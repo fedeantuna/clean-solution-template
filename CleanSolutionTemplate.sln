@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Application", "src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj", "{A0C468D9-0EEF-409E-BCAA-27E520A4F375}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Infrastructure", "src\CleanSolutionTemplate.Infrastructure\CleanSolutionTemplate.Infrastructure.csproj", "{50F9AD9F-3E07-4A89-AEDD-C0AEC3C36FF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Infrastructure.Tests.Unit", "tests\CleanSolutionTemplate.Infrastructure.Tests.Unit\CleanSolutionTemplate.Infrastructure.Tests.Unit.csproj", "{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,9 +36,18 @@ Global
 		{A0C468D9-0EEF-409E-BCAA-27E520A4F375}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0C468D9-0EEF-409E-BCAA-27E520A4F375}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0C468D9-0EEF-409E-BCAA-27E520A4F375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50F9AD9F-3E07-4A89-AEDD-C0AEC3C36FF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50F9AD9F-3E07-4A89-AEDD-C0AEC3C36FF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50F9AD9F-3E07-4A89-AEDD-C0AEC3C36FF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50F9AD9F-3E07-4A89-AEDD-C0AEC3C36FF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8C282D00-8797-4B15-AD56-95AEEE213FD4} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
 		{D3932F20-FDB8-4787-AD75-F49379BE6A60} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
+		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
 	EndGlobalSection
 EndGlobal
