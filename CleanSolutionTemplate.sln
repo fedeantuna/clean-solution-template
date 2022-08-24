@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Infra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Infrastructure.Tests.Unit", "tests\CleanSolutionTemplate.Infrastructure.Tests.Unit\CleanSolutionTemplate.Infrastructure.Tests.Unit.csproj", "{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Api", "src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj", "{DEC91A9D-6FA5-410D-A6F8-D4CF1F22D27D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Api.Tests.Unit", "tests\CleanSolutionTemplate.Api.Tests.Unit\CleanSolutionTemplate.Api.Tests.Unit.csproj", "{225F3BDC-95BC-457D-B146-0B5ACDCD863F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,10 +48,19 @@ Global
 		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEC91A9D-6FA5-410D-A6F8-D4CF1F22D27D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEC91A9D-6FA5-410D-A6F8-D4CF1F22D27D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEC91A9D-6FA5-410D-A6F8-D4CF1F22D27D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEC91A9D-6FA5-410D-A6F8-D4CF1F22D27D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{225F3BDC-95BC-457D-B146-0B5ACDCD863F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{225F3BDC-95BC-457D-B146-0B5ACDCD863F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{225F3BDC-95BC-457D-B146-0B5ACDCD863F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{225F3BDC-95BC-457D-B146-0B5ACDCD863F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8C282D00-8797-4B15-AD56-95AEEE213FD4} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
 		{D3932F20-FDB8-4787-AD75-F49379BE6A60} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
 		{CDEFE215-E5C1-4D80-ABDF-2CA767DBF4A9} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
+		{225F3BDC-95BC-457D-B146-0B5ACDCD863F} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
 	EndGlobalSection
 EndGlobal
