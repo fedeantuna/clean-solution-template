@@ -1,0 +1,4 @@
+*.cs text eol=lf
+*.sln text eol=lf
+*.csproj text eol=lf
+
