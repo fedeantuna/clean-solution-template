@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>CleanSolutionTemplate.Api</id>
+    <version>0.0.1</version>
+    <title>Clean Solution Template - Api</title>
+    <owners>fedeantuna</owners>
+    <authors>Federico Antuña</authors>
+    <description>Clean Solution Template - .NET 6</description>
+    <summary>Basic template for an API following Clean Architecture principles.</summary>
+    <releaseNotes>First release!</releaseNotes>
+
+    <projectUrl>https://github.com/fedeantuna/clean-solution-template</projectUrl>
+    <repository type="git" url="https://github.com/fedeantuna/clean-solution-template.git" branch="main" />
+
+    <license type="expression">MIT</license>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>clean-solution clean-architecture project template csharp dotnet</tags>
+    <icon>icon.png</icon>
+    <readme>README.md</readme>
+
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+
+  <files>
+    <file src=".template.config/icon.png" />
+    <file src="README.md" />
+    <file src="./**" target="content" exclude="**/bin/**;**/obj/**;**/test-results/**;**test-reports/**;**/.vs/**;**/.idea/**;**/.vscode/**;**/.git/**;**/.github/**;**/CODE_OF_CONDUCT.md;" />
+  </files>
+</package>
