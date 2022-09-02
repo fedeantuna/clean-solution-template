@@ -3,7 +3,7 @@
     "author": "Federico Antuña (https://github.com/fedeantuna/clean-solution-template)",
     "classifications": [
         "Web",
-        "API",
+        "Clean Solution",
         "Clean Architecture"
     ],
     "name": "Clean Solution Template",
@@ -12,25 +12,13 @@
     "description": "A solution that contains Domain, Application, Infrastructure and Presentation layers with their respective tests and runs on Windows, Linux and macOS",
     "groupIdentity": "Clean.Solution.Template",
     "identity": "Clean.Solution.Template.Api",
-    "shortName": "cst-api",
+    "shortName": "cst-web",
     "tags": {
         "language": "C#",
         "type": "solution"
     },
     "sourceName": "CleanSolutionTemplate",
     "preferNameDirectory": true,
-    "guids": [
-        "1F5836C7-B83B-494D-9AF1-4C815A01AE6C",
-        "21E6DF6A-19CA-4969-B339-2319B4DEA439",
-        "5B2F4C80-8A0C-4A28-8F7D-7620727EC4CF",
-        "B92B99E2-C729-419A-8DCF-049B35C68948",
-        "E9815DB5-A47A-4F70-A17F-88B8E5C60CFE",
-        "867E7F1F-3B03-4FCC-844D-F5194F195DDE",
-        "B5530661-8740-4158-A330-9D03A9F75C7E",
-        "34D3CDEE-FED3-4705-9AEE-29A71AA8E753",
-        "9BF6E225-F345-4AD7-8E7A-20CDB37BBA95",
-        "9F831736-E781-494E-A2F6-801C2896D044"
-    ],
     "sources": [
         {
             "source": "./",

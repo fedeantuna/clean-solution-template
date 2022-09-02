@@ -4,8 +4,8 @@
     <id>CleanSolutionTemplate.Api</id>
     <version>0.0.1</version>
     <title>Clean Solution Template - Api</title>
-    <owners>fedeantuna</owners>
     <authors>Federico Antuña</authors>
+    <owners>fedeantuna</owners>
     <description>Clean Solution Template - .NET 6</description>
     <summary>Basic template for an API following Clean Architecture principles.</summary>
     <releaseNotes>First release!</releaseNotes>
@@ -25,8 +25,8 @@
   </metadata>
 
   <files>
-    <file src=".template.config/icon.png" />
+    <file src=".template.config\icon.png" />
     <file src="README.md" />
-    <file src="./**" target="content" exclude="**/bin/**;**/obj/**;**/test-results/**;**test-reports/**;**/.vs/**;**/.idea/**;**/.vscode/**;**/.git/**;**/.github/**;**/CODE_OF_CONDUCT.md;" />
+    <file src=".\**" target="content" exclude="**\bin\**;**\obj\**;**\test-results\**;**test-reports\**;**\.vs\**;**\.idea\**;**\.vscode\**;**\.git\**;**\.github\**;**\CODE_OF_CONDUCT.md;" />
   </files>
 </package>
