@@ -1,11 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/template",
     "author": "Federico Antuña (https://github.com/fedeantuna/clean-solution-template)",
-    "classifications": [
-        "Web",
-        "Clean Solution",
-        "Clean Architecture"
-    ],
+    "classifications": ["Web", "Clean Solution", "Clean Architecture"],
     "name": "Clean Solution Template",
     "defaultName": "CleanSolutionTemplate",
     "generatorVersions": "[1.0.0.0-*)",
@@ -33,6 +29,7 @@
                 "**/*.user",
                 "**/*.lock.json",
                 "**/.git/**",
+                ".github/workflows/package.yml",
                 "*.nuspec"
             ]
         }

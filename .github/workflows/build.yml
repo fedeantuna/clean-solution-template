@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore
+
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory:"./test-results/"
+
+      - name: Merge tests with ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
+        with:
+          reports: "test-results/**/*.cobertura.xml"
+          targetdir: "coverage-report"
+          reporttypes: "Cobertura"
+          verbosity: "Info"
+
+      - name: Report results to DeepSource
+        run: |
+          curl https://deepsource.io/cli | sh
+          ./bin/deepsource report --analyzer test-coverage --key csharp --value-file ./coverage-report/Cobertura.xml
+        env:
+          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
