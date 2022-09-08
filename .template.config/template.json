@@ -6,9 +6,8 @@
     "defaultName": "CleanSolutionTemplate",
     "generatorVersions": "[1.0.0.0-*)",
     "description": "A solution that contains Domain, Application, Infrastructure and Presentation layers with their respective tests and runs on Windows, Linux and macOS",
-    "groupIdentity": "Clean.Solution.Template",
-    "identity": "Clean.Solution.Template.Api",
-    "shortName": "cst-web",
+    "identity": "Clean.Solution.Template",
+    "shortName": "cst",
     "tags": {
         "language": "C#",
         "type": "solution"
