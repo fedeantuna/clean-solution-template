@@ -1,16 +1,16 @@
 #!/usr/bin/env pwsh
 
-$Timestamp = Get-Date -UFormat %s
+$Timestamp = [int64](([datetime]::UtcNow) - (Get-Date "1/1/1970")).TotalSeconds
 
 $RootProjectDir = $MyInvocation.MyCommand.Path | Split-Path -Parent | Split-Path -Parent
 Push-Location $RootProjectDir
 
-$DotnetTestOutput = "$RootProjectDir/test-results/$Timestamp"
-$ReportGeneratorOutput = "$RootProjectDir/test-reports/$Timestamp"
+$DotnetTestOutput = [IO.Path]::Combine($RootProjectDir, "test-results", $Timestamp)
+$ReportGeneratorOutput = [IO.Path]::Combine($RootProjectDir, "test-reports", $Timestamp)
 
 $DotnetTestCollect = "XPlat Code Coverage"
 $DotnetTestLogger = "console;verbosity=detailed"
-$DotnetCoberturaReports = "$DotnetTestOutput/**/*.cobertura.xml"
+$DotnetCoberturaReports = [IO.Path]::Combine($DotnetTestOutput, "**", "*.cobertura.xml")
 
 dotnet test --collect:"$DotnetTestCollect" --logger:"$DotnetTestLogger" --results-directory $DotnetTestOutput $RootProjectDir
 dotnet reportgenerator "-reports:$DotnetCoberturaReports" "-targetdir:$ReportGeneratorOutput" "-reporttypes:HTML;"
