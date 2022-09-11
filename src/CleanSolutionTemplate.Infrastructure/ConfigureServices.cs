@@ -27,8 +27,9 @@ public static class ConfigureServices
         const string useInMemoryDatabaseSettingName = "UseInMemoryDatabase";
         if (configuration.GetValue<bool>(useInMemoryDatabaseSettingName))
         {
+            const string inMemoryDatabaseName = "CleanSolutionTemplateDb";
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("AuraDb"));
+                options.UseInMemoryDatabase(inMemoryDatabaseName));
         }
         else
         {

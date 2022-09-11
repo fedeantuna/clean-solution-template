@@ -7,7 +7,7 @@ namespace CleanSolutionTemplate.Application.Common.Behaviors;
 public class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    internal const string LogMessageTemplate = "Aura Combat Request: Unhandled Exception for Request {requestName} {@request}";
+    internal const string LogMessageTemplate = "CleanSolutionTemplate Request: Unhandled Exception for Request {requestName} {@request}";
 
     private readonly ILogger _logger;
 
@@ -30,7 +30,8 @@ public class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior
         {
             var requestName = typeof(TRequest).Name;
 
-            this._logger.LogError(ex, LogMessageTemplate,
+            this._logger.LogError(ex,
+                LogMessageTemplate,
                 requestName, request);
 
             throw;

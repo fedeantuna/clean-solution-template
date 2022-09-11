@@ -9,9 +9,10 @@ namespace CleanSolutionTemplate.Infrastructure.Tests.Unit;
 
 public class TestBase
 {
+    private const string TestUserEmail = "test-user-email";
+
     protected const string TestUserId = "test-user-id";
-    protected const string TestUserEmail = "test-user-email";
-    
+
     private readonly IServiceCollection _services = new ServiceCollection();
     private readonly IServiceProvider _provider;
 
