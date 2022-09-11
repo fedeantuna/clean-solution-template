@@ -12,7 +12,7 @@ DOTNET_TEST_LOGGER="console;verbosity=detailed"
 DOTNET_COBERTURA_REPORTS="$DOTNET_TEST_OUTPUT/**/*.cobertura.xml"
 
 dotnet test --collect:"$DOTNET_TEST_COLLECT" --logger:"$DOTNET_TEST_LOGGER" --results-directory $DOTNET_TEST_OUTPUT $ROOT_PROJECT_DIR
-reportgenerator "-reports:$DOTNET_COBERTURA_REPORTS" "-targetdir:$REPORT_GENERATOR_OUTPUT" "-reporttypes:HTML;"
+$(cd $ROOT_PROJECT_DIR && dotnet reportgenerator "-reports:$DOTNET_COBERTURA_REPORTS" "-targetdir:$REPORT_GENERATOR_OUTPUT" "-reporttypes:HTML;")
 
 open $REPORT_GENERATOR_OUTPUT/index.html
 
