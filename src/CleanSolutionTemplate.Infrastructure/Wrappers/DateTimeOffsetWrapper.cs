@@ -6,5 +6,5 @@ namespace CleanSolutionTemplate.Infrastructure.Wrappers;
 [ExcludeFromCodeCoverage]
 public class DateTimeOffsetWrapper : IDateTimeOffsetWrapper
 {
-    public DateTimeOffset GetUtcNow() => DateTimeOffset.UtcNow;
+    public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 }
