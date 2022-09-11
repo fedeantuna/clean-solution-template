@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>CleanSolutionTemplate.Api</id>
+    <id>CleanSolutionTemplate</id>
     <version>0.0.1</version>
     <title>Clean Solution Template - Api</title>
     <authors>Federico Antuña</authors>
