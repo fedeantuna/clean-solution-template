@@ -13,6 +13,7 @@ $DotnetTestLogger = "console;verbosity=detailed"
 $DotnetCoberturaReports = [IO.Path]::Combine($DotnetTestOutput, "**", "*.cobertura.xml")
 
 dotnet test --collect:"$DotnetTestCollect" --logger:"$DotnetTestLogger" --results-directory $DotnetTestOutput $RootProjectDir
+dotnet tool restore
 dotnet reportgenerator "-reports:$DotnetCoberturaReports" "-targetdir:$ReportGeneratorOutput" "-reporttypes:HTML;"
 
 Pop-Location
