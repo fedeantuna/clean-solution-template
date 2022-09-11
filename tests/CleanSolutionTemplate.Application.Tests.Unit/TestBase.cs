@@ -12,7 +12,7 @@ public abstract class TestBase
 {
     protected const string TestUserId = "test-user-id";
     protected const string TestUserEmail = "test-user-email";
-    
+
     private readonly IServiceCollection _services = new ServiceCollection();
     private readonly IServiceProvider _provider;
 
@@ -55,7 +55,7 @@ public abstract class TestBase
     private void UnregisterActualValidators()
     {
         var validators = this._services.Where(s => s.ServiceType == typeof(IValidator<>)).ToList();
-        validators.ForEach(validator => this._services.Remove(validator));
+        validators.ForEach(this.RemoveService);
     }
 
     private void SetupValidatorsMock()
@@ -66,4 +66,7 @@ public abstract class TestBase
         this.ValidatorBMock = new Mock<IValidator<IRequest<string>>>();
         this._services.AddScoped(_ => this.ValidatorBMock.Object);
     }
+
+    private void RemoveService(ServiceDescriptor serviceDescriptor) =>
+        this._services.Remove(serviceDescriptor);
 }
