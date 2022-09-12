@@ -12,8 +12,7 @@ internal class ApplicationDbContext : DbContext, IApplicationDbContext
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
     private readonly IPublisher _publisher;
 
-    public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options,
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
         IPublisher publisher,
         AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor)
         : base(options)
