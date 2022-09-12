@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using CleanSolutionTemplate.Application.Common.Behaviors;
 using FluentValidation;
@@ -8,6 +9,7 @@ namespace CleanSolutionTemplate.Application;
 
 public static class ConfigureServices
 {
+    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.ConfigureValidators();

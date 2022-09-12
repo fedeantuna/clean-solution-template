@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Application.Common.Wrappers;
 using CleanSolutionTemplate.Infrastructure.Persistence;
@@ -11,6 +12,7 @@ namespace CleanSolutionTemplate.Infrastructure;
 
 public static class ConfigureServices
 {
+    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -43,6 +45,9 @@ public static class ConfigureServices
         }
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>();
     }
 
     private static void ConfigureWrappers(this IServiceCollection services)
