@@ -25,19 +25,10 @@ public class TestBase
         this._services.AddInfrastructureServices(configuration);
         this._services.AddLogging();
 
-        var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(TestUserId);
-        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(TestUserEmail);
-        this._services.AddTransient(_ => userServiceMock.Object);
+        this.AddPresentationServiceMocks();
+        this.AddApplicationServiceMocks();
 
-        var mediatorMock = new Mock<IMediator>();
-        this._services.AddTransient(_ => mediatorMock.Object);
-
-        var dateTimeOffsetWrapper = this._services.Single(s => s.ServiceType == typeof(IDateTimeOffsetWrapper));
-        this._services.Remove(dateTimeOffsetWrapper);
-        var dateTimeOffsetWrapperMock = new Mock<IDateTimeOffsetWrapper>();
-        dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(this.UtcNow);
-        this._services.AddSingleton(_ => dateTimeOffsetWrapperMock.Object);
+        this.SetupWrapperMocks();
 
         this._provider = this._services.BuildServiceProvider();
     }
@@ -48,5 +39,28 @@ public class TestBase
         where T : notnull
     {
         return this._provider.GetRequiredService<T>();
+    }
+
+    private void AddPresentationServiceMocks()
+    {
+        var userServiceMock = new Mock<IUserService>();
+        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(TestUserId);
+        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(TestUserEmail);
+        this._services.AddTransient(_ => userServiceMock.Object);
+    }
+
+    private void AddApplicationServiceMocks()
+    {
+        var mediatorMock = new Mock<IMediator>();
+        this._services.AddTransient(_ => mediatorMock.Object);
+    }
+
+    private void SetupWrapperMocks()
+    {
+        var dateTimeOffsetWrapper = this._services.Single(s => s.ServiceType == typeof(IDateTimeOffsetWrapper));
+        this._services.Remove(dateTimeOffsetWrapper);
+        var dateTimeOffsetWrapperMock = new Mock<IDateTimeOffsetWrapper>();
+        dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(this.UtcNow);
+        this._services.AddSingleton(_ => dateTimeOffsetWrapperMock.Object);
     }
 }

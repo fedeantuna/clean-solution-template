@@ -22,7 +22,7 @@ public abstract class TestBase
 
         this.SetupFakeLogging();
 
-        this.SetupUserServiceMock();
+        this.AddPresentationServiceMocks();
 
         this.UnregisterActualValidators();
         this.SetupValidatorsMock();
@@ -44,7 +44,7 @@ public abstract class TestBase
         this._services.AddSingleton(typeof(ILogger<>), typeof(FakeLogger<>));
     }
 
-    private void SetupUserServiceMock()
+    private void AddPresentationServiceMocks()
     {
         var userServiceMock = new Mock<IUserService>();
         userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(TestUserId);
