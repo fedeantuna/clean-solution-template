@@ -20,7 +20,7 @@ public class UserService : IUserService
             .User
             .FindFirstValue(ClaimTypes.NameIdentifier) ?? Unknown;
 
-    public string GetCurrentUserEmail()=>
+    public string GetCurrentUserEmail() =>
         this._httpContextAccessor
             .HttpContext?
             .User
