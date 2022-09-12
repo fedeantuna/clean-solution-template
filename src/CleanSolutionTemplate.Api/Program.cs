@@ -13,9 +13,9 @@ builder.Services
 
 builder.Host
     .UseSerilog((context, services, configuration) =>
-        configuration.Enrich.FromLogContext()
-            .ReadFrom.Configuration(context.Configuration)
+        configuration.ReadFrom.Configuration(context.Configuration)
             .ReadFrom.Services(services)
+            .Enrich.FromLogContext()
             .WriteTo.Console(theme: AnsiConsoleTheme.Code));
 
 var app = builder.Build();
