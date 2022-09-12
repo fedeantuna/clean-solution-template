@@ -1,0 +1,16 @@
+version = 1
+
+test_patterns = [
+  "tests/**",
+  "*Tests.cs",
+  "*Test.cs"
+]
+
+[[analyzers]]
+name = "csharp"
+enabled = true
+
+[[analyzers]]
+name = "test-coverage"
+enabled = true
+

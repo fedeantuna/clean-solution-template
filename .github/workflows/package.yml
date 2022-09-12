@@ -1,0 +1,27 @@
+name: Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["CleanSolutionTemplate.nuspec"]
+
+jobs:
+  publish:
+    name: Publish to NuGet.org
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: "6.x"
+
+      - name: Create the package
+        run: nuget pack CleanSolutionTemplate.nuspec -NoDefaultExcludes
+
+      - name: Publish the package
+        run: nuget push *.nupkg -Source 'https://api.nuget.org/v3/index.json' -SkipDuplicate

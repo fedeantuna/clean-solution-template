@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Federico Antuña (https://github.com/fedeantuna/clean-solution-template)",
+    "classifications": ["Web", "Clean Solution", "Clean Architecture"],
+    "name": "Clean Solution Template",
+    "defaultName": "CleanSolutionTemplate",
+    "generatorVersions": "[1.0.0.0-*)",
+    "description": "A solution that contains Domain, Application, Infrastructure and Presentation layers with their respective tests and runs on Windows, Linux and macOS",
+    "identity": "Clean.Solution.Template",
+    "shortName": "cst",
+    "tags": {
+        "language": "C#",
+        "type": "solution"
+    },
+    "sourceName": "CleanSolutionTemplate",
+    "preferNameDirectory": true,
+    "sources": [
+        {
+            "source": "./",
+            "target": "./",
+            "exclude": [
+                "**/[Bb]in/**",
+                "**/[Oo]bj/**",
+                ".template.config/**/*",
+                ".vs/**/*",
+                ".idea/**/*",
+                "**/*.filelist",
+                "**/*.user",
+                "**/*.lock.json",
+                "**/.git/**",
+                ".github/workflows/package.yml",
+                "*.nuspec"
+            ]
+        }
+    ]
+}
