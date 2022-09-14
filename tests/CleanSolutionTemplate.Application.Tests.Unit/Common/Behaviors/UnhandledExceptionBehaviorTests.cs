@@ -3,6 +3,7 @@ using CleanSolutionTemplate.Application.Common.Behaviors;
 using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using FluentAssertions;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -12,51 +13,26 @@ public class UnhandledExceptionBehaviorTests : TestBase
 {
     private readonly FakeLogger<IRequest<string>> _fakeLogger;
 
-    private readonly UnhandledExceptionBehavior<IRequest<string>, string> _sut;
+    private readonly UnhandledExceptionBehavior<IRequest<string>, Exception> _sut;
 
     public UnhandledExceptionBehaviorTests()
     {
         this._fakeLogger = (FakeLogger<IRequest<string>>)this.FindService<ILogger<IRequest<string>>>();
 
-        var pipelineBehaviors = this.FindService<IEnumerable<IPipelineBehavior<IRequest<string>, string>>>();
-        this._sut = (UnhandledExceptionBehavior<IRequest<string>, string>)pipelineBehaviors.First(pb =>
+        var pipelineBehaviors = this.FindService<IEnumerable<IRequestExceptionAction<IRequest<string>, Exception>>>();
+        this._sut = (UnhandledExceptionBehavior<IRequest<string>, Exception>)pipelineBehaviors.First(pb =>
             pb.GetType().Name == typeof(UnhandledExceptionBehavior<,>).Name);
     }
 
     [Fact]
-    public async Task Handle_ReturnsRequestHandlerResult()
+    public async Task Execute_LogsError_WhenRequestHandlerIsNotValid()
     {
         // Arrange
         var requestMock = new Mock<IRequest<string>>();
-        var cancellationToken = default(CancellationToken);
-        const string handlerResponse = "test-handler-response";
-
-        Task<string> Handler()
-        {
-            return Task.FromResult(handlerResponse);
-        }
-
-        // Act
-        var result = await this._sut.Handle(requestMock.Object, cancellationToken, Handler);
-
-        // Assert
-        result.Should().Be(handlerResponse);
-    }
-
-    [Fact]
-    public async Task Handle_LogsErrorAndThrowsException_WhenRequestHandlerIsNotValid()
-    {
-        // Arrange
         var exception = new Exception("test-exception");
-
-        var requestMock = new Mock<IRequest<string>>();
         var cancellationToken = default(CancellationToken);
-        Task<string> Handler()
-        {
-            return Task.FromException<string>(exception);
-        }
 
-        var stateBuilder = new StringBuilder(UnhandledExceptionBehavior<IRequest<object>, object>.LogMessageTemplate);
+        var stateBuilder = new StringBuilder(UnhandledExceptionBehavior<IRequest<string>, Exception>.LogMessageTemplate);
         stateBuilder.Replace("{requestName}", typeof(IRequest<>).Name);
         stateBuilder.Replace("{@request}", requestMock.Object.ToString());
         var expectedState = stateBuilder.ToString();
@@ -72,10 +48,9 @@ public class UnhandledExceptionBehaviorTests : TestBase
         };
 
         // Act
-        Func<Task> act = () => this._sut.Handle(requestMock.Object, cancellationToken, Handler);
+        await this._sut.Execute(requestMock.Object, exception, cancellationToken);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>(exception.Message);
         this._fakeLogger.Category.Should().Be(typeof(IRequest<>).Name);
         this._fakeLogger.LogRecords.Should().Equal(expectedLogRecords);
     }

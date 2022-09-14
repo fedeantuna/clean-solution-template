@@ -1,11 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
-using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace CleanSolutionTemplate.Application.Common.Behaviors;
 
-public class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public class UnhandledExceptionBehavior<TRequest, TException> : IRequestExceptionAction<TRequest, TException>
+    where TRequest : notnull
+    where TException : Exception
 {
     internal const string LogMessageTemplate = "CleanSolutionTemplate Request: Unhandled Exception for Request {requestName} {@request}";
 
@@ -18,23 +19,14 @@ public class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior
         this._logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request,
-        CancellationToken cancellationToken,
-        RequestHandlerDelegate<TResponse> next)
+    public Task Execute(TRequest request, TException exception, CancellationToken cancellationToken)
     {
-        try
-        {
-            return await next();
-        }
-        catch (Exception ex)
-        {
-            var requestName = typeof(TRequest).Name;
+        var requestName = typeof(TRequest).Name;
 
-            this._logger.LogError(ex,
-                LogMessageTemplate,
-                requestName, request);
+        this._logger.LogError(exception,
+            LogMessageTemplate,
+            requestName, request);
 
-            throw;
-        }
+        return Task.CompletedTask;
     }
 }
