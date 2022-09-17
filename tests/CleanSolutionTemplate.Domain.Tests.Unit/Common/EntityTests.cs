@@ -53,7 +53,7 @@ public class EntityTests
     }
 
     [Fact]
-    public void ClearDomainEvents_ShouldRemoveAllDomainEvents()
+    public void RemoveRange_ShouldRemoveARangeDomainEvents()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -63,7 +63,7 @@ public class EntityTests
         entity.AddDomainEvent(domainEvent);
 
         // Act
-        entity.ClearDomainEvents();
+        entity.RemoveRange(entity.DomainEvents.Count);
 
         // Assert
         entity.DomainEvents.Should().BeEmpty();

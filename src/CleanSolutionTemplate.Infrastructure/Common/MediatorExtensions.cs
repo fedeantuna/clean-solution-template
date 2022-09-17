@@ -16,13 +16,22 @@ public static class MediatorExtensions
             .Select(e => e.Entity)
             .ToList();
 
-        var domainEvents = entities
-            .SelectMany(e => e.DomainEvents)
-            .ToList();
-
-        entities.ForEach(e => e.ClearDomainEvents());
-
-        foreach (var domainEvent in domainEvents)
-            await publisher.Publish(domainEvent, cancellationToken);
+        foreach (var entity in entities)
+        {
+            var index = 0;
+            try
+            {
+                foreach (var domainEvent in entity.DomainEvents)
+                {
+                    await publisher.Publish(domainEvent, cancellationToken);
+                    index++;
+                }
+            }
+            finally
+            {
+                // In case of a failure, we only remove the events already published.
+                entity.RemoveRange(index);
+            }
+        }
     }
 }
