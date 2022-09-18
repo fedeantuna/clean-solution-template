@@ -1,0 +1,11 @@
+{
+    "stryker-config": {
+        "project": "CleanSolutionTemplate.Infrastructure.csproj",
+        "test-projects": [
+            "../../tests/CleanSolutionTemplate.Infrastructure.Tests.Unit/CleanSolutionTemplate.Infrastructure.Tests.Unit.csproj"
+        ],
+        "project-info": {
+            "module": "Infrastructure"
+        }
+    }
+}

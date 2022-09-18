@@ -1,0 +1,11 @@
+{
+    "stryker-config": {
+        "project": "CleanSolutionTemplate.Domain.csproj",
+        "test-projects": [
+            "../../tests/CleanSolutionTemplate.Domain.Tests.Unit/CleanSolutionTemplate.Domain.Tests.Unit.csproj"
+        ],
+        "project-info": {
+            "module": "Domain"
+        }
+    }
+}

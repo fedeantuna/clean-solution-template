@@ -1,0 +1,11 @@
+{
+    "stryker-config": {
+        "project": "CleanSolutionTemplate.Application.csproj",
+        "test-projects": [
+            "../../tests/CleanSolutionTemplate.Application.Tests.Unit/CleanSolutionTemplate.Application.Tests.Unit.csproj"
+        ],
+        "project-info": {
+            "module": "Application"
+        }
+    }
+}
