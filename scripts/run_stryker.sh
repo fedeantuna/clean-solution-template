@@ -2,7 +2,12 @@
 
 STARTUP_DIRECTORY=$(pwd)
 
+echo "Current Directory is: $STARTUP_DIRECTORY"
+
 ROOT_PROJECT_DIRECTORY=$(dirname -- "$(readlink -f "${BASH_SOURCE[0]}")" | sed 's/\/scripts$//')
+
+echo "The Root Project Directory is: $ROOT_PROJECT_DIRECTORY. Moving into it..."
+
 cd "$ROOT_PROJECT_DIRECTORY" || exit 1
 
 if [[ -z $1 ]]; then
@@ -33,7 +38,7 @@ if [[ ! -r "$SOLUTION" ]]; then
     exit 1
 fi
 
-SOURCE_PROJECT_RELATIVE_PATHS=$(grep "csproj" CleanSolutionTemplate.sln | cut -d , -f 2 | cut -d \" -f 2 | grep -v Tests | rev | cut -d \\ -f 2- | rev | tr "\\" "/")
+SOURCE_PROJECT_RELATIVE_PATHS=$(grep "csproj" CleanSolutionTemplate.sln | cut -d , -f 2 | cut -d \" -f 2 | grep -v Tests | rev | cut -d \\ -f 2- | rev | sed 's/\\/\//g')
 
 for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     SOURCE_PROJECT="$ROOT_PROJECT_DIRECTORY/$SOURCE_PROJECT_RELATIVE_PATH"
@@ -67,6 +72,7 @@ echo -n "$MUTATION_REPORT_JSON_FRAGMENT" > "$STRYKER_MERGED_REPORT"
 
 COUNT=0
 for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
+    echo "The Source Project Relative Path is $SOURCE_PROJECT_RELATIVE_PATH"
     SOURCE_PROJECT="$ROOT_PROJECT_DIRECTORY/$SOURCE_PROJECT_RELATIVE_PATH"
 
     cd "$SOURCE_PROJECT" || exit 1
