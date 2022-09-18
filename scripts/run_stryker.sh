@@ -79,8 +79,6 @@ for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
         DOTNET_STRYKER_COMMAND="dotnet stryker -r json"
     fi
 
-    echo "Running command $DOTNET_STRYKER_COMMAND"
-
     echo -n "Running Stryker for $PROJECT_NAME..."
 
     $DOTNET_STRYKER_COMMAND # > "$CURRENT_PROJECT_STRYKER_LOG" 2>&1
