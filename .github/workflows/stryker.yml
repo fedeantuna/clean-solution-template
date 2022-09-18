@@ -19,4 +19,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Generate Report
-        run: bash ${{ github.workspace }}/scripts/run_stryker.sh
+        run: bash ./scripts/run_stryker.sh
