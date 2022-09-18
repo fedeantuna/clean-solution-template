@@ -74,7 +74,15 @@ for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     PROJECT_NAME=$(echo "$SOURCE_PROJECT" | rev | cut -d / -f 1 | rev)
     CURRENT_PROJECT_STRYKER_LOG="$STRYKER_LOGS_OUTPUT/$PROJECT_NAME.stryker.json"
     if [[ $RUNNING_FROM_PIPELINE == "true" ]]; then
-        DOTNET_STRYKER_COMMAND="dotnet stryker -r dashboard --with-baseline:$DOTNET_STRYKER_DASHBOARD_BASELINE --version $DOTNET_STRYKER_DASHBOARD_VERSION"
+        DOTNET_STRYKER_COMMAND="dotnet stryker -r dashboard"
+
+        STRYKER_PROJECT_NAME="github.com/fedeantuna/clean-solution-template"
+        STRYKER_MODULE=$(echo $PROJECT_NAME | rev | cut -d . -f 1 | rev)
+        STRYKER_BASELINE_RESULT="https://dashboard.stryker-mutator.io/api/reports/$STRYKER_PROJECT_NAME/baseline/$DOTNET_STRYKER_DASHBOARD_BASELINE?module=$STRYKER_MODULE"
+
+        if curl --output /dev/null --silent --head --fail "$STRYKER_BASELINE_RESULT"; then
+            DOTNET_STRYKER_COMMAND+=" --with-baseline:$DOTNET_STRYKER_DASHBOARD_BASELINE --version $DOTNET_STRYKER_DASHBOARD_VERSION"
+        fi
     else
         DOTNET_STRYKER_COMMAND="dotnet stryker -r json"
     fi
