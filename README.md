@@ -1,3 +1,9 @@
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Build?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/build.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Package?label=package&style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/package.yml)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffedeantuna%2Fclean-solution-template%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/fedeantuna/clean-solution-template/main)
+[![NuGet](https://img.shields.io/nuget/v/CleanSolutionTemplate?style=flat-square)](https://www.nuget.org/packages/CleanSolutionTemplate/)
+[![GitHub](https://img.shields.io/github/license/fedeantuna/clean-solution-template?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/LICENSE)
+
 # Clean Solution Template
 
 This template is based on Jason Taylor's [Clean Architecture Template](https://github.com/jasontaylordev/CleanArchitecture)
@@ -14,13 +20,19 @@ Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
 At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported. To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
 
-## Static Analysis and Online Coverage Report
+## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses DeepSource as the tool for code analysis and reporting on test coverage. In order to set it up, you need to create an account at https://deepsource.io/ and then allow access to the your repository. Once that is done, you need to add the DSN to your repository secrets under the name DEEPSOURCE_DSN. You can take a look here https://deepsource.io/docs/dashboard/repo-settings/#dsn to know more about how to do it.
 
+TODO: Online Mutation Score
+
+## Local Mutation Report
+
+Running the mutation report locally can be done by executing the stryker scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the stryker tool, pleace visit the [Stryker Web](https://stryker-mutator.io/docs/stryker-net/introduction/) to know more about the project.
+
 ## Local Coverage Report
 
-Running the coverage report locally can be done by executing the scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the report-generator tool, please visit [ReportGenerator GitHub](https://github.com/danielpalme/ReportGenerator) to know more about the project.
+Running the coverage report locally can be done by executing the test coverage scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the report-generator tool, please visit the [ReportGenerator GitHub](https://github.com/danielpalme/ReportGenerator) to know more about the project.
 
 ## Structure Overview
 
