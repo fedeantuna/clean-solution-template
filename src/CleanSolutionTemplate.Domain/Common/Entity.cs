@@ -4,7 +4,7 @@ namespace CleanSolutionTemplate.Domain.Common;
 
 public abstract class Entity
 {
-    readonly List<DomainEvent> _domainEvents = new();
+    private readonly List<DomainEvent> _domainEvents = new();
 
     protected Entity(Guid id) => this.Id = id;
 
@@ -16,5 +16,5 @@ public abstract class Entity
 
     public void RemoveDomainEvent(DomainEvent domainEvent) => this._domainEvents.Remove(domainEvent);
 
-    public void RemoveRange(int index) => this._domainEvents.RemoveRange(0, index);
+    public void ClearDomainEvents() => this._domainEvents.Clear();
 }
