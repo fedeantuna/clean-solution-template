@@ -5,7 +5,8 @@
             "../../tests/CleanSolutionTemplate.Domain.Tests.Unit/CleanSolutionTemplate.Domain.Tests.Unit.csproj"
         ],
         "project-info": {
-            "module": "Domain"
+            "module": "Domain",
+            "name": "github.com/fedeantuna/clean-solution-template"
         }
     }
 }

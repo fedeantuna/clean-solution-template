@@ -5,7 +5,8 @@
             "../../tests/CleanSolutionTemplate.Infrastructure.Tests.Unit/CleanSolutionTemplate.Infrastructure.Tests.Unit.csproj"
         ],
         "project-info": {
-            "module": "Infrastructure"
+            "module": "Infrastructure",
+            "name": "github.com/fedeantuna/clean-solution-template"
         }
     }
 }
