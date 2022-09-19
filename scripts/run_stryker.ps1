@@ -94,6 +94,8 @@ $SourceProjects | ForEach-Object {
             $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('.') + 1)
             $StrykerBaselineResult = "https://dashboard.stryker-mutator.io/api/reports/$StrykerProjectName/baseline/$StrykerDashboardBaseline`?module=$StrykerModule"
 
+            Write-Information "Checking baseline at $StrykerBaselineResult"
+            
             $StrykerBaselineStatusCode = (Invoke-WebRequest -Uri $StrykerBaselineResult -UseBasicParsing -DisableKeepAlive).StatusCode
 
             if ($StrykerBaselineStatusCode -eq 200) {
@@ -163,7 +165,6 @@ if ($RunningFromPipeline -eq "true") {
 $StrykerMutationHtmlReport = [IO.Path]::Combine($StrykerReportsOutput, "mutation-report.html")
 $StrykerMutationHtmlReportFileUrl = "https://raw.githubusercontent.com/stryker-mutator/stryker-net/master/src/Stryker.Core/Stryker.Core/Reporters/HtmlReporter/Files/mutation-report.html"
 
-Write-Host -NoNewline "Generating Stryker HTML Report..."
 Invoke-WebRequest -Uri $StrykerMutationHtmlReportFileUrl -OutFile $StrykerMutationHtmlReport
 
 $StrykerMergedReportContent = Get-Content -Raw -Path $StrykerMergedReport
@@ -171,7 +172,7 @@ $StrykerMergedReportContent = Get-Content -Raw -Path $StrykerMergedReport
 ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace "##REPORT_TITLE##", "Stryker Mutation Testing") | Set-Content -Path $StrykerMutationHtmlReport
 ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace "##REPORT_JSON##", "$StrykerMergedReportContent") | Set-Content -Path $StrykerMutationHtmlReport
 
-Write-Host "Stryker HTML Report: $StrykerMutationHtmlReport"
+Write-Information "Stryker HTML Report: $StrykerMutationHtmlReport"
 
 Pop-Location
 

@@ -75,6 +75,8 @@ for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
         STRYKER_MODULE=$(echo "$PROJECT_NAME" | rev | cut -d . -f 1 | rev)
         STRYKER_BASELINE_RESULT="https://dashboard.stryker-mutator.io/api/reports/$STRYKER_PROJECT_NAME/baseline/$STRYKER_DASHBOARD_BASELINE?module=$STRYKER_MODULE"
 
+        echo "Checking baseline at $STRYKER_BASELINE_RESULT"
+        
         if curl --output /dev/null --silent --head --fail "$STRYKER_BASELINE_RESULT"; then
             STRYKER_COMMAND+=" --with-baseline:$STRYKER_DASHBOARD_BASELINE"
         else

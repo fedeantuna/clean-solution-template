@@ -2,14 +2,15 @@ name: Stryker
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 
 env:
   RUNNING_FROM_PIPELINE: 'true'
   CURRENT_REPOSITORY_URL: $ {{ github.repositoryUrl }}
-  STRYKER_DASHBOARD_BASELINE: ${{ github.base_ref }}
-  STRYKER_DASHBOARD_VERSION: ${{ github.head_ref }}
+  STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
 jobs:
   stryker-mutation-report:
@@ -19,7 +20,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Generate Report
+      - name: Generate Report (PR)
+        if: github.event_name == 'pull_request'
         env:
-          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+          STRYKER_DASHBOARD_BASELINE: ${{ github.base_ref }}
+          STRYKER_DASHBOARD_VERSION: ${{ github.head_ref }}
         run: bash ${{ github.workspace }}/scripts/run_stryker.sh
+
+      - name: Generate Report
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "STRYKER_DASHBOARD_BASELINE=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "STRYKER_DASHBOARD_VERSION=$(git branch --show-current)" >> $GITHUB_ENV
+          bash ${{ github.workspace }}/scripts/run_stryker.sh
