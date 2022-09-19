@@ -86,7 +86,7 @@ $SourceProjects | ForEach-Object {
         try
         {
             $StrykerProjectName = "github.com/fedeantuna/clean-solution-template"
-            $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('\') + 1)
+            $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('.') + 1)
 
             $StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')
             $StrykerDashboardVersion = [System.Environment]::GetEnvironmentVariable('StrykerDashboardVersion')
