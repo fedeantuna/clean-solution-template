@@ -35,7 +35,7 @@ if [[ ! -r "$SOLUTION" ]]; then
     exit 1
 fi
 
-SOURCE_PROJECT_RELATIVE_PATHS=$(grep "csproj" $SOLUTION | cut -d , -f 2 | cut -d \" -f 2 | grep -v Tests | rev | cut -d \\ -f 2- | rev | sed 's/\\/\//g')
+SOURCE_PROJECT_RELATIVE_PATHS=$(grep "csproj" "$SOLUTION" | cut -d , -f 2 | cut -d \" -f 2 | grep -v Tests | rev | cut -d \\ -f 2- | rev | sed 's/\\/\//g')
 
 for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     SOURCE_PROJECT="$ROOT_PROJECT_DIRECTORY/$SOURCE_PROJECT_RELATIVE_PATH"
