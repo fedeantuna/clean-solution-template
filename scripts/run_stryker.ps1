@@ -1,5 +1,7 @@
 #!/usr/bin/env pwsh
 
+$ErrorActionPreference = 'Stop'
+
 $RootProjectDirectory = $MyInvocation.MyCommand.Path | Split-Path -Parent | Split-Path -Parent
 Push-Location $RootProjectDirectory
 
@@ -46,10 +48,6 @@ $SourceProjects | ForEach-Object {
 
 $Timestamp = [int64](([datetime]::UtcNow) - (Get-Date "1/1/1970")).TotalSeconds
 
-$StrykerLogsOutput = [IO.Path]::Combine($RootProjectDirectory, "stryker-logs", $Timestamp)
-if (-Not (Test-Path -Path $StrykerLogsOutput)) {
-    New-Item -Path $StrykerLogsOutput -Type Directory | Out-Null
-}
 $StrykerResultsOutput = [IO.Path]::Combine($RootProjectDirectory, "stryker-results", $Timestamp)
 if (-Not (Test-Path -Path $StrykerResultsOutput)) {
     New-Item -Path $StrykerResultsOutput -Type Directory | Out-Null
@@ -59,15 +57,14 @@ if (-Not (Test-Path -Path $StrykerReportsOutput)) {
     New-Item -Path $StrykerReportsOutput -Type Directory | Out-Null
 }
 
-$DotnetToolLog = [IO.Path]::Combine($StrykerLogsOutput, "dotnet-tool.log")
-Write-Host -NoNewline "Restoring dotnet tools..."
-dotnet tool restore > $DotnetToolLog 2>&1
-if ($?) {
-    Write-Host "[OK]"
-} else {
-    Write-Host "[ERROR]"
+try
+{
+    dotnet tool restore
+}
+catch
+{
     Pop-Location
-    exit 1
+    throw $_
 }
 
 $StrykerMergedReport = [IO.Path]::Combine($StrykerReportsOutput, "merged-mutation-report.json")
@@ -82,20 +79,48 @@ $SourceProjects | ForEach-Object {
     Set-Location $_
 
     $ProjectName = $_.Substring($_.LastIndexOf('\') + 1)
-    $CurrentProjectStrykerLog = [IO.Path]::Combine($StrykerLogsOutput, "$ProjectName.stryker.log")
-    
-    if ($RunningFromPipeline -eq "true") {
-        $DotnetStrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('DotnetStrykerDashboardBaseline')
-        $DotnetStrykerDashboardVersion = [System.Environment]::GetEnvironmentVariable('DotnetStrykerDashboardVersion')
 
-        $DotnetStrykerCommand = "dotnet stryker -r dashboard --with-baseline $DotnetStrykerDashboardBaseline --version $DotnetStrykerDashboardVersion"
+    if ($RunningFromPipeline -eq "true") {
+        $StrykerCommand = "dotnet stryker -r dashboard"
+
+        try
+        {
+            $StrykerProjectName = "github.com/fedeantuna/clean-solution-template"
+            $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('\') + 1)
+
+            $StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')
+            $StrykerDashboardVersion = [System.Environment]::GetEnvironmentVariable('StrykerDashboardVersion')
+
+            $StrykerBaselineResult = "https://dashboard.stryker-mutator.io/api/reports/$StrykerProjectName/baseline/$StrykerDashboardBaseline`?module=$StrykerModule"
+
+            $StrykerBaselineStatusCode = (Invoke-WebRequest -Uri $StrykerBaselineResult -UseBasicParsing -DisableKeepAlive).StatusCode
+
+            if ($StrykerBaselineStatusCode -eq 200) {
+                $StrykerCommand += " --with-baseline $StrykerDashboardBaseline --version $StrykerDashboardVersion"
+            } else {
+                Write-Information "No baseline found. Running full report."
+            }
+        }
+        catch [Net.WebException]
+        {
+            Write-Information "No baseline found. Running full report."
+        }
+
+        $StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')
+
     } else {
-        $DotnetStrykerCommand = "dotnet stryker -r json"
+        $StrykerCommand = "dotnet stryker -r json"
     }
 
-    Write-Host -NoNewline "Running Stryker for $ProjectName..."
-    
-    Invoke-Expression $DotnetStrykerCommand > $CurrentProjectStrykerLog 2>&1
+    try
+    {
+        Invoke-Expression $StrykerCommand
+    }
+    catch
+    {
+        Pop-Location
+        throw $_
+    }
 
     $StrykerOutput = [IO.Path]::Combine($_, "StrykerOutput")
     $StrykerUnmergedResultRelativePath = Get-ChildItem -Path $StrykerOutput *.json -File -Name -Recurse
@@ -110,17 +135,15 @@ $SourceProjects | ForEach-Object {
         "," | Out-File -NoNewline -Append $StrykerMergedReport
     }
 
-    $StrykerUnmergedReultContent = Get-Content $StrykerUnmergedResultNewPath
-    $CurrentUnmergedStrykerResultFilesObject = [Regex]::Match($StrykerUnmergedReultContent, "files"":{(.*?)}}$").Groups[1].Value
-    $CurrentUnmergedStrykerResultFilesObject | Out-File -NoNewline -Append $StrykerMergedReport
+    try {
+        $StrykerUnmergedReultContent = Get-Content $StrykerUnmergedResultNewPath
+        $CurrentUnmergedStrykerResultFilesObject = [Regex]::Match($StrykerUnmergedReultContent, "files"":{(.*?)}}$").Groups[1].Value
+        $CurrentUnmergedStrykerResultFilesObject | Out-File -NoNewline -Append $StrykerMergedReport
 
-    if ($?) {
         $Count++
-        Write-Host "[OK]"
-    } else {
-        Write-Host "[ERROR]"
+    } catch {
         Pop-Location
-        exit 1
+        throw $_
     }
 }
 Set-Location $RootProjectDirectory
@@ -141,8 +164,6 @@ $StrykerMergedReportContent = Get-Content -Raw -Path $StrykerMergedReport
 ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace ">##REPORT_JS##", " defer src=""https://www.unpkg.com/mutation-testing-elements"">") | Set-Content -Path $StrykerMutationHtmlReport
 ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace "##REPORT_TITLE##", "Stryker Mutation Testing") | Set-Content -Path $StrykerMutationHtmlReport
 ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace "##REPORT_JSON##", "$StrykerMergedReportContent") | Set-Content -Path $StrykerMutationHtmlReport
-
-Write-Host "[OK]"
 
 Write-Host "Stryker HTML Report: $StrykerMutationHtmlReport"
 
