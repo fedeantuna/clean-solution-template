@@ -33,7 +33,7 @@ if (-Not (Test-Path -Path $Solution)) {
     exit 1
 }
 
-$SourceProjects = Select-String -Raw -Path .\CleanSolutionTemplate.sln -Pattern csproj | ForEach-Object {
+$SourceProjects = Select-String -Raw -Path $Solution -Pattern csproj | ForEach-Object {
     $_.Split(',')[1].Split('"')[1].Substring(0, $_.Split(',')[1].Split('"')[1].LastIndexOf('\'))
 } | Select-String -Raw -NotMatch -Pattern Tests | ForEach-Object {
     [IO.Path]::Combine($RootProjectDirectory, $_)
@@ -75,6 +75,10 @@ $MutationReportJsonFragment | Out-File -NoNewline -FilePath $StrykerMergedReport
 
 $Count = 0
 $RunningFromPipeline = [System.Environment]::GetEnvironmentVariable('RunningFromPipeline')
+if ($RunningFromPipeline -eq "true") {
+    $CurrentRepositoryUrl = [System.Environment]::GetEnvironmentVariable('CurrentRepositoryUrl')
+    $StrykerProjectName = $CurrentRepositoryUrl.Substring(6, $CurrentRepositoryUrl.Length -6 - 4)
+}
 $SourceProjects | ForEach-Object {
     Set-Location $_
 
@@ -85,7 +89,6 @@ $SourceProjects | ForEach-Object {
 
         try
         {
-            $StrykerProjectName = "github.com/fedeantuna/clean-solution-template"
             $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('.') + 1)
 
             $StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')

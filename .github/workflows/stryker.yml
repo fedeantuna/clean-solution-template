@@ -7,8 +7,9 @@ on:
 
 env:
   RUNNING_FROM_PIPELINE: 'true'
-  DOTNET_STRYKER_DASHBOARD_BASELINE: ${{ github.event.pull_request.base.sha }}
-  DOTNET_STRYKER_DASHBOARD_VERSION: ${{ github.event.pull_request.head.sha }}
+  CURRENT_REPOSITORY_URL: $ {{ github.repositoryUrl }}
+  STRYKER_DASHBOARD_BASELINE: ${{ github.base_ref }}
+  STRYKER_DASHBOARD_VERSION: ${{ github.head_ref }}
 
 jobs:
   stryker-mutation-report:

@@ -24,7 +24,7 @@ At this moment, the supported way to create a solution using this template is fr
 
 This template uses DeepSource as the tool for code analysis and reporting on test coverage. In order to set it up, you need to create an account at https://deepsource.io/ and then allow access to your repository. Once that is done, you need to add the DSN to your repository secrets under the name DEEPSOURCE_DSN. You can take a look here https://deepsource.io/docs/dashboard/repo-settings/#dsn to know more about how to do it.
 
-For the Mutation Report this template uses Stryker. You need to sign in with your GitHub Account into https://dashboard.stryker-mutator.io/ and then allow access to your repository. Once that is done follow the instructions on how to set up the corresponding secrets.
+For the Mutation Report this template uses Stryker. You need to sign in with your GitHub Account into https://dashboard.stryker-mutator.io/ and then allow access to your repository. Once that is done follow the instructions on how to set up the corresponding secrets. Remember to modify the `stryker-config.json`files that are in each Source Project to match the name with your actual repository.
 
 ## Local Mutation Report
 
@@ -43,14 +43,24 @@ The project is divided as follows
 |__ CleanSolutionTemplate.sln
 |
 |__ scripts
+|   |__ run_stryker.ps1
+|   |__ run_stryker.sh
 |   |__ run_test_coverage.ps1
 |   |__ run_test_coverage.sh
 |
 |__ src
 |   |__ CleanSolutionTemplate.Api
+|       |__ ...
+|       |__ stryker-config.json
 |   |__ CleanSolutionTemplate.Application
+|       |__ ...
+|       |__ stryker-config.json
 |   |__ CleanSolutionTemplate.Domain
+|       |__ ...
+|       |__ stryker-config.json
 |   |__ CleanSolutionTemplate.Infrastructure
+|       |__ ...
+|       |__ stryker-config.json
 |
 |__ tests
 |   |__ CleanSolutionTemplate.Api.Tests.Unit
@@ -65,7 +75,7 @@ The project is divided as follows
 |__ README.md
 ```
 
-The `scripts` directory is where all scripts should be placed. By default two come with the template to run the tests and generate a coverage report locally.
+The `scripts` directory is where all scripts should be placed. By default four come with the template to run the tests and generate a coverage and mutation report locally.
 
 The `src` directory is where all the source code should be placed. By default four projects are included here. The Api project is the default Presentation Layer, then we have the Application, Domain and Infrastructure layers.
 

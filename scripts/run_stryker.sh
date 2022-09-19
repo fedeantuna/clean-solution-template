@@ -35,7 +35,7 @@ if [[ ! -r "$SOLUTION" ]]; then
     exit 1
 fi
 
-SOURCE_PROJECT_RELATIVE_PATHS=$(grep "csproj" CleanSolutionTemplate.sln | cut -d , -f 2 | cut -d \" -f 2 | grep -v Tests | rev | cut -d \\ -f 2- | rev | sed 's/\\/\//g')
+SOURCE_PROJECT_RELATIVE_PATHS=$(grep "csproj" $SOLUTION | cut -d , -f 2 | cut -d \" -f 2 | grep -v Tests | rev | cut -d \\ -f 2- | rev | sed 's/\\/\//g')
 
 for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     SOURCE_PROJECT="$ROOT_PROJECT_DIRECTORY/$SOURCE_PROJECT_RELATIVE_PATH"
@@ -61,6 +61,7 @@ MUTATION_REPORT_JSON_FRAGMENT="{\"schemaVersion\":\"1\",\"thresholds\":{\"high\"
 echo -n "$MUTATION_REPORT_JSON_FRAGMENT" > "$STRYKER_MERGED_REPORT"
 
 COUNT=0
+[[ $RUNNING_FROM_PIPELINE == "true" ]] && STRYKER_PROJECT_NAME=$(echo "$CURRENT_REPOSITORY_URL" | cut -d / -f 3- | rev | cut -d . -f 2- | rev)
 for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     SOURCE_PROJECT="$ROOT_PROJECT_DIRECTORY/$SOURCE_PROJECT_RELATIVE_PATH"
 
@@ -71,7 +72,6 @@ for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     if [[ $RUNNING_FROM_PIPELINE == "true" ]]; then
         STRYKER_COMMAND="dotnet stryker -r dashboard"
 
-        STRYKER_PROJECT_NAME="github.com/fedeantuna/clean-solution-template"
         STRYKER_MODULE=$(echo "$PROJECT_NAME" | rev | cut -d . -f 1 | rev)
         STRYKER_BASELINE_RESULT="https://dashboard.stryker-mutator.io/api/reports/$STRYKER_PROJECT_NAME/baseline/$STRYKER_DASHBOARD_BASELINE?module=$STRYKER_MODULE"
 
