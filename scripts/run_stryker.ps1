@@ -122,6 +122,10 @@ $SourceProjects | ForEach-Object {
         throw $_
     }
 
+	if ($RunningFromPipeline -eq "true") {
+		return
+	}
+
     $StrykerOutput = [IO.Path]::Combine($_, "StrykerOutput")
     $StrykerUnmergedResultRelativePath = Get-ChildItem -Path $StrykerOutput *.json -File -Name -Recurse
     $StrykerUnmergedResultPath = [IO.Path]::Combine($StrykerOutput, $StrykerUnmergedResultRelativePath)
