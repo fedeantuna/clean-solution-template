@@ -117,6 +117,7 @@ $SourceProjects | ForEach-Object {
 
     try
     {
+        Write-Information "Running: $StrykerCommand"
         Invoke-Expression $StrykerCommand
     }
     catch

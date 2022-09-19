@@ -84,6 +84,8 @@ for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
         STRYKER_COMMAND="dotnet stryker -r json"
     fi
 
+    echo "Running: $STRYKER_COMMAND"
+
     if ! $STRYKER_COMMAND; then
 		cd "$STARTUP_DIRECTORY"
 		exit 1
