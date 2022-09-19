@@ -79,27 +79,25 @@ if ($RunningFromPipeline -eq "true") {
     $CurrentRepositoryUrl = [System.Environment]::GetEnvironmentVariable('CurrentRepositoryUrl')
     $StrykerProjectName = $CurrentRepositoryUrl.Substring(6, $CurrentRepositoryUrl.Length -6 - 4)
 }
+$StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')
+$StrykerDashboardVersion = [System.Environment]::GetEnvironmentVariable('StrykerDashboardVersion')
 $SourceProjects | ForEach-Object {
     Set-Location $_
 
     $ProjectName = $_.Substring($_.LastIndexOf('\') + 1)
 
     if ($RunningFromPipeline -eq "true") {
-        $StrykerCommand = "dotnet stryker -r dashboard"
+        $StrykerCommand = "dotnet stryker -r dashboard --version $StrykerDashboardVersion"
 
         try
         {
             $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('.') + 1)
-
-            $StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')
-            $StrykerDashboardVersion = [System.Environment]::GetEnvironmentVariable('StrykerDashboardVersion')
-
             $StrykerBaselineResult = "https://dashboard.stryker-mutator.io/api/reports/$StrykerProjectName/baseline/$StrykerDashboardBaseline`?module=$StrykerModule"
 
             $StrykerBaselineStatusCode = (Invoke-WebRequest -Uri $StrykerBaselineResult -UseBasicParsing -DisableKeepAlive).StatusCode
 
             if ($StrykerBaselineStatusCode -eq 200) {
-                $StrykerCommand += " --with-baseline $StrykerDashboardBaseline --version $StrykerDashboardVersion"
+                $StrykerCommand += " --with-baseline $StrykerDashboardBaseline"
             } else {
                 Write-Information "No baseline found. Running full report."
             }

@@ -70,13 +70,13 @@ for SOURCE_PROJECT_RELATIVE_PATH in $SOURCE_PROJECT_RELATIVE_PATHS; do
     PROJECT_NAME=$(echo "$SOURCE_PROJECT" | rev | cut -d / -f 1 | rev)
 
     if [[ $RUNNING_FROM_PIPELINE == "true" ]]; then
-        STRYKER_COMMAND="dotnet stryker -r dashboard"
+        STRYKER_COMMAND="dotnet stryker -r dashboard --version $STRYKER_DASHBOARD_VERSION"
 
         STRYKER_MODULE=$(echo "$PROJECT_NAME" | rev | cut -d . -f 1 | rev)
         STRYKER_BASELINE_RESULT="https://dashboard.stryker-mutator.io/api/reports/$STRYKER_PROJECT_NAME/baseline/$STRYKER_DASHBOARD_BASELINE?module=$STRYKER_MODULE"
 
         if curl --output /dev/null --silent --head --fail "$STRYKER_BASELINE_RESULT"; then
-            STRYKER_COMMAND+=" --with-baseline:$STRYKER_DASHBOARD_BASELINE --version $STRYKER_DASHBOARD_VERSION"
+            STRYKER_COMMAND+=" --with-baseline:$STRYKER_DASHBOARD_BASELINE"
         else
             echo "No baseline found. Running full report."
         fi
