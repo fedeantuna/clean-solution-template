@@ -9,8 +9,10 @@ on:
 
 env:
   STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-  STRYKER_EXPERIMENTAL: "true"
+  STRYKER_EXPERIMENTAL: "false"
+  STRYKER_MINIMUM_SCORE: "70"
   RUNNING_FROM_PIPELINE: "true"
+
 jobs:
   stryker-mutation-report:
     name: Stryker Mutation Report
@@ -32,3 +34,23 @@ jobs:
           echo "STRYKER_DASHBOARD_BASELINE=$(git branch --show-current)" >> $GITHUB_ENV
           echo "STRYKER_DASHBOARD_VERSION=$(git branch --show-current)" >> $GITHUB_ENV
           bash ${{ github.workspace }}/scripts/run_stryker.sh
+
+      - name: Get Mutation Score
+        if: github.event_name == 'pull_request'
+        env:
+          CURRENT_REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "STRYKER_SCORE=$(curl "https://badge-api.stryker-mutator.io/github.com/$CURRENT_REPOSITORY/$STRYKER_DASHBOARD_VERSION" -s | grep % | cut -d % -f 1 | rev | cut -d \" -f 1 | rev)" >> $GITHUB_ENV
+
+      - name: Evaluating Mutation Score
+        run: |
+          [[ $STRYKER_SCORE -ge $STRYKER_MINIMUM_SCORE ]] && exit 0 || exit 1
+
+      - name: Running Check
+        uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Stryker .NET
+          conclusion: ${{ job.status }}
+          output: |
+            {"summary":${{ steps.test.outputs.summary }}}
