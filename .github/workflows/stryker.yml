@@ -8,10 +8,9 @@ on:
     branches: [main]
 
 env:
-  RUNNING_FROM_PIPELINE: 'true'
-  CURRENT_REPOSITORY_URL: $ {{ github.repositoryUrl }}
   STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-
+  STRYKER_EXPERIMENTAL: "true"
+  RUNNING_FROM_PIPELINE: "true"
 jobs:
   stryker-mutation-report:
     name: Stryker Mutation Report
@@ -20,14 +19,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Generate Report (PR)
+      - name: Pull Request - Generate Report
         if: github.event_name == 'pull_request'
         env:
           STRYKER_DASHBOARD_BASELINE: ${{ github.base_ref }}
           STRYKER_DASHBOARD_VERSION: ${{ github.head_ref }}
         run: bash ${{ github.workspace }}/scripts/run_stryker.sh
 
-      - name: Generate Report
+      - name: Merged - Generate Report
         if: github.event_name != 'pull_request'
         run: |
           echo "STRYKER_DASHBOARD_BASELINE=$(git branch --show-current)" >> $GITHUB_ENV
