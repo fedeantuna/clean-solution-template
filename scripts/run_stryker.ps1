@@ -3,7 +3,6 @@
 $ErrorActionPreference = 'Stop'
 
 #$StrykerDashboardApiKey = [System.Environment]::GetEnvironmentVariable('StrykerDashboardApiKey')
-$CurrentRepositoryUrl = [System.Environment]::GetEnvironmentVariable('CurrentRepositoryUrl')
 
 $RunningFromPipeline = [System.Environment]::GetEnvironmentVariable('RunningFromPipeline')
 $StrykerDashboardBaseline = [System.Environment]::GetEnvironmentVariable('StrykerDashboardBaseline')
@@ -118,21 +117,7 @@ function Get-StrykerDashboardReporterCommand {
     $StrykerCommand = "dotnet stryker -r dashboard --version $StrykerDashboardVersion"
 
     if ($StrykerExperimental -eq 'true') {
-        $StrykerProjectName = $CurrentRepositoryUrl.Substring(6, $CurrentRepositoryUrl.Length - 6 - 4)
-        $StrykerModule = $ProjectName.Substring($ProjectName.LastIndexOf('.') + 1)
-        $StrykerBaselineResult = "https://dashboard.stryker-mutator.io/api/reports/$StrykerProjectName/baseline/$StrykerDashboardBaseline`?module=$StrykerModule"
-
-        try {
-            $StrykerBaselineStatusCode = (Invoke-WebRequest -Uri $StrykerBaselineResult -UseBasicParsing -DisableKeepAlive).StatusCode
-
-            if ($StrykerBaselineStatusCode -eq 200) {
-                $StrykerCommand += " --with-baseline:$StrykerDashboardBaseline"
-            } else {
-                Write-Host 'No baseline found. Running full report.'
-            }
-        } catch [Net.WebException] {
-            Write-Host 'No baseline found. Running full report.'
-        }
+        $StrykerCommand += " --with-baseline:$StrykerDashboardBaseline"
     }
 
     return $StrykerCommand
@@ -146,20 +131,12 @@ function Get-StrykerJsonReporterCommand {
 
 function Invoke-DotnetStryker {
     param (
-        [string]$Solution
+        [string]$Solution,
+		[string]$StrykerCommand
     )
 
     Get-SourceProjectPaths $Solution | ForEach-Object {
         Set-Location $_
-
-        $ProjectName = Split-Path -Leaf $_
-
-        $StrykerCommand
-        if ($RunningFromPipeline -eq 'true' ) {
-            $StrykerCommand = Get-StrykerDashboardReporterCommand $ProjectName
-        } else {
-            $StrykerCommand = Get-StrykerJsonReporterCommand
-        }
 
         Write-Host "Running: $StrykerCommand"
 
@@ -255,7 +232,14 @@ New-StrykerOutputDirectories $StrykerResultsOutput $StrykerReportsOutput
 
 Invoke-DotnetToolRestore
 
-Invoke-DotnetStryker $Solution
+if ($RunningFromPipeline -eq 'true' ) {
+	Invoke-DotnetStryker $Solution (Get-StrykerDashboardReporterCommand)
+
+	exit 0
+}
+
+Invoke-DotnetStryker $Solution (Get-StrykerJsonReporterCommand)
+
 
 if ($RunningFromPipeline -eq 'true') {
     exit 0

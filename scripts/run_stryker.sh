@@ -2,7 +2,6 @@
 
 set -e
 
-# CURRENT_REPOSITORY_URL=''
 # STRYKER_DASHBOARD_API_KEY=''
 
 # RUNNING_FROM_PIPELINE=''
@@ -91,17 +90,10 @@ function invoke_dotnet_tool_restore() {
 }
 
 function get_stryker_dashboard_reporter_command() {
-    local _PROJECT_NAME ; _PROJECT_NAME=$1
-
     local _STRYKER_COMMAND ; _STRYKER_COMMAND="dotnet stryker -r dashboard --version $STRYKER_DASHBOARD_VERSION"
 
     if [[ $STRYKER_EXPERIMENTAL == 'true' ]]; then
-        local _STRYKER_PROJECT_NAME ; _STRYKER_PROJECT_NAME=$(echo "$CURRENT_REPOSITORY_URL" | cut -d / -f 3- | rev | cut -d . -f 2- | rev)
-        local _STRYKER_MODULE ; _STRYKER_MODULE=$(echo "$_PROJECT_NAME" | rev | cut -d . -f 1 | rev)
-        local _STRYKER_BASELINE_RESULT ; _STRYKER_BASELINE_RESULT="https://dashboard.stryker-mutator.io/api/reports/$_STRYKER_PROJECT_NAME/baseline/$STRYKER_DASHBOARD_BASELINE?module=$_STRYKER_MODULE"
-
-        curl --output /dev/null --silent --head --fail "$_STRYKER_BASELINE_RESULT" \
-            && _STRYKER_COMMAND+=" --with-baseline:$STRYKER_DASHBOARD_BASELINE"
+        _STRYKER_COMMAND+=" --with-baseline:$STRYKER_DASHBOARD_BASELINE"
     fi
 
     echo "$_STRYKER_COMMAND"
@@ -119,6 +111,7 @@ function get_stryker_json_reporter_command() {
 
 function invoke_dotnet_stryker() {
     local _SOLUTION ; _SOLUTION=$1
+    local _STRYKER_COMMAND ; _STRYKER_COMMAND=$2
 
     local _SOURCE_PROJECT_RELATIVE_PATHS ; _SOURCE_PROJECT_RELATIVE_PATHS=$(get_source_project_relative_paths "$_SOLUTION")
     local _SOURCE_PROJECT_RELATIVE_PATH
@@ -126,13 +119,6 @@ function invoke_dotnet_stryker() {
         local _SOURCE_PROJECT_PATH ; _SOURCE_PROJECT_PATH="$ROOT_PROJECT_DIRECTORY/$_SOURCE_PROJECT_RELATIVE_PATH"
 
         cd "$_SOURCE_PROJECT_PATH"
-
-        local _PROJECT_NAME ; _PROJECT_NAME=$(echo "$_SOURCE_PROJECT_PATH" | rev | cut -d / -f 1 | rev)
-
-        local _STRYKER_COMMAND
-        [[ $RUNNING_FROM_PIPELINE == 'true' ]] \
-            && _STRYKER_COMMAND=$(get_stryker_dashboard_reporter_command "$_PROJECT_NAME") \
-            || _STRYKER_COMMAND=$(get_stryker_json_reporter_command)
 
         echo "Running: $_STRYKER_COMMAND"
 
@@ -223,9 +209,11 @@ new_stryker_output_directories "$STRYKER_RESULTS_OUTPUT" "$STRYKER_REPORTS_OUTPU
 
 invoke_dotnet_tool_restore
 
-invoke_dotnet_stryker "$SOLUTION"
+[[ $RUNNING_FROM_PIPELINE == 'true' ]] \
+    && invoke_dotnet_stryker "$SOLUTION" "$(get_stryker_dashboard_reporter_command)" \
+    && exit 0
 
-[[ $RUNNING_FROM_PIPELINE == 'true' ]] && exit 0
+invoke_dotnet_stryker "$SOLUTION" "$(get_stryker_json_reporter_command)"
 
 STRYKER_MERGED_REPORT_PATH="$STRYKER_REPORTS_OUTPUT/merged-mutation-report.json"
 new_merged_stryker_json_report "$STRYKER_RESULTS_OUTPUT" "$STRYKER_REPORTS_OUTPUT" "$SOURCE_PROJECT_RELATIVE_PATHS" "$STRYKER_MERGED_REPORT_PATH"
