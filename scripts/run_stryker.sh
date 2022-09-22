@@ -21,7 +21,9 @@ function complete_fail_safely() {
 
     cd "$STARTUP_DIRECTORY"
 
-    exit 1
+    [[ $RUNNING_FROM_PIPELINE == 'true' ]] \
+        && exit 1 \
+        || return 0
 }
 
 function get_solution() {

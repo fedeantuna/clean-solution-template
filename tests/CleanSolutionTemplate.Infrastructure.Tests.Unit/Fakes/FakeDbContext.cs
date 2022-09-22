@@ -13,11 +13,14 @@ public class FakeDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<FakeEntityWithValueObject>()
-            .OwnsOne(e => e.FakeValueObject);
+        modelBuilder.Entity<FakeRelatedEntity>()
+            .OwnsOne(e =>
+                e.FakeValueObject);
     }
 
-    public DbSet<FakeEntity> FakeEntities => this.Set<FakeEntity>();
+    public DbSet<FakeEntity> FakeEntities =>
+        this.Set<FakeEntity>();
 
-    public DbSet<FakeEntityWithValueObject> FakeEntitiesWithValueObject => this.Set<FakeEntityWithValueObject>();
+    public DbSet<FakeRelatedEntity> FakeRelatedEntities =>
+        this.Set<FakeRelatedEntity>();
 }
