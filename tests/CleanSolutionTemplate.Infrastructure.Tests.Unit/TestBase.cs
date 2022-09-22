@@ -1,6 +1,10 @@
+using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Application.Common.Services;
 using CleanSolutionTemplate.Application.Common.Wrappers;
+using CleanSolutionTemplate.Infrastructure.Persistence;
+using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -9,6 +13,7 @@ namespace CleanSolutionTemplate.Infrastructure.Tests.Unit;
 
 public class TestBase
 {
+    private const string InMemoryDatabaseName = "InMemoryDatabase";
     private const string TestUserEmail = "test-user-email";
 
     protected const string TestUserId = "test-user-id";
@@ -23,6 +28,8 @@ public class TestBase
             .Build();
 
         this._services.AddInfrastructureServices(configuration);
+        this.ReplaceApplicationDbContextWithFakeDbContext();
+
         this._services.AddLogging();
 
         this.AddPresentationServiceMocks();
@@ -41,6 +48,21 @@ public class TestBase
         return this._provider.GetRequiredService<T>();
     }
 
+    private void ReplaceApplicationDbContextWithFakeDbContext()
+    {
+        var applicationDbContextOptions = this._services.Single(sd =>
+            sd.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+        var applicationDbContext = this._services.Single(sd =>
+            sd.ServiceType == typeof(IApplicationDbContext));
+
+        this._services.Remove(applicationDbContextOptions);
+        this._services.Remove(applicationDbContext);
+
+        this._services.AddDbContext<ApplicationDbContext>((_, options) =>
+            options.UseInMemoryDatabase(InMemoryDatabaseName));
+        this._services.AddScoped<IApplicationDbContext, FakeDbContext>();
+    }
+
     private void AddPresentationServiceMocks()
     {
         var userServiceMock = new Mock<IUserService>();
@@ -53,6 +75,9 @@ public class TestBase
     {
         var mediatorMock = new Mock<IMediator>();
         this._services.AddTransient(_ => mediatorMock.Object);
+
+        var publisherMock = new Mock<IPublisher>();
+        this._services.AddTransient(_ => publisherMock.Object);
     }
 
     private void SetupWrapperMocks()

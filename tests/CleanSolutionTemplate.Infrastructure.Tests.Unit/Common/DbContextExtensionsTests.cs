@@ -1,3 +1,4 @@
+using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Infrastructure.Common;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using FluentAssertions;
@@ -11,7 +12,7 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsTrue_WhenEntryHasNewValueObject()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         var fakeRelatedEntity = new FakeRelatedEntity
         {
@@ -33,7 +34,7 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsTrue_WhenEntryHasModifiedValueObject()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         var fakeRelatedEntity = new FakeRelatedEntity
         {
@@ -55,7 +56,7 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsFalse_WhenEntryDoesNotHaveNewNorModifiedValueObject()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         var fakeRelatedEntity = new FakeRelatedEntity
         {
@@ -78,7 +79,7 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsFalse_WhenEntryDoesNotHaveValueObject()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         context.FakeEntities.Add(new FakeEntity());
 
@@ -95,7 +96,7 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsFalse_WhenEntryHasAnotherEntityButDoesNotHaveValueObject()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         var fakeRelatedEntity = new FakeRelatedEntity
         {

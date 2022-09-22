@@ -1,3 +1,4 @@
+using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Infrastructure.Persistence.Interceptors;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using FluentAssertions;
@@ -43,7 +44,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
         await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
@@ -68,7 +69,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
         await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
@@ -94,7 +95,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         await context.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
         {
@@ -126,7 +127,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     {
         // Arrange
         var cancellationToken = new CancellationToken();
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         await context.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
         {
@@ -179,7 +180,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     public void SavingChanges_UpdatesAuditableEntities_WhenEntitiesAreAdded()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         context.FakeEntities.Add(new FakeEntity());
         context.FakeEntities.Add(new FakeEntity());
@@ -203,7 +204,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     public void SavingChanges_DoesNotUpdatesAuditableEntities_WhenEntitiesAreNotAddedNorModified()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         context.FakeEntities.Add(new FakeEntity());
         context.FakeEntities.Add(new FakeEntity());
@@ -228,7 +229,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     public void SavingChanges_DoesNotUpdatesAuditableEntities_WhenValueObjectsAreNotModified()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         context.FakeRelatedEntities.Add(new FakeRelatedEntity
         {
@@ -259,7 +260,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     public void SavingChanges_UpdatesAuditableEntities_WhenValueObjectsAreModified()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         context.FakeRelatedEntities.Add(new FakeRelatedEntity
         {

@@ -1,14 +1,17 @@
+using CleanSolutionTemplate.Infrastructure.Persistence;
+using CleanSolutionTemplate.Infrastructure.Persistence.Interceptors;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 
-public class FakeDbContext : DbContext
+internal class FakeDbContext : ApplicationDbContext
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public FakeDbContext(DbContextOptions<ApplicationDbContext> options,
+        IPublisher publisher,
+        AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor)
+        : base(options, publisher, auditableEntitySaveChangesInterceptor)
     {
-        optionsBuilder.UseInMemoryDatabase("FakeDbContext");
-
-        base.OnConfiguring(optionsBuilder);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
