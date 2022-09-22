@@ -7,6 +7,11 @@
         "project-info": {
             "module": "Domain",
             "name": "github.com/fedeantuna/clean-solution-template"
+        },
+        "thresholds": {
+            "high": 90,
+            "low": 80,
+            "break": 70
         }
     }
 }
