@@ -21,7 +21,7 @@ function complete_fail_safely() {
 
     cd "$STARTUP_DIRECTORY"
 
-    return 1
+    exit 1
 }
 
 function get_solution() {
