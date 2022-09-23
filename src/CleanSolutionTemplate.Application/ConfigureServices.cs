@@ -26,7 +26,6 @@ public static class ConfigureServices
     private static void ConfigureMediator(this IServiceCollection services)
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     }
 }
