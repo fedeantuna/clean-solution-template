@@ -114,10 +114,12 @@ function Get-StrykerDashboardReporterCommand {
         [string]$ProjectName
     )
 
-    $StrykerCommand = "dotnet stryker -r dashboard --version $StrykerDashboardVersion"
+	$_StrykerDashboardVersion = $StrykerDashboardVersion.Split('/')[-1]
+    $StrykerCommand = "dotnet stryker -r dashboard --version $_StrykerDashboardVersion"
 
     if ($StrykerExperimental -eq 'true') {
-        $StrykerCommand += " --with-baseline:$StrykerDashboardBaseline"
+		$_StrykerDashboardBaseline = $StrykerDashboardBaseline.Split('/')[-1]
+        $StrykerCommand += " --with-baseline:$_StrykerDashboardBaseline"
     }
 
     return $StrykerCommand
