@@ -92,10 +92,12 @@ function invoke_dotnet_tool_restore() {
 }
 
 function get_stryker_dashboard_reporter_command() {
-    local _STRYKER_COMMAND ; _STRYKER_COMMAND="dotnet stryker -r dashboard --version $STRYKER_DASHBOARD_VERSION"
+	local _STRYKER_DASHBOARD_VERSION ; _STRYKER_DASHBOARD_VERSION=$(echo "$STRYKER_DASHBOARD_VERSION" | cut -d / -f 3)
+    local _STRYKER_COMMAND ; _STRYKER_COMMAND="dotnet stryker -r dashboard --version $_STRYKER_DASHBOARD_VERSION"
 
     if [[ $STRYKER_EXPERIMENTAL == 'true' ]]; then
-        _STRYKER_COMMAND+=" --with-baseline:$STRYKER_DASHBOARD_BASELINE"
+		local _STRYKER_DASHBOARD_BASELINE ; _STRYKER_DASHBOARD_BASELINE=$(echo "$STRYKER_DASHBOARD_BASELINE" | cut -d / -f 3)
+        _STRYKER_COMMAND+=" --with-baseline:$_STRYKER_DASHBOARD_BASELINE"
     fi
 
     echo "$_STRYKER_COMMAND"
