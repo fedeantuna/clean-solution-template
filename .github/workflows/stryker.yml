@@ -1,0 +1,35 @@
+name: Stryker
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+  STRYKER_EXPERIMENTAL: "false"
+  RUNNING_FROM_PIPELINE: "true"
+
+jobs:
+  stryker-mutation-report:
+    name: Stryker Mutation Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pull Request - Running Stryker
+        if: github.event_name == 'pull_request'
+        env:
+          STRYKER_DASHBOARD_BASELINE: ${{ github.base_ref }}
+          STRYKER_DASHBOARD_VERSION: ${{ github.head_ref }}
+        run: bash ${{ github.workspace }}/scripts/run_stryker.sh
+
+      - name: Merged - Running Stryker
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "STRYKER_DASHBOARD_BASELINE=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "STRYKER_DASHBOARD_VERSION=$(git branch --show-current)" >> $GITHUB_ENV
+          bash ${{ github.workspace }}/scripts/run_stryker.sh

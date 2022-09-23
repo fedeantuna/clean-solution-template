@@ -1,3 +1,4 @@
+using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Domain.Common;
 using CleanSolutionTemplate.Infrastructure.Common;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
@@ -13,7 +14,7 @@ public class MediatorExtensionsTests : TestBase
     public async Task DispatchDomainEvents_ShouldClearTheDomainEventsFromTheEntity()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         var domainEventMock = new Mock<DomainEvent>();
         var entity = new FakeEntity();
@@ -36,7 +37,7 @@ public class MediatorExtensionsTests : TestBase
     public async Task DispatchDomainEvents_ShouldPublishEachDomainEvent()
     {
         // Arrange
-        var context = new FakeDbContext();
+        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
 
         var domainEventAMock = new Mock<DomainEvent>();
         var domainEventBMock = new Mock<DomainEvent>();

@@ -350,9 +350,13 @@ MigrationBackup/
 .ionide/
 
 # Tests
-test-results/
 test-reports/
-merged-test-results/
+test-results/
+test-logs/
+stryker-reports/
+stryker-results/
+stryker-logs/
+StrykerOutput/
 
 # Rider
 # User specific

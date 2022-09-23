@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{AD7D
 	ProjectSection(SolutionItems) = preProject
 		scripts\run_test_coverage.ps1 = scripts\run_test_coverage.ps1
 		scripts\run_test_coverage.sh = scripts\run_test_coverage.sh
+		scripts\run_stryker.sh = scripts\run_stryker.sh
+		scripts\run_stryker.ps1 = scripts\run_stryker.ps1
 	EndProjectSection
 EndProject
 Global

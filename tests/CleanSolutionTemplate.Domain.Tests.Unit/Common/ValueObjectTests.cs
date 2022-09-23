@@ -89,11 +89,11 @@ public class ValueObjectTests
 
     [Theory]
     [MemberData(nameof(NonEqualValueObjects))]
-    public void GetHashCode_ShouldReturnDifferentHashCodes_WhenNonEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
+    public void GetHashCode_ShouldReturnDifferentHashCodes_WhenNonEqualValueObjects(ValueObject instanceA, ValueObject? instanceB, string reason)
     {
         // Act
         var hashCodeA = instanceA.GetHashCode();
-        var hashCodeB = instanceB.GetHashCode();
+        var hashCodeB = instanceB?.GetHashCode();
 
         // Assert
         hashCodeA.Should().NotBe(hashCodeB, reason);
@@ -145,17 +145,22 @@ public class ValueObjectTests
         {
             new ValueObjectB(1, "2", 1, 2, 3),
             new ValueObjectB(1, "2", 1, 2, 3, 4),
-            "they should be not be equal because the 'C' list contains one additional value"
+            "they should not be equal because the 'C' list contains one additional value"
         },
         {
             new ValueObjectB(1, "2", 1, 2, 3, 5),
             new ValueObjectB(1, "2", 1, 2, 3),
-            "they should be not be equal because the 'C' list contains one additional value"
+            "they should not be equal because the 'C' list contains one additional value"
         },
         {
             new ValueObjectB(1, "2", 1, 2, 3, 5),
             new ValueObjectB(1, "2", 1, 2, 3, 4),
-            "they should be not be equal because the 'C' lists are not equal"
+            "they should not be equal because the 'C' lists are not equal"
+        },
+        {
+            new ValueObjectB(1, "2", 1, 2, 3, 5),
+            null,
+            "they should not be equal because one is null"
         }
     };
 
