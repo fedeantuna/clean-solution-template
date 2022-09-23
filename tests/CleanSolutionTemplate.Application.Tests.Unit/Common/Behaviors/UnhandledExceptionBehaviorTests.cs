@@ -11,14 +11,10 @@ namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Behaviors;
 
 public class UnhandledExceptionBehaviorTests : TestBase
 {
-    private readonly FakeLogger<IRequest<string>> _fakeLogger;
-
     private readonly UnhandledExceptionBehavior<IRequest<string>, Exception> _sut;
 
     public UnhandledExceptionBehaviorTests()
     {
-        this._fakeLogger = (FakeLogger<IRequest<string>>)this.FindService<ILogger<IRequest<string>>>();
-
         var pipelineBehaviors = this.FindService<IEnumerable<IRequestExceptionAction<IRequest<string>, Exception>>>();
         this._sut = (UnhandledExceptionBehavior<IRequest<string>, Exception>)pipelineBehaviors.First(pb =>
             pb.GetType().Name == typeof(UnhandledExceptionBehavior<,>).Name);
@@ -28,6 +24,8 @@ public class UnhandledExceptionBehaviorTests : TestBase
     public async Task Execute_LogsError_WhenRequestHandlerIsNotValid()
     {
         // Arrange
+        var fakeLogger = (FakeLogger<IRequest<string>>)this.FindService<ILogger<IRequest<string>>>();
+
         var requestMock = new Mock<IRequest<string>>();
         var exception = new Exception("test-exception");
         var cancellationToken = default(CancellationToken);
@@ -51,7 +49,36 @@ public class UnhandledExceptionBehaviorTests : TestBase
         await this._sut.Execute(requestMock.Object, exception, cancellationToken);
 
         // Assert
-        this._fakeLogger.Category.Should().Be(typeof(IRequest<>).Name);
-        this._fakeLogger.LogRecords.Should().Equal(expectedLogRecords);
+        fakeLogger.Category.Should().Be(typeof(IRequest<>).Name);
+        fakeLogger.LogRecords.Should().Equal(expectedLogRecords);
+    }
+
+    [Fact]
+    public async Task Execute_ProcessUnhandledExceptions()
+    {
+        // Arrange
+        var fakeLogger = (FakeLogger<FakeFailingRequest>)this.FindService<ILogger<FakeFailingRequest>>();
+        var mediator = this.FindService<IMediator>();
+
+        var request = new FakeFailingRequest();
+
+        var stateBuilder = new StringBuilder(UnhandledExceptionBehavior<FakeFailingRequest, Exception>.LogMessageTemplate);
+        stateBuilder.Replace("{requestName}", nameof(FakeFailingRequest));
+        stateBuilder.Replace("{@request}", request.ToString());
+        var expectedState = stateBuilder.ToString();
+        var expectedLogRecord = new LogRecord()
+        {
+            LogLevel = (int)LogLevel.Error,
+            EventId = 0,
+            State = expectedState,
+            Exception = request.Exception
+        };
+
+        // Act
+        var act = async () => await mediator.Send(request);
+
+        // Assert
+        await act.Should().ThrowAsync<Exception>();
+        fakeLogger.LogRecords.Last().Should().Be(expectedLogRecord);
     }
 }

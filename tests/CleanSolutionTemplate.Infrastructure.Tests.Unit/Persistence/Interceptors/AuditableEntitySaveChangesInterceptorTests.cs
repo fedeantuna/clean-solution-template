@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence;
+namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence.Interceptors;
 
 public class AuditableEntitySaveChangesInterceptorTests : TestBase
 {

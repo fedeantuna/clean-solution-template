@@ -42,6 +42,8 @@ public class TestBase
 
     protected DateTimeOffset UtcNow { get; } = DateTimeOffset.UtcNow;
 
+    protected Mock<IPublisher> PublisherMock { get; private set; } = null!;
+
     protected T FindService<T>()
         where T : notnull
     {
@@ -76,8 +78,8 @@ public class TestBase
         var mediatorMock = new Mock<IMediator>();
         this._services.AddTransient(_ => mediatorMock.Object);
 
-        var publisherMock = new Mock<IPublisher>();
-        this._services.AddTransient(_ => publisherMock.Object);
+        PublisherMock = new Mock<IPublisher>();
+        this._services.AddTransient(_ => PublisherMock.Object);
     }
 
     private void SetupWrapperMocks()

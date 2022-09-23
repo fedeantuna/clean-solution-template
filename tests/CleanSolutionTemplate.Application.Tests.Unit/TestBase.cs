@@ -1,3 +1,4 @@
+using System.Reflection;
 using CleanSolutionTemplate.Application.Common.Services;
 using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using FluentValidation;
@@ -19,6 +20,7 @@ public abstract class TestBase
     protected TestBase()
     {
         this._services.AddApplicationServices();
+        this.AddFakeMediatorRequests();
 
         this.SetupFakeLogging();
 
@@ -37,6 +39,11 @@ public abstract class TestBase
         where T : notnull
     {
         return this._provider.GetRequiredService<T>();
+    }
+
+    private void AddFakeMediatorRequests()
+    {
+        this._services.AddMediatR(Assembly.GetExecutingAssembly());
     }
 
     private void SetupFakeLogging()
