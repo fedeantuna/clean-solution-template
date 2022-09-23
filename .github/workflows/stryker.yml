@@ -30,6 +30,6 @@ jobs:
       - name: Merged - Running Stryker
         if: github.event_name != 'pull_request'
         run: |
-          echo "STRYKER_DASHBOARD_BASELINE=$(git branch --show-current)" >> $GITHUB_ENV
-          echo "STRYKER_DASHBOARD_VERSION=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "STRYKER_DASHBOARD_BASELINE=$(echo ${{ github.ref }} | cut -d / -f 3)" >> $GITHUB_ENV
+          echo "STRYKER_DASHBOARD_VERSION=$(echo ${{ github.ref }} | cut -d / -f 3)" >> $GITHUB_ENV
           bash ${{ github.workspace }}/scripts/run_stryker.sh
