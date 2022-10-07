@@ -15,7 +15,7 @@ public class TestBase
 
     protected TestBase()
     {
-        this._services.AddPresentationServices();
+        this._services.AddPresentationServices(null!);
 
         this.UnregisterActualHttpContextAccessor();
         this.SetupHttpContextAccessorMock();
