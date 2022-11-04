@@ -14,14 +14,16 @@ public static class ConfigureServices
     {
         services.AddHttpContextAccessor();
 
+        services
+            .AddControllers(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            })
+            .AddControllersAsServices();
+
         services.ConfigureCors(configuration);
 
         services.ConfigureAuth(configuration);
-
-        services.AddControllers(options =>
-        {
-            options.Filters.Add(new AuthorizeFilter());
-        });
 
         services.AddSingleton<IUserService, UserService>();
 

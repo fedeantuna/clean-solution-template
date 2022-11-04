@@ -7,4 +7,3 @@ indent_size=4
 
 [{*.yaml,*.yml,*.json}]
 indent_size=2
-

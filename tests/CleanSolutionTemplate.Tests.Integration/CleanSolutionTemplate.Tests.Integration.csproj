@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -6,7 +6,8 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-    </PropertyGroup>
+        <UserSecretsId>ff0ea392-c936-4630-8bdd-16da3c547b51</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
@@ -21,6 +22,7 @@
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
         <PackageReference Include="coverlet.collector" Version="3.1.2" />
+        <PackageReference Include="Testcontainers" Version="2.2.0" />
     </ItemGroup>
 
     <ItemGroup>

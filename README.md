@@ -20,6 +20,22 @@ Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
 At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported. To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
 
+In order to run the Integration Tests there are a few steps needed before.
+
+1. If not installed already, install [Docker](https://docker.com)
+2. If dotnet dev certs are not already exported, export them. From the command line and positioned in your home run:
+   - ``dotnet dev-certs -ep ./.aspnet/https/localhost.pfx -p <PASSWORD>``
+   - Replacing <PASSWORD> with an actual password that you'll need to remember
+   - If you already have dev-certs but are not exported, run ``dotnet dev-certs --clean`` and try again
+   - If you are running a Linux distro, creating the SSL Certificate it's a bit more tricky. In case you are running Fedora, the section "Create a SSL Certificate for your .NET apps" from [this article](https://fedoramagazine.org/set-up-a-net-development-environment/) will tell you what you need. In other distros you might use that as well as a guide but you'll need to dig a bit deeper to find the specifics of it.
+3. Run ``dotnet dev-certs --trust``
+4. From the command line, position yourself in the Integration Tests project and run:
+   - ``dotnet user-secrets set "Development:LocalhostCertificatePassword" "<PASSWORD>"``
+   - Replacing <PASSWORD> with the password you exported before
+5. Run the following to get the needed Docker Images:
+    - ``docker pull testcontainers/ryuk:0.3.4``
+    - ``docker pull fedeantuna/test-identity-server:v1.0.0``
+
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses DeepSource as the tool for code analysis and reporting on test coverage. In order to set it up, you need to create an account at https://deepsource.io/ and then allow access to your repository. Once that is done, you need to add the DSN to your repository secrets under the name DEEPSOURCE_DSN. You can take a look here https://deepsource.io/docs/dashboard/repo-settings/#dsn to know more about how to do it.

@@ -10,16 +10,18 @@ namespace CleanSolutionTemplate.Tests.Integration;
 
 internal class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
+    private readonly IConfiguration _configuration;
+
+    public TestWebApplicationFactory(IConfiguration configuration)
+    {
+        this._configuration = configuration;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration(configurationBuilder =>
         {
-            var integrationConfig = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .Build();
-
-            configurationBuilder.AddConfiguration(integrationConfig);
+            configurationBuilder.AddConfiguration(this._configuration);
         });
 
         builder.ConfigureServices(services =>
