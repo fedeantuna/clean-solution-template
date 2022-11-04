@@ -37,8 +37,10 @@ public static class ConfigureServices
             {
                 const string stsAuthoritySettingName = "Sts:Authority";
                 const string stsAudience = "Sts:Audience";
+                const string stsRequireHttps = "Sts:RequireHttps";
                 options.Authority = configuration.GetValue<string>(stsAuthoritySettingName);
                 options.Audience = configuration.GetValue<string>(stsAudience);
+                options.RequireHttpsMetadata = configuration.GetValue<bool>(stsRequireHttps);
             });
         services.AddAuthorization();
     }

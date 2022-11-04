@@ -1,7 +1,5 @@
-using System.Reflection;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
-using DotNet.Testcontainers.Images;
 using Microsoft.Extensions.Configuration;
 
 namespace CleanSolutionTemplate.Tests.Integration;
@@ -19,10 +17,10 @@ public class TestBase
         var configuration = GetIntegrationTestConfiguration();
         var factory = new TestWebApplicationFactory(configuration);
 
-        this.SetupTestIdentityServerContainer(configuration["Development:LocalhostCertificatePassword"]);
+        this.SetupTestIdentityServerContainer();
 
         await this._testIdentityServerContainer.StartAsync();
-        this.TestIdentityServerHttpsPort = this._testIdentityServerContainer.GetMappedPublicPort(443);
+        this.TestIdentityServerHttpsPort = this._testIdentityServerContainer.GetMappedPublicPort(80);
 
         this.UpdateIntegrationTestConfiguration(configuration);
 
@@ -40,35 +38,24 @@ public class TestBase
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
-            .AddUserSecrets(Assembly.GetExecutingAssembly())
             .Build();
 
         return configuration;
     }
 
-    private void SetupTestIdentityServerContainer(string aspnetCoreKestrelCertificatesPassword)
+    private void SetupTestIdentityServerContainer()
     {
-        const string testIdentityServerImage = "fedeantuna/test-identity-server:v1.0.0";
-        const string aspnetHttpsContainerDirectory = "/https/";
-        var aspnetHttpsHostDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            ".aspnet",
-            "https");
-
-        const string aspnetCoreUrls = "https://+;http://+";
-        const string aspnetCoreKestrelCertificatesPath = "/https/localhost.pfx";
+        const string testIdentityServerImage = "fedeantuna/test-identity-server:v1.0.1";
+        const string aspnetCoreUrls = "http://+";
 
         this._testIdentityServerContainer = new TestcontainersBuilder<TestcontainersContainer>()
             .WithImage(testIdentityServerImage)
             .WithPortBinding(80, true)
-            .WithPortBinding(443, true)
             .WithEnvironment(new Dictionary<string, string>
             {
                 { "ASPNETCORE_URLS", aspnetCoreUrls },
-                { "ASPNETCORE_Kestrel__Certificates__Default__Password", aspnetCoreKestrelCertificatesPassword },
-                { "ASPNETCORE_Kestrel__Certificates__Default__Path", aspnetCoreKestrelCertificatesPath }
             })
-            .WithBindMount(aspnetHttpsHostDirectory, aspnetHttpsContainerDirectory)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(443))
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(80))
             .Build();
     }
 

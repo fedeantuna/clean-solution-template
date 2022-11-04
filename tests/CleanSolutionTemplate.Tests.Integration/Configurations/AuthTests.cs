@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
@@ -32,7 +34,7 @@ public class AuthTests : TestBase
     public async Task ShouldAllowAuthorizedUsersToAccessProtectedEndpoints()
     {
         const string schema = "Bearer";
-        var tokenEndpoint = $"https://localhost:{this.TestIdentityServerHttpsPort}/connect/token";
+        var tokenEndpoint = $"http://localhost:{this.TestIdentityServerHttpsPort}/connect/token";
         var token = await GetTestIdentityServerToken(tokenEndpoint);
 
         this.TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(schema, token);
