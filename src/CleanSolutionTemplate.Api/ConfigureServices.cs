@@ -21,29 +21,11 @@ public static class ConfigureServices
             })
             .AddControllersAsServices();
 
-        services.ConfigureCors(configuration);
-
         services.ConfigureAuth(configuration);
 
         services.AddSingleton<IUserService, UserService>();
 
         return services;
-    }
-
-    private static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(builder =>
-            {
-                const string corsAllowedOriginsSettingName = "Cors:AllowedOrigins";
-                builder.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials()
-                    .SetIsOriginAllowedToAllowWildcardSubdomains()
-                    .WithOrigins(configuration.GetSection(corsAllowedOriginsSettingName).Get<string[]>());
-            });
-        });
     }
 
     private static void ConfigureAuth(this IServiceCollection services, IConfiguration configuration)
