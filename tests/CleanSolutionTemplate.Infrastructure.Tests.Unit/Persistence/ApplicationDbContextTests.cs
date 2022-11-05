@@ -22,7 +22,7 @@ public class ApplicationDbContextTests : TestBase
         // Arrange
         var fakeEntity = new FakeEntity();
 
-        await ((FakeDbContext) this._sut).FakeEntities.AddAsync(fakeEntity);
+        await ((FakeDbContext)this._sut).FakeEntities.AddAsync(fakeEntity);
 
         var now = this.FindService<IDateTimeOffsetWrapper>().UtcNow;
 
@@ -47,7 +47,7 @@ public class ApplicationDbContextTests : TestBase
 
         fakeEntity.AddDomainEvent(domainEvent);
 
-        await ((FakeDbContext) this._sut).FakeEntities.AddAsync(fakeEntity, cancellationToken);
+        await ((FakeDbContext)this._sut).FakeEntities.AddAsync(fakeEntity, cancellationToken);
 
         // Act
         await this._sut.SaveChangesAsync(cancellationToken);

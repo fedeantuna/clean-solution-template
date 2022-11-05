@@ -14,20 +14,22 @@ public static class ConfigureServices
 {
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        bool useInMemoryDatabase)
     {
-        services.ConfigurePersistence(configuration);
+        services.ConfigurePersistence(configuration, useInMemoryDatabase);
         services.ConfigureWrappers();
 
         return services;
     }
 
-    private static void ConfigurePersistence(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigurePersistence(this IServiceCollection services,
+        IConfiguration configuration,
+        bool useInMemoryDatabase)
     {
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
-        const string useInMemoryDatabaseSettingName = "UseInMemoryDatabase";
-        if (configuration.GetValue<bool>(useInMemoryDatabaseSettingName))
+        if (useInMemoryDatabase)
         {
             const string inMemoryDatabaseName = "CleanSolutionTemplateDb";
             services.AddDbContext<ApplicationDbContext>(options =>

@@ -5,7 +5,6 @@ using CleanSolutionTemplate.Infrastructure.Persistence;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -23,11 +22,7 @@ public class TestBase
 
     protected TestBase()
     {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        this._services.AddInfrastructureServices(configuration);
+        this._services.AddInfrastructureServices(null!, true);
         this.ReplaceApplicationDbContextWithFakeDbContext();
 
         this._services.AddLogging();

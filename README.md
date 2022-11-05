@@ -20,6 +20,13 @@ Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
 At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported. To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
 
+In order to run the Integration Tests there are a few steps needed before.
+
+1. If not installed already, install [Docker](https://docker.com)
+2. Run the following to get the needed Docker Images:
+    - ``docker pull testcontainers/ryuk:0.3.4``
+    - ``docker pull fedeantuna/test-identity-server:v1.0.1``
+
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses DeepSource as the tool for code analysis and reporting on test coverage. In order to set it up, you need to create an account at https://deepsource.io/ and then allow access to your repository. Once that is done, you need to add the DSN to your repository secrets under the name DEEPSOURCE_DSN. You can take a look here https://deepsource.io/docs/dashboard/repo-settings/#dsn to know more about how to do it.

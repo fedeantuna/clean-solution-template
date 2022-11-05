@@ -7,8 +7,8 @@ using Serilog.Sinks.SystemConsole.Themes;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddInfrastructureServices(builder.Configuration)
-    .AddPresentationServices()
+    .AddInfrastructureServices(builder.Configuration, false)
+    .AddPresentationServices(builder.Configuration)
     .AddApplicationServices();
 
 builder.Host
@@ -19,5 +19,7 @@ builder.Host
             .WriteTo.Console(theme: AnsiConsoleTheme.Code));
 
 var app = builder.Build();
+
+app.SetupMiddleware();
 
 app.Run();
