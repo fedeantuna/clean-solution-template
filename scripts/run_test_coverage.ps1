@@ -15,34 +15,34 @@ $TestLogsOutput = [IO.Path]::Combine($RootProjectDir, "test-logs", $Timestamp)
 New-Item -Path "$TestLogsOutput" -Type Directory | Out-Null
 
 $DotnetToolLog = [IO.Path]::Combine($TestLogsOutput, "dotnet-tool.log")
-Write-Host -NoNewline "Restoring dotnet tools..."
+Write-Information -NoNewline "Restoring dotnet tools..."
 dotnet tool restore > $DotnetToolLog 2>&1
 if ($?) {
-    Write-Host "[OK]"
+    Write-Information "[OK]"
 } else {
-    Write-Host "[ERROR]"
+    Write-Error "[ERROR]"
     Pop-Location
     exit 1
 }
 
 $DotnetTestLog = [IO.Path]::Combine($TestLogsOutput, "dotnet-test.log")
-Write-Host -NoNewline "Running tests..."
+Write-Information -NoNewline "Running tests..."
 dotnet test --collect:"$DotnetTestCollect" --logger:"$DotnetTestLogger" --results-directory $DotnetTestOutput $RootProjectDir > $DotnetTestLog 2>&1
 if ($?) {
-    Write-Host "[OK]"
+    Write-Information "[OK]"
 } else {
-    Write-Host "[ERROR]"
+    Write-Error "[ERROR]"
     Pop-Location
     exit 1
 }
 
 $DotnetReportGeneratorLog = [IO.Path]::Combine($TestLogsOutput, "dotnet-report-generator.log")
-Write-Host -NoNewline "Merging reports..."
+Write-Information -NoNewline "Merging reports..."
 dotnet reportgenerator "-reports:$DotnetCoberturaReports" "-targetdir:$ReportGeneratorOutput" "-reporttypes:HTML;" > $DotnetReportGeneratorLog 2>&1
 if ($?) {
-    Write-Host "[OK]"
+    Write-Information "[OK]"
 } else {
-    Write-Host "[ERROR]"
+    Write-Error "[ERROR]"
     Pop-Location
     exit 1
 }

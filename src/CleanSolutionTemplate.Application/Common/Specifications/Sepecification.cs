@@ -16,9 +16,13 @@ public abstract class Specification<TEntity>
     public Specification<TEntity> And(Specification<TEntity> specification)
     {
         if (this == All)
+        {
             return specification;
+        }
         if (specification == All)
+        {
             return this;
+        }
 
         return new AndSpecification<TEntity>(this, specification);
     }
@@ -26,7 +30,9 @@ public abstract class Specification<TEntity>
     public Specification<TEntity> Or(Specification<TEntity> specification)
     {
         if (this == All || specification == All)
+        {
             return All;
+        }
 
         return new OrSpecification<TEntity>(this, specification);
     }

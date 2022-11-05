@@ -39,8 +39,10 @@ internal class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
     private void UpdateEntities(DbContext? context)
     {
-        if (context == null)
+        if (context is null)
+        {
             return;
+        }
 
         foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
         {

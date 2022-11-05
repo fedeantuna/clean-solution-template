@@ -71,6 +71,7 @@ function Get-DefaultStrykerOutputPath {
 }
 
 function Remove-DefaultStrykerOutputDirectories {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [string[]]$SourceProjectPaths
     )
@@ -85,6 +86,7 @@ function Remove-DefaultStrykerOutputDirectories {
 }
 
 function New-StrykerOutputDirectories {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string]$StrykerResultsOutput,
         [string]$StrykerReportsOutput
@@ -140,7 +142,7 @@ function Invoke-DotnetStryker {
     Get-SourceProjectPaths $Solution | ForEach-Object {
         Set-Location $_
 
-        Write-Host "Running: $StrykerCommand"
+        Write-Information "Running: $StrykerCommand"
 
         try {
             Invoke-Expression $StrykerCommand
@@ -151,6 +153,7 @@ function Invoke-DotnetStryker {
 }
 
 function New-MergedStrykerJsonReport {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [string]$StrykerResultsOutput,
         [string]$StrykerReportsOutput,
@@ -194,6 +197,7 @@ function New-MergedStrykerJsonReport {
 }
 
 function New-MergedStrykerHtmlReport {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [string]$StrykerReportsOutput,
         [string]$StrykerMergedReportPath

@@ -37,7 +37,7 @@ public class ValidationBehaviorTests : TestBase
         SetupPassingValidator(this.ValidatorBMock, requestMock.Object, cancellationToken);
 
         // Act
-        var result = await this._sut.Handle(requestMock.Object, cancellationToken, Handler);
+        var result = await this._sut.Handle(requestMock.Object, Handler, cancellationToken);
 
         // Assert
         VerifyValidation(this.ValidatorAMock, requestMock.Object, cancellationToken);
@@ -64,7 +64,7 @@ public class ValidationBehaviorTests : TestBase
         SetupFailingValidator(this.ValidatorBMock, requestMock.Object, cancellationToken);
 
         // Act
-        Func<Task> act = () => this._sut.Handle(requestMock.Object, cancellationToken, Handler);
+        Func<Task> act = () => this._sut.Handle(requestMock.Object, Handler, cancellationToken);
 
         // Assert
         await act.Should().ThrowAsync<ValidationException>();
@@ -90,7 +90,7 @@ public class ValidationBehaviorTests : TestBase
         var sut = new ValidationBehavior<IRequest<string>, string>(Enumerable.Empty<IValidator<IRequest<string>>>());
 
         // Act
-        var result = await sut.Handle(requestMock.Object, cancellationToken, Handler);
+        var result = await sut.Handle(requestMock.Object, Handler, cancellationToken);
 
         // Assert
         result.Should().Be(handlerResponse);

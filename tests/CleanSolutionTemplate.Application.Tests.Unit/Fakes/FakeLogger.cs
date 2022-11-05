@@ -64,5 +64,7 @@ internal sealed class FakeLoggerScope : IDisposable
 
     public void Dispose()
     {
+        // Needed for IDisposable, that is needed because
+        // return type of BeginScope is IDisposable
     }
 }
