@@ -3,7 +3,7 @@ name: Package
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [ "main" ]
     paths: ["CleanSolutionTemplate.nuspec"]
 
 jobs:
