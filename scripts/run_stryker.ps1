@@ -134,6 +134,7 @@ function Get-StrykerJsonReporterCommand {
 }
 
 function Invoke-DotnetStryker {
+    [CmdletBinding()]
     param (
         [string]$Solution,
 		[string]$StrykerCommand
@@ -142,7 +143,7 @@ function Invoke-DotnetStryker {
     Get-SourceProjectPaths $Solution | ForEach-Object {
         Set-Location $_
 
-        Write-Information "Running: $StrykerCommand"
+        Write-Verbose -Message "Running: $StrykerCommand"
 
         try {
             Invoke-Expression $StrykerCommand
@@ -213,7 +214,7 @@ function New-MergedStrykerHtmlReport {
     ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace '##REPORT_TITLE##', 'Stryker Mutation Testing') | Set-Content -Path $StrykerMutationHtmlReport
     ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace '##REPORT_JSON##', "$StrykerMergedReportContent") | Set-Content -Path $StrykerMutationHtmlReport
 
-    Write-Information "Stryker HTML Report: $StrykerMutationHtmlReport"
+    Write-Verbose -Message "Stryker HTML Report: $StrykerMutationHtmlReport"
 
     Pop-Location
 
