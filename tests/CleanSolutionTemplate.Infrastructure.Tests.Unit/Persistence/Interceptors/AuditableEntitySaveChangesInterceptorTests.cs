@@ -11,29 +11,23 @@ namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence.Intercepto
 
 public class AuditableEntitySaveChangesInterceptorTests : TestBase
 {
+    private readonly FakeDbContext _fakeDbContext;
+
     private readonly AuditableEntitySaveChangesInterceptor _sut;
 
     public AuditableEntitySaveChangesInterceptorTests()
     {
+        this._fakeDbContext = (FakeDbContext)this.FindService<IApplicationDbContext>();
+
         this._sut = this.FindService<AuditableEntitySaveChangesInterceptor>();
     }
 
     [Fact]
     public async Task SavingChangesAsync_DoesNotThrow_WhenContextIsNull()
     {
-        // Arrange
-        var cancellationToken = new CancellationToken();
-        var context = (DbContext?)null;
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
-
         // Act
         var act = async () =>
-            await this._sut.SavingChangesAsync(eventData,
-                interceptionResult,
-                cancellationToken);
+            await this.CallSavingChangesAsyncWithNullContext();
 
         // Assert
         await act.Should().NotThrowAsync();
@@ -43,134 +37,95 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     public async Task SavingChangesAsync_UpdatesAuditableEntities_WhenEntitiesAreAdded()
     {
         // Arrange
-        var cancellationToken = new CancellationToken();
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
-        await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+        await this.AddFakeEntitiesAsync(2);
 
         // Act
-        await this._sut.SavingChangesAsync(eventData, interceptionResult, cancellationToken);
+        await this.CallSavingChangesAsync();
 
         // Assert
-        var fakeEntities = context.FakeEntities.Local.ToList();
-        fakeEntities.Select(fe => fe.CreatedBy).Should().Equal(TestUserId, TestUserId);
-        fakeEntities.Select(fe => fe.LastModifiedBy).Should().Equal(TestUserId, TestUserId);
-        fakeEntities.Select(fe => fe.CreatedAt).Should().Equal(this.UtcNow, this.UtcNow);
-        fakeEntities.Select(fe => fe.LastModifiedAt).Should().Equal(this.UtcNow, this.UtcNow);
+        this.VerifyFakeEntities(new [] { TestUserId, TestUserId },
+            new [] { TestUserId, TestUserId },
+            new DateTimeOffset?[] { this.UtcNow, this.UtcNow },
+            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }
 
     [Fact]
     public async Task SavingChangesAsync_DoesNotUpdatesAuditableEntities_WhenEntitiesAreNotAddedNorModified()
     {
         // Arrange
-        var cancellationToken = new CancellationToken();
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
-        await context.FakeEntities.AddAsync(new FakeEntity(), cancellationToken);
-        context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Unchanged);
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+        await this.AddFakeEntitiesAsync(2);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
+            .ToList()
+            .ForEach(e =>
+                e.State = EntityState.Unchanged);
 
         // Act
-        await this._sut.SavingChangesAsync(eventData, interceptionResult, cancellationToken);
+        await this.CallSavingChangesAsync();
 
         // Assert
-        var fakeEntities = context.FakeEntities.Local.ToList();
-        fakeEntities.Select(fe => fe.CreatedBy).Should().Equal(null, null);
-        fakeEntities.Select(fe => fe.LastModifiedBy).Should().Equal(null, null);
-        fakeEntities.Select(fe => fe.CreatedAt).Should().Equal((DateTimeOffset?)null, null);
-        fakeEntities.Select(fe => fe.LastModifiedAt).Should().Equal((DateTimeOffset?)null, null);
+        this.VerifyFakeEntities(new string?[] { null, null },
+            new string?[] { null, null },
+            new DateTimeOffset?[] { null, null },
+            new DateTimeOffset?[] { null, null });
     }
 
     [Fact]
     public async Task SavingChangesAsync_DoesNotUpdatesAuditableEntities_WhenValueObjectsAreNotModified()
     {
         // Arrange
-        var cancellationToken = new CancellationToken();
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        await context.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        }, cancellationToken);
-        await context.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        }, cancellationToken);
-        context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Unchanged);
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+        await this.AddFakeRelatedEntitiesAsync(2);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
+            .ToList()
+            .ForEach(e =>
+                e.State = EntityState.Unchanged);
 
         // Act
-        await this._sut.SavingChangesAsync(eventData, interceptionResult, cancellationToken);
+        await this.CallSavingChangesAsync();
 
         // Assert
-        var fakeEntitiesWithValueObject = context.FakeRelatedEntities.Local.ToList();
-        fakeEntitiesWithValueObject.Select(fe => fe.CreatedBy).Should().Equal(null, null);
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedBy).Should().Equal(null, null);
-        fakeEntitiesWithValueObject.Select(fe => fe.CreatedAt).Should().Equal((DateTimeOffset?)null, null);
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedAt).Should().Equal((DateTimeOffset?)null, null);
+        this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
+            new string?[] { null, null },
+            new DateTimeOffset?[] { null, null },
+            new DateTimeOffset?[] { null, null });
     }
 
     [Fact]
     public async Task SavingChangesAsync_UpdatesAuditableEntities_WhenValueObjectsAreModified()
     {
         // Arrange
-        var cancellationToken = new CancellationToken();
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        await context.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        }, cancellationToken);
-        await context.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        }, cancellationToken);
-        context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Unchanged);
-        context.ChangeTracker.Entries()
+        await this.AddFakeRelatedEntitiesAsync(2);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
+            .ToList()
+            .ForEach(e =>
+                e.State = EntityState.Unchanged);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
             .Where(e =>
                 e.References.Any(r =>
                     r.TargetEntry != null &&
                     r.TargetEntry.Metadata.IsOwned()))
             .ToList()
-            .ForEach(e => e.State = EntityState.Modified);
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+            .ForEach(e =>
+                e.State = EntityState.Modified);
 
         // Act
-        await this._sut.SavingChangesAsync(eventData, interceptionResult, cancellationToken);
+        await this.CallSavingChangesAsync();
 
         // Assert
-        var fakeEntitiesWithValueObject = context.FakeRelatedEntities.Local.ToList();
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedBy).Should().Equal(TestUserId, TestUserId);
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedAt).Should().Equal(this.UtcNow, this.UtcNow);
+        this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
+            new [] { TestUserId, TestUserId },
+            new DateTimeOffset?[] { null, null },
+            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }
 
     [Fact]
     public void SavingChanges_DoesNotThrow_WhenContextIsNull()
     {
-        // Arrange
-        var context = (DbContext?)null;
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
-
         // Act
-        var act = () => this._sut.SavingChanges(eventData, interceptionResult);
+        var act = this.CallSavingChangesWithNullContext;
 
         // Assert
         act.Should().NotThrow();
@@ -180,116 +135,97 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
     public void SavingChanges_UpdatesAuditableEntities_WhenEntitiesAreAdded()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        context.FakeEntities.Add(new FakeEntity());
-        context.FakeEntities.Add(new FakeEntity());
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+        this.AddFakeEntities(2);
 
         // Act
-        this._sut.SavingChanges(eventData, interceptionResult);
+        this.CallSavingChanges();
 
         // Assert
-        var fakeEntities = context.FakeEntities.Local.ToList();
-        fakeEntities.Select(fe => fe.CreatedBy).Should().Equal(TestUserId, TestUserId);
-        fakeEntities.Select(fe => fe.LastModifiedBy).Should().Equal(TestUserId, TestUserId);
-        fakeEntities.Select(fe => fe.CreatedAt).Should().Equal(this.UtcNow, this.UtcNow);
-        fakeEntities.Select(fe => fe.LastModifiedAt).Should().Equal(this.UtcNow, this.UtcNow);
+        this.VerifyFakeEntities(new [] { TestUserId, TestUserId },
+            new [] { TestUserId, TestUserId },
+            new DateTimeOffset?[] { this.UtcNow, this.UtcNow },
+            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }
 
     [Fact]
     public void SavingChanges_DoesNotUpdatesAuditableEntities_WhenEntitiesAreNotAddedNorModified()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        context.FakeEntities.Add(new FakeEntity());
-        context.FakeEntities.Add(new FakeEntity());
-        context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Unchanged);
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+        this.AddFakeEntities(2);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
+            .ToList()
+            .ForEach(e =>
+                e.State = EntityState.Unchanged);
 
         // Act
-        this._sut.SavingChanges(eventData, interceptionResult);
+        this.CallSavingChanges();
 
         // Assert
-        var fakeEntities = context.FakeEntities.Local.ToList();
-        fakeEntities.Select(fe => fe.CreatedBy).Should().Equal(null, null);
-        fakeEntities.Select(fe => fe.LastModifiedBy).Should().Equal(null, null);
-        fakeEntities.Select(fe => fe.CreatedAt).Should().Equal((DateTimeOffset?)null, null);
-        fakeEntities.Select(fe => fe.LastModifiedAt).Should().Equal((DateTimeOffset?)null, null);
+        this.VerifyFakeEntities(new string?[] { null, null },
+            new string?[] { null, null },
+            new DateTimeOffset?[] { null, null },
+            new DateTimeOffset?[] { null, null });
     }
 
     [Fact]
     public void SavingChanges_DoesNotUpdatesAuditableEntities_WhenValueObjectsAreNotModified()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        context.FakeRelatedEntities.Add(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        });
-        context.FakeRelatedEntities.Add(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        });
-        context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Unchanged);
-
-        var eventDefinition = CreateEventDefinition();
-        var eventData = CreateDbContextEventData(eventDefinition, context);
-        var interceptionResult = new InterceptionResult<int>();
+        this.AddFakeRelatedEntities(2);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
+            .ToList()
+            .ForEach(e =>
+                e.State = EntityState.Unchanged);
 
         // Act
-        this._sut.SavingChanges(eventData, interceptionResult);
+        this.CallSavingChanges();
 
         // Assert
-        var fakeEntitiesWithValueObject = context.FakeRelatedEntities.Local.ToList();
-        fakeEntitiesWithValueObject.Select(fe => fe.CreatedBy).Should().Equal(null, null);
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedBy).Should().Equal(null, null);
-        fakeEntitiesWithValueObject.Select(fe => fe.CreatedAt).Should().Equal((DateTimeOffset?)null, null);
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedAt).Should().Equal((DateTimeOffset?)null, null);
+        this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
+            new string?[] { null, null },
+            new DateTimeOffset?[] { null, null },
+            new DateTimeOffset?[] { null, null });
     }
 
     [Fact]
     public void SavingChanges_UpdatesAuditableEntities_WhenValueObjectsAreModified()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        context.FakeRelatedEntities.Add(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        });
-        context.FakeRelatedEntities.Add(new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        });
-        context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Unchanged);
-        context.ChangeTracker.Entries()
+        this.AddFakeRelatedEntities(2);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
+            .ToList()
+            .ForEach(e =>
+                e.State = EntityState.Unchanged);
+        this._fakeDbContext.ChangeTracker
+            .Entries()
             .Where(e =>
                 e.References.Any(r =>
                     r.TargetEntry != null &&
                     r.TargetEntry.Metadata.IsOwned()))
             .ToList()
-            .ForEach(e => e.State = EntityState.Modified);
+            .ForEach(e =>
+                e.State = EntityState.Modified);
 
+        // Act
+        this.CallSavingChanges();
+
+        // Assert
+        this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
+            new [] { TestUserId, TestUserId },
+            new DateTimeOffset?[] { null, null },
+            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
+    }
+
+    private static (DbContextEventData, InterceptionResult<int>) CreateSavingChangesParameters(DbContext? context)
+    {
         var eventDefinition = CreateEventDefinition();
         var eventData = CreateDbContextEventData(eventDefinition, context);
         var interceptionResult = new InterceptionResult<int>();
 
-        // Act
-        this._sut.SavingChanges(eventData, interceptionResult);
-
-        // Assert
-        var fakeEntitiesWithValueObject = context.FakeRelatedEntities.Local.ToList();
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedBy).Should().Equal(TestUserId, TestUserId);
-        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedAt).Should().Equal(this.UtcNow, this.UtcNow);
+        return (eventData, interceptionResult);
     }
 
     private static EventDefinition CreateEventDefinition()
@@ -309,10 +245,101 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
 
     private static DbContextEventData CreateDbContextEventData(EventDefinitionBase eventDefinition, DbContext? context)
     {
-        string MessageGenerator(EventDefinitionBase eventDefinitionBase, EventData eventData) => string.Empty;
+        string MessageGenerator(EventDefinitionBase eventDefinitionBase, EventData eventData) =>
+            string.Empty;
 
         return new DbContextEventData(eventDefinition,
             MessageGenerator,
             context);
+    }
+
+    private async Task AddFakeEntitiesAsync(int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            await this._fakeDbContext.FakeEntities.AddAsync(new FakeEntity());
+        }
+    }
+
+    private void AddFakeEntities(int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            this._fakeDbContext.FakeEntities.Add(new FakeEntity());
+        }
+    }
+
+    private async Task AddFakeRelatedEntitiesAsync(int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            await this._fakeDbContext.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
+            {
+                FakeValueObject = new FakeValueObject()
+            });
+        }
+    }
+
+    private void AddFakeRelatedEntities(int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            this._fakeDbContext.FakeRelatedEntities.Add(new FakeRelatedEntity
+            {
+                FakeValueObject = new FakeValueObject()
+            });
+        }
+    }
+
+    private async Task CallSavingChangesAsync()
+    {
+        var (eventData, interceptionResult) = CreateSavingChangesParameters(this._fakeDbContext);
+
+        await this._sut.SavingChangesAsync(eventData, interceptionResult);
+    }
+
+    private async Task CallSavingChangesAsyncWithNullContext()
+    {
+        var (eventData, interceptionResult) = CreateSavingChangesParameters(null);
+
+        await this._sut.SavingChangesAsync(eventData, interceptionResult);
+    }
+
+    private void CallSavingChanges()
+    {
+        var (eventData, interceptionResult) = CreateSavingChangesParameters(this._fakeDbContext);
+
+        this._sut.SavingChanges(eventData, interceptionResult);
+    }
+
+    private void CallSavingChangesWithNullContext()
+    {
+        var (eventData, interceptionResult) = CreateSavingChangesParameters(null);
+
+        this._sut.SavingChanges(eventData, interceptionResult);
+    }
+
+    private void VerifyFakeEntities(string?[] createdBy,
+        string?[] lastModifiedBy,
+        DateTimeOffset?[] createdAt,
+        DateTimeOffset?[] lastModifiedAt)
+    {
+        var fakeEntities = this._fakeDbContext.FakeEntities.Local.ToList();
+        fakeEntities.Select(fe => fe.CreatedBy).Should().Equal(createdBy);
+        fakeEntities.Select(fe => fe.LastModifiedBy).Should().Equal(lastModifiedBy);
+        fakeEntities.Select(fe => fe.CreatedAt).Should().Equal(createdAt);
+        fakeEntities.Select(fe => fe.LastModifiedAt).Should().Equal(lastModifiedAt);
+    }
+
+    private void VerifyFakeEntitiesWithValueObjects(string?[] createdBy,
+        string?[] lastModifiedBy,
+        DateTimeOffset?[] createdAt,
+        DateTimeOffset?[] lastModifiedAt)
+    {
+        var fakeEntitiesWithValueObject = this._fakeDbContext.FakeRelatedEntities.Local.ToList();
+        fakeEntitiesWithValueObject.Select(fe => fe.CreatedBy).Should().Equal(createdBy);
+        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedBy).Should().Equal(lastModifiedBy);
+        fakeEntitiesWithValueObject.Select(fe => fe.CreatedAt).Should().Equal(createdAt);
+        fakeEntitiesWithValueObject.Select(fe => fe.LastModifiedAt).Should().Equal(lastModifiedAt);
     }
 }

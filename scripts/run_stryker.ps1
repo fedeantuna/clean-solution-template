@@ -156,9 +156,11 @@ function Invoke-DotnetStryker {
 function New-MergedStrykerJsonReport {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
+        [Alias("Results")]
         [string]$StrykerResultsOutput,
-        [string]$StrykerReportsOutput,
+        [Alias("Projects")]
         [string[]]$SourceProjectPaths,
+        [Alias("Output")]
         [string]$StrykerMergedReportPath
     )
 
@@ -200,7 +202,9 @@ function New-MergedStrykerJsonReport {
 function New-MergedStrykerHtmlReport {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
+        [Alias("Output")]
         [string]$StrykerReportsOutput,
+        [Alias("Input")]
         [string]$StrykerMergedReportPath
     )
 
@@ -253,8 +257,8 @@ if ($RunningFromPipeline -eq 'true') {
 }
 
 $StrykerMergedReportPath = "$StrykerReportsOutput/merged-mutation-report.json"
-New-MergedStrykerJsonReport $StrykerResultsOutput $StrykerReportsOutput $SourceProjectPaths $StrykerMergedReportPath
-New-MergedStrykerHtmlReport $StrykerReportsOutput $StrykerMergedReportPath
+New-MergedStrykerJsonReport -Results $StrykerResultsOutput -Projects $SourceProjectPaths -Output $StrykerMergedReportPath
+New-MergedStrykerHtmlReport -Output $StrykerReportsOutput -Input $StrykerMergedReportPath
 
 Remove-DefaultStrykerOutputDirectories $SourceProjectPaths
 

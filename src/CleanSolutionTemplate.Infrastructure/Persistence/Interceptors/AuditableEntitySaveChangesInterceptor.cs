@@ -55,7 +55,9 @@ internal class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             if (entry.State != EntityState.Added
                 && entry.State != EntityState.Modified
                 && !entry.HasChangedOwnedEntities())
+            {
                 continue;
+            }
 
             entry.Entity.LastModifiedBy = this._userService.GetCurrentUserId();
             entry.Entity.LastModifiedAt = this._dateTimeOffsetWrapper.UtcNow;
