@@ -9,10 +9,16 @@ namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Behaviors;
 
 public class ValidationBehaviorTests : TestBase
 {
+    private const string HandlerResponse = "test-handler-response";
+
+    private readonly Mock<IRequest<string>> _requestMock;
+
     private readonly ValidationBehavior<IRequest<string>, string> _sut;
 
     public ValidationBehaviorTests()
     {
+        this._requestMock = new Mock<IRequest<string>>();
+
         var pipelineBehaviors = this.FindService<IEnumerable<IPipelineBehavior<IRequest<string>, string>>>();
         this._sut = (ValidationBehavior<IRequest<string>, string>)pipelineBehaviors.First(pb =>
             pb.GetType().Name == typeof(ValidationBehavior<,>).Name);
@@ -22,89 +28,59 @@ public class ValidationBehaviorTests : TestBase
     public async Task Handle_CallsValidateAsyncOnEachValidatorAndReturnsRequestHandlerResult_WhenValidationsAreSuccessful()
     {
         // Arrange
-        const string handlerResponse = "test-handler-response";
-
-        var requestMock = new Mock<IRequest<string>>();
-
-        Task<string> Handler()
-        {
-            return Task.FromResult(handlerResponse);
-        }
-
-        var cancellationToken = default(CancellationToken);
-
-        SetupPassingValidator(this.ValidatorAMock, requestMock.Object, cancellationToken);
-        SetupPassingValidator(this.ValidatorBMock, requestMock.Object, cancellationToken);
+        SetupPassingValidator(this.ValidatorAMock, this._requestMock.Object);
+        SetupPassingValidator(this.ValidatorBMock, this._requestMock.Object);
 
         // Act
-        var result = await this._sut.Handle(requestMock.Object, cancellationToken, Handler);
+        var result = await this._sut.Handle(this._requestMock.Object, Handler, default);
 
         // Assert
-        VerifyValidation(this.ValidatorAMock, requestMock.Object, cancellationToken);
-        VerifyValidation(this.ValidatorBMock, requestMock.Object, cancellationToken);
-        result.Should().Be(handlerResponse);
+        VerifyValidation(this.ValidatorAMock, this._requestMock.Object);
+        VerifyValidation(this.ValidatorBMock, this._requestMock.Object);
+        result.Should().Be(HandlerResponse);
     }
 
     [Fact]
     public async Task Handle_CallsValidateAsyncOnEachValidatorAndThrowsValidationException_WhenValidationsContainFailures()
     {
         // Arrange
-        const string handlerResponse = "test-handler-response";
-
-        var requestMock = new Mock<IRequest<string>>();
-
-        Task<string> Handler()
-        {
-            return Task.FromResult(handlerResponse);
-        }
-
-        var cancellationToken = default(CancellationToken);
-
-        SetupPassingValidator(this.ValidatorAMock, requestMock.Object, cancellationToken);
-        SetupFailingValidator(this.ValidatorBMock, requestMock.Object, cancellationToken);
+        SetupPassingValidator(this.ValidatorBMock, this._requestMock.Object);
+        SetupFailingValidator(this.ValidatorAMock, this._requestMock.Object);
 
         // Act
-        Func<Task> act = () => this._sut.Handle(requestMock.Object, cancellationToken, Handler);
+        Func<Task> act = () => this._sut.Handle(this._requestMock.Object, Handler, default);
 
         // Assert
         await act.Should().ThrowAsync<ValidationException>();
-        VerifyValidation(this.ValidatorAMock, requestMock.Object, cancellationToken);
-        VerifyValidation(this.ValidatorBMock, requestMock.Object, cancellationToken);
+        VerifyValidation(this.ValidatorBMock, this._requestMock.Object);
+        VerifyValidation(this.ValidatorAMock, this._requestMock.Object);
     }
 
     [Fact]
     public async Task Handle_ReturnsRequestHandlerResult_WhenNoValidatorsAreRegistered()
     {
         // Arrange
-        const string handlerResponse = "test-handler-response";
-
-        var requestMock = new Mock<IRequest<string>>();
-
-        Task<string> Handler()
-        {
-            return Task.FromResult(handlerResponse);
-        }
-
-        var cancellationToken = default(CancellationToken);
-
         var sut = new ValidationBehavior<IRequest<string>, string>(Enumerable.Empty<IValidator<IRequest<string>>>());
 
         // Act
-        var result = await sut.Handle(requestMock.Object, cancellationToken, Handler);
+        var result = await sut.Handle(this._requestMock.Object, Handler, default);
 
         // Assert
-        result.Should().Be(handlerResponse);
+        result.Should().Be(HandlerResponse);
     }
 
-    private static void SetupPassingValidator(Mock<IValidator<IRequest<string>>> validator, IRequest<string> request, CancellationToken cancellationToken)
+    private static Task<string> Handler() =>
+        Task.FromResult(HandlerResponse);
+
+    private static void SetupPassingValidator(Mock<IValidator<IRequest<string>>> validator, IRequest<string> request)
     {
         validator.Setup(v =>
             v.ValidateAsync(It.Is<ValidationContext<IRequest<string>>>(vc =>
                     vc.InstanceToValidate == request),
-                cancellationToken)).ReturnsAsync(new ValidationResult());
+                default)).ReturnsAsync(new ValidationResult());
     }
 
-    private static void SetupFailingValidator(Mock<IValidator<IRequest<string>>> validator, IRequest<string> request, CancellationToken cancellationToken)
+    private static void SetupFailingValidator(Mock<IValidator<IRequest<string>>> validator, IRequest<string> request)
     {
         var validationFailures = new List<ValidationFailure>
         {
@@ -114,14 +90,14 @@ public class ValidationBehaviorTests : TestBase
         validator.Setup(v =>
             v.ValidateAsync(It.Is<ValidationContext<IRequest<string>>>(vc =>
                     vc.InstanceToValidate == request),
-                cancellationToken)).ReturnsAsync(new ValidationResult(validationFailures));
+                default)).ReturnsAsync(new ValidationResult(validationFailures));
     }
 
-    private static void VerifyValidation(Mock<IValidator<IRequest<string>>> validatorMock, IRequest<string> request, CancellationToken cancellationToken)
+    private static void VerifyValidation(Mock<IValidator<IRequest<string>>> validatorMock, IRequest<string> request)
     {
         validatorMock.Verify(v =>
             v.ValidateAsync(It.Is<ValidationContext<IRequest<string>>>(vc =>
                     vc.InstanceToValidate == request),
-                cancellationToken), Times.Once);
+                default), Times.Once);
     }
 }

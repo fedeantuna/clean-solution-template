@@ -71,6 +71,7 @@ function Get-DefaultStrykerOutputPath {
 }
 
 function Remove-DefaultStrykerOutputDirectories {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [string[]]$SourceProjectPaths
     )
@@ -85,6 +86,7 @@ function Remove-DefaultStrykerOutputDirectories {
 }
 
 function New-StrykerOutputDirectories {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string]$StrykerResultsOutput,
         [string]$StrykerReportsOutput
@@ -132,6 +134,7 @@ function Get-StrykerJsonReporterCommand {
 }
 
 function Invoke-DotnetStryker {
+    [CmdletBinding()]
     param (
         [string]$Solution,
 		[string]$StrykerCommand
@@ -140,7 +143,7 @@ function Invoke-DotnetStryker {
     Get-SourceProjectPaths $Solution | ForEach-Object {
         Set-Location $_
 
-        Write-Host "Running: $StrykerCommand"
+        Write-Verbose -Message "Running: $StrykerCommand"
 
         try {
             Invoke-Expression $StrykerCommand
@@ -151,10 +154,13 @@ function Invoke-DotnetStryker {
 }
 
 function New-MergedStrykerJsonReport {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
+        [Alias("Results")]
         [string]$StrykerResultsOutput,
-        [string]$StrykerReportsOutput,
+        [Alias("Projects")]
         [string[]]$SourceProjectPaths,
+        [Alias("Output")]
         [string]$StrykerMergedReportPath
     )
 
@@ -194,8 +200,11 @@ function New-MergedStrykerJsonReport {
 }
 
 function New-MergedStrykerHtmlReport {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
+        [Alias("Output")]
         [string]$StrykerReportsOutput,
+        [Alias("Input")]
         [string]$StrykerMergedReportPath
     )
 
@@ -209,7 +218,7 @@ function New-MergedStrykerHtmlReport {
     ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace '##REPORT_TITLE##', 'Stryker Mutation Testing') | Set-Content -Path $StrykerMutationHtmlReport
     ((Get-Content -Raw -Path $StrykerMutationHtmlReport) -replace '##REPORT_JSON##', "$StrykerMergedReportContent") | Set-Content -Path $StrykerMutationHtmlReport
 
-    Write-Information "Stryker HTML Report: $StrykerMutationHtmlReport"
+    Write-Verbose -Message "Stryker HTML Report: $StrykerMutationHtmlReport"
 
     Pop-Location
 
@@ -248,8 +257,8 @@ if ($RunningFromPipeline -eq 'true') {
 }
 
 $StrykerMergedReportPath = "$StrykerReportsOutput/merged-mutation-report.json"
-New-MergedStrykerJsonReport $StrykerResultsOutput $StrykerReportsOutput $SourceProjectPaths $StrykerMergedReportPath
-New-MergedStrykerHtmlReport $StrykerReportsOutput $StrykerMergedReportPath
+New-MergedStrykerJsonReport -Results $StrykerResultsOutput -Projects $SourceProjectPaths -Output $StrykerMergedReportPath
+New-MergedStrykerHtmlReport -Output $StrykerReportsOutput -Input $StrykerMergedReportPath
 
 Remove-DefaultStrykerOutputDirectories $SourceProjectPaths
 

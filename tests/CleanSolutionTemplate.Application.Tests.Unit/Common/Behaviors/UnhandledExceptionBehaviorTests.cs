@@ -66,7 +66,7 @@ public class UnhandledExceptionBehaviorTests : TestBase
         stateBuilder.Replace("{requestName}", nameof(FakeFailingRequest));
         stateBuilder.Replace("{@request}", request.ToString());
         var expectedState = stateBuilder.ToString();
-        var expectedLogRecord = new LogRecord()
+        var expectedLogRecord = new LogRecord
         {
             LogLevel = (int)LogLevel.Error,
             EventId = 0,

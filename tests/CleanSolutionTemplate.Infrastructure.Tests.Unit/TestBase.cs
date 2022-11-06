@@ -73,8 +73,8 @@ public class TestBase
         var mediatorMock = new Mock<IMediator>();
         this._services.AddTransient(_ => mediatorMock.Object);
 
-        PublisherMock = new Mock<IPublisher>();
-        this._services.AddTransient(_ => PublisherMock.Object);
+        this.PublisherMock = new Mock<IPublisher>();
+        this._services.AddTransient(_ => this.PublisherMock.Object);
     }
 
     private void SetupWrapperMocks()

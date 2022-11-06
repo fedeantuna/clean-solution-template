@@ -39,8 +39,10 @@ internal class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
     private void UpdateEntities(DbContext? context)
     {
-        if (context == null)
+        if (context is null)
+        {
             return;
+        }
 
         foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
         {
@@ -53,7 +55,9 @@ internal class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             if (entry.State != EntityState.Added
                 && entry.State != EntityState.Modified
                 && !entry.HasChangedOwnedEntities())
+            {
                 continue;
+            }
 
             entry.Entity.LastModifiedBy = this._userService.GetCurrentUserId();
             entry.Entity.LastModifiedAt = this._dateTimeOffsetWrapper.UtcNow;

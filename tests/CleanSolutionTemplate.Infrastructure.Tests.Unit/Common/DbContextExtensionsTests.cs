@@ -3,25 +3,25 @@ using CleanSolutionTemplate.Infrastructure.Common;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Common;
 
 public class DbContextExtensionsTests : TestBase
 {
+    private readonly FakeDbContext _fakeDbContext;
+
+    public DbContextExtensionsTests()
+    {
+        this._fakeDbContext = (FakeDbContext)this.FindService<IApplicationDbContext>();
+    }
+
     [Fact]
     public void HasChangedOwnedEntities_ReturnsTrue_WhenEntryHasNewValueObject()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        var fakeRelatedEntity = new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        };
-        context.FakeRelatedEntities.Add(fakeRelatedEntity);
-
-        var entry = context.ChangeTracker.Entries<FakeRelatedEntity>().Single();
-        entry.State = EntityState.Added;
+        var entry = this.AddFakeRelatedEntityWithValueObject(EntityState.Added,
+            EntityState.Added);
 
         // Act
         var result = entry.HasChangedOwnedEntities();
@@ -34,16 +34,8 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsTrue_WhenEntryHasModifiedValueObject()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        var fakeRelatedEntity = new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        };
-        context.FakeRelatedEntities.Add(fakeRelatedEntity);
-
-        var entry = context.ChangeTracker.Entries<FakeRelatedEntity>().Single();
-        entry.State = EntityState.Modified;
+        var entry = this.AddFakeRelatedEntityWithValueObject(EntityState.Modified,
+            EntityState.Added);
 
         // Act
         var result = entry.HasChangedOwnedEntities();
@@ -56,17 +48,8 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsFalse_WhenEntryDoesNotHaveNewNorModifiedValueObject()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        var fakeRelatedEntity = new FakeRelatedEntity
-        {
-            FakeValueObject = new FakeValueObject()
-        };
-        context.FakeRelatedEntities.Add(fakeRelatedEntity);
-
-        var entry = context.ChangeTracker.Entries<FakeRelatedEntity>().Single();
-        var valueObjectEntry = context.ChangeTracker.Entries<FakeValueObject>().Single();
-        valueObjectEntry.State = EntityState.Unchanged;
+        var entry = this.AddFakeRelatedEntityWithValueObject(EntityState.Added,
+            EntityState.Unchanged);
 
         // Act
         var result = entry.HasChangedOwnedEntities();
@@ -79,11 +62,7 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsFalse_WhenEntryDoesNotHaveValueObject()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        context.FakeEntities.Add(new FakeEntity());
-
-        var entry = context.ChangeTracker.Entries<FakeEntity>().Single();
+        var entry = this.AddFakeEntity();
 
         // Act
         var result = entry.HasChangedOwnedEntities();
@@ -96,22 +75,59 @@ public class DbContextExtensionsTests : TestBase
     public void HasChangedOwnedEntities_ReturnsFalse_WhenEntryHasAnotherEntityButDoesNotHaveValueObject()
     {
         // Arrange
-        var context = (FakeDbContext)this.FindService<IApplicationDbContext>();
-
-        var fakeRelatedEntity = new FakeRelatedEntity
-        {
-            FakeEntity = new FakeEntity()
-        };
-        context.FakeRelatedEntities.Add(fakeRelatedEntity);
-
-        var entry = context.ChangeTracker.Entries<FakeRelatedEntity>().Single();
-        var differentEntityEntry = context.ChangeTracker.Entries<FakeEntity>().Single();
-        differentEntityEntry.State = EntityState.Added;
+        var entry = this.AddFakeRelatedEntityWithFakeEntity(EntityState.Added,
+            EntityState.Added);
 
         // Act
         var result = entry.HasChangedOwnedEntities();
 
         // Assert
         result.Should().BeFalse();
+    }
+
+    private EntityEntry<T> SetEntryState<T>(EntityState state)
+        where T : class
+    {
+        var entry = this._fakeDbContext.ChangeTracker.Entries<T>().Single();
+        entry.State = state;
+
+        return entry;
+    }
+
+    private EntityEntry<FakeRelatedEntity> AddFakeRelatedEntityWithValueObject(EntityState fakeRelatedEntityState,
+        EntityState fakeValueObjectState)
+    {
+        this._fakeDbContext.FakeRelatedEntities.Add(new FakeRelatedEntity
+        {
+            FakeValueObject = new FakeValueObject()
+        });
+
+        this.SetEntryState<FakeValueObject>(fakeValueObjectState);
+        var entry = this.SetEntryState<FakeRelatedEntity>(fakeRelatedEntityState);
+
+        return entry;
+    }
+
+    private EntityEntry<FakeEntity> AddFakeEntity()
+    {
+        this._fakeDbContext.FakeEntities.Add(new FakeEntity());
+
+        var entry = this.SetEntryState<FakeEntity>(EntityState.Added);
+
+        return entry;
+    }
+
+    private EntityEntry<FakeRelatedEntity> AddFakeRelatedEntityWithFakeEntity(EntityState relatedEntityState,
+        EntityState fakeEntityState)
+    {
+        this._fakeDbContext.FakeRelatedEntities.Add(new FakeRelatedEntity
+        {
+            FakeEntity = new FakeEntity()
+        });
+
+        this.SetEntryState<FakeEntity>(fakeEntityState);
+        var entry = this.SetEntryState<FakeRelatedEntity>(relatedEntityState);
+
+        return entry;
     }
 }

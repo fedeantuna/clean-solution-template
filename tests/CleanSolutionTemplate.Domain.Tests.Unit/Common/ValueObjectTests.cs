@@ -22,28 +22,6 @@ public class ValueObjectTests
 
     [Theory]
     [MemberData(nameof(EqualValueObjects))]
-    public void EqualOperator_ShouldReturnTrue_WhenEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var sut = instanceA == instanceB;
-
-        // Assert
-        sut.Should().BeTrue(reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(EqualValueObjects))]
-    public void NonEqualOperator_ShouldReturnFalse_WhenEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var sut = instanceA != instanceB;
-
-        // Assert
-        sut.Should().BeFalse(reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(EqualValueObjects))]
     public void GetHashCode_ShouldReturnSameHashCodes_WhenEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
     {
         // Act
@@ -63,28 +41,6 @@ public class ValueObjectTests
 
         // Assert
         sut.Should().BeFalse(reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(NonEqualValueObjects))]
-    public void EqualOperator_ShouldReturnFalse_WhenNonEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var sut = instanceA == instanceB;
-
-        // Assert
-        sut.Should().BeFalse(reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(NonEqualValueObjects))]
-    public void NonEqualOperator_ShouldReturnTrue_WhenNonEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var sut = instanceA != instanceB;
-
-        // Assert
-        sut.Should().BeTrue(reason);
     }
 
     [Theory]
@@ -207,7 +163,10 @@ public class ValueObjectTests
             yield return this.A;
             yield return this.B;
 
-            foreach (var c in this.C) yield return c;
+            foreach (var c in this.C)
+            {
+                yield return c;
+            }
         }
     }
 }

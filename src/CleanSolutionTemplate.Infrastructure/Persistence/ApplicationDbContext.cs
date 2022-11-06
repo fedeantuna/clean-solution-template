@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Infrastructure.Common;
@@ -21,19 +22,21 @@ internal class ApplicationDbContext : DbContext, IApplicationDbContext
         this._auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.AddInterceptors(this._auditableEntitySaveChangesInterceptor);
-    }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<int> SaveChangesAsync() =>
+        await this.SaveChangesAsync(default);
+
+    [SuppressMessage("ReSharper", "OptionalParameterHierarchyMismatch")]
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
         await this._publisher.DispatchDomainEvents(this, cancellationToken);
 
