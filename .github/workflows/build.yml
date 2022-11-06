@@ -39,9 +39,8 @@ jobs:
           reporttypes: "Cobertura"
           verbosity: "Info"
 
-      - name: Report results to DeepSource
+      - name: Report results to Codacy
         run: |
-          curl https://deepsource.io/cli | sh
-          ./bin/deepsource report --analyzer test-coverage --key csharp --value-file ./coverage-report/Cobertura.xml
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./coverage-report/Cobertura.xml
         env:
-          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
