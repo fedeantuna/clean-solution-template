@@ -62,7 +62,7 @@ public class TestBase
     private void UpdateIntegrationTestConfiguration(IConfiguration configuration)
     {
         const string stsAuthoritySettingName = "Sts:Authority";
-        configuration[stsAuthoritySettingName] = configuration.GetValue<string>(stsAuthoritySettingName)
+        configuration[stsAuthoritySettingName] = configuration.GetValue<string>(stsAuthoritySettingName)!
             .Replace("#PORT", this.TestIdentityServerHttpsPort.ToString());
     }
 }

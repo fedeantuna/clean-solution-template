@@ -1,6 +1,8 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Build?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/build.yml)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Package?label=package&style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/package.yml)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffedeantuna%2Fclean-solution-template%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/fedeantuna/clean-solution-template/main)
+[![Codacy Code Analysis](https://img.shields.io/codacy/grade/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fedeantuna/clean-solution-template&amp;utm_campaign=Badge_Grade)
+[![Codacy Code Coverage](https://img.shields.io/codacy/coverage/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com&utm_medium=referral&utm_content=fedeantuna/clean-solution-template&utm_campaign=Badge_Coverage)
+[![Mutation Testing Score](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffedeantuna%2Fclean-solution-template%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/fedeantuna/clean-solution-template/main)
 [![NuGet](https://img.shields.io/nuget/v/CleanSolutionTemplate?style=flat-square)](https://www.nuget.org/packages/CleanSolutionTemplate/)
 [![GitHub](https://img.shields.io/github/license/fedeantuna/clean-solution-template?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/LICENSE)
 
@@ -14,7 +16,7 @@ Icon design credit goes to [@antunamirna](https://www.instagram.com/antunamirna/
 
 The most simple way to obtain this template is by installing the NuGet package.
 
-First make sure that you have the [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) installed on your machine.
+First make sure that you have the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) installed on your machine.
 
 Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
@@ -30,13 +32,17 @@ In order to run the Integration Tests there are a few steps needed before.
 
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
-This template uses DeepSource as the tool for code analysis and reporting on test coverage. In order to set it up, you need to create an account at https://deepsource.io/ and then allow access to your repository. Once that is done, you need to add the DSN to your repository secrets under the name DEEPSOURCE_DSN. You can take a look here https://deepsource.io/docs/dashboard/repo-settings/#dsn to know more about how to do it.
+This template uses Codacy as the tool for code analysis and reporting on test coverage. In order to set it up follow the steps described in the docs:
+   -   https://docs.codacy.com/getting-started/codacy-quickstart/
+   -   https://docs.codacy.com/coverage-reporter/
+   -   https://docs.codacy.com/repositories-configure/integrations/github-integration/#configuring
+   -   https://docs.codacy.com/faq/general/how-do-i-block-merging-prs-using-codacy-as-a-quality-gate/
 
 For the Mutation Report this template uses Stryker. You need to sign in with your GitHub Account into https://dashboard.stryker-mutator.io/ and then allow access to your repository. Once that is done follow the instructions on how to set up the corresponding secrets. Remember to modify the `stryker-config.json`files that are in each Source Project to match the name with your actual repository.
 
 ## Local Mutation Report
 
-Running the mutation report locally can be done by executing the stryker scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the stryker tool, pleace visit the [Stryker Web](https://stryker-mutator.io/docs/stryker-net/introduction/) to know more about the project.
+Running the mutation report locally can be done by executing the stryker scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the stryker tool, please visit the [Stryker Web](https://stryker-mutator.io/docs/stryker-net/introduction/) to know more about the project.
 
 ## Local Coverage Report
 

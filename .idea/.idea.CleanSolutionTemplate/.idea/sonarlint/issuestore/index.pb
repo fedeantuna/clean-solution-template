@@ -17,8 +17,6 @@ f
 6src/CleanSolutionTemplate.Domain/Common/ValueObject.cs,8\8\88b86c7d6f8541006672de47a07ec9b1d6dca267
 x
 Htests/CleanSolutionTemplate.Domain.Tests.Unit/Common/ValueObjectTests.cs,d\0\d0e6ad88caa28f3258df0516e3f7de295f6183cc
-9
-	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 u
 Esrc/CleanSolutionTemplate.Infrastructure/Common/MediatorExtensions.cs,2\1\2163d1cfee6d480cf92d86d324032cfa81eab085
 ˆ
