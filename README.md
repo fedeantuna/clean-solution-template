@@ -27,8 +27,8 @@ In order to run the Integration Tests there are a few steps needed before.
 1.  If not installed already, install [Docker](https://docker.com)
 
 2.  Run the following to get the needed Docker Images:
-    -   ``docker pull testcontainers/ryuk:0.3.4``
-    -   ``docker pull fedeantuna/test-identity-server:v1.0.1``
+-   ``docker pull testcontainers/ryuk:0.3.4``
+-   ``docker pull fedeantuna/test-identity-server:v1.0.1``
 
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
