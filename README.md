@@ -1,8 +1,8 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Build?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/build.yml)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Package?label=package&style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/package.yml)
-[![Codacy Code Analysis](https://img.shields.io/codacy/grade/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fedeantuna/clean-solution-template&amp;utm_campaign=Badge_Grade)
-[![Codacy Code Coverage](https://img.shields.io/codacy/coverage/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com&utm_medium=referral&utm_content=fedeantuna/clean-solution-template&utm_campaign=Badge_Coverage)
-[![Mutation Testing Score](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffedeantuna%2Fclean-solution-template%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/fedeantuna/clean-solution-template/main)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fedeantuna/clean-solution-template/Package?label=package\&style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/package.yml)
+[![Codacy Code Analysis](https://img.shields.io/codacy/grade/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com\&utm_medium=referral\&utm_content=fedeantuna/clean-solution-template\&utm_campaign=Badge_Grade)
+[![Codacy Code Coverage](https://img.shields.io/codacy/coverage/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com\&utm_medium=referral\&utm_content=fedeantuna/clean-solution-template\&utm_campaign=Badge_Coverage)
+[![Mutation Testing Score](https://img.shields.io/endpoint?style=flat-square\&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffedeantuna%2Fclean-solution-template%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/fedeantuna/clean-solution-template/main)
 [![NuGet](https://img.shields.io/nuget/v/CleanSolutionTemplate?style=flat-square)](https://www.nuget.org/packages/CleanSolutionTemplate/)
 [![GitHub](https://img.shields.io/github/license/fedeantuna/clean-solution-template?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/LICENSE)
 
@@ -27,16 +27,17 @@ In order to run the Integration Tests there are a few steps needed before.
 1.  If not installed already, install [Docker](https://docker.com)
 
 2.  Run the following to get the needed Docker Images:
-   -   ``docker pull testcontainers/ryuk:0.3.4``
-   -   ``docker pull fedeantuna/test-identity-server:v1.0.1``
+    *   `docker pull testcontainers/ryuk:0.3.4`
+    *   `docker pull fedeantuna/test-identity-server:v1.0.1`
 
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses Codacy as the tool for code analysis and reporting on test coverage. In order to set it up follow the steps described in the docs:
--   https://docs.codacy.com/getting-started/codacy-quickstart/
--   https://docs.codacy.com/coverage-reporter/
--   https://docs.codacy.com/repositories-configure/integrations/github-integration/#configuring
--   https://docs.codacy.com/faq/general/how-do-i-block-merging-prs-using-codacy-as-a-quality-gate/
+
+*   https://docs.codacy.com/getting-started/codacy-quickstart/
+*   https://docs.codacy.com/coverage-reporter/
+*   https://docs.codacy.com/repositories-configure/integrations/github-integration/#configuring
+*   https://docs.codacy.com/faq/general/how-do-i-block-merging-prs-using-codacy-as-a-quality-gate/
 
 For the Mutation Report this template uses Stryker. You need to sign in with your GitHub Account into https://dashboard.stryker-mutator.io/ and then allow access to your repository. Once that is done follow the instructions on how to set up the corresponding secrets. Remember to modify the `stryker-config.json`files that are in each Source Project to match the name with your actual repository.
 
