@@ -27,16 +27,16 @@ In order to run the Integration Tests there are a few steps needed before.
 1.  If not installed already, install [Docker](https://docker.com)
 
 2.  Run the following to get the needed Docker Images:
--   ``docker pull testcontainers/ryuk:0.3.4``
--   ``docker pull fedeantuna/test-identity-server:v1.0.1``
+   -   ``docker pull testcontainers/ryuk:0.3.4``
+   -   ``docker pull fedeantuna/test-identity-server:v1.0.1``
 
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses Codacy as the tool for code analysis and reporting on test coverage. In order to set it up follow the steps described in the docs:
-   -   https://docs.codacy.com/getting-started/codacy-quickstart/
-   -   https://docs.codacy.com/coverage-reporter/
-   -   https://docs.codacy.com/repositories-configure/integrations/github-integration/#configuring
-   -   https://docs.codacy.com/faq/general/how-do-i-block-merging-prs-using-codacy-as-a-quality-gate/
+-   https://docs.codacy.com/getting-started/codacy-quickstart/
+-   https://docs.codacy.com/coverage-reporter/
+-   https://docs.codacy.com/repositories-configure/integrations/github-integration/#configuring
+-   https://docs.codacy.com/faq/general/how-do-i-block-merging-prs-using-codacy-as-a-quality-gate/
 
 For the Mutation Report this template uses Stryker. You need to sign in with your GitHub Account into https://dashboard.stryker-mutator.io/ and then allow access to your repository. Once that is done follow the instructions on how to set up the corresponding secrets. Remember to modify the `stryker-config.json`files that are in each Source Project to match the name with your actual repository.
 
