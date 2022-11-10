@@ -12,7 +12,7 @@ namespace CleanSolutionTemplate.Api.SerilogPolicies;
 
 public class SensitiveInformationDestructuringPolicy : IDestructuringPolicy
 {
-    public const string Mask = "#####";
+    internal const string Mask = "#####";
 
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> Cache = new();
 
