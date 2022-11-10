@@ -8,7 +8,7 @@ namespace CleanSolutionTemplate.Application.Common.Behaviors;
 public class LoggingBehavior<TRequest> : IRequestPreProcessor<TRequest>
     where TRequest : notnull
 {
-    internal const string LogMessageTemplate = "Request: {requestName} {userId} {userEmail} {@request}";
+    internal const string LogMessageTemplate = "Request: {RequestName} {UserId} {UserEmail} {@Request}";
 
     private readonly ILogger _logger;
     private readonly IUserService _userService;
