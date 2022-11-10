@@ -41,9 +41,9 @@ public static class ConfigureServices
             const string cosmosAccountKeySettingName = "Cosmos:AccountKey";
             const string cosmosDatabaseNameSettingName = "Cosmos:DatabaseName";
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseCosmos(configuration.GetValue<string>(cosmosAccountEndpointSettingName),
-                    configuration.GetValue<string>(cosmosAccountKeySettingName),
-                    configuration.GetValue<string>(cosmosDatabaseNameSettingName)));
+                options.UseCosmos(configuration.GetValue<string>(cosmosAccountEndpointSettingName)!,
+                    configuration.GetValue<string>(cosmosAccountKeySettingName)!,
+                    configuration.GetValue<string>(cosmosDatabaseNameSettingName)!));
         }
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());

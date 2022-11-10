@@ -32,7 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		CleanSolutionTemplate.sln.DotSettings = CleanSolutionTemplate.sln.DotSettings
-		.deepsource.toml = .deepsource.toml
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 	EndProjectSection
