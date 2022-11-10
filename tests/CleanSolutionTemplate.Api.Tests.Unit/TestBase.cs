@@ -1,7 +1,12 @@
 using System.Security.Claims;
+using CleanSolutionTemplate.Api.SerilogPolicies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
+using Serilog;
+using Serilog.Sinks.InMemory;
 
 namespace CleanSolutionTemplate.Api.Tests.Unit;
 
@@ -15,7 +20,10 @@ public class TestBase
 
     protected TestBase()
     {
-        this._services.AddPresentationServices(null!);
+        var configuration = new ConfigurationBuilder().Build();
+        this._services.AddPresentationServices(configuration);
+
+        this.ReplaceLoggerWithInMemoryLogger();
 
         this.UnregisterActualHttpContextAccessor();
         this.SetupHttpContextAccessorMock();
@@ -29,6 +37,22 @@ public class TestBase
         where T : notnull
     {
         return this._provider.GetRequiredService<T>();
+    }
+
+    private void ReplaceLoggerWithInMemoryLogger()
+    {
+        this._services.AddLogging(builder =>
+        {
+            builder.ClearProviders();
+
+            var logger = new LoggerConfiguration()
+                .Destructure
+                .UseSensitiveDataMasking()
+                .WriteTo.InMemory()
+                .MinimumLevel.Verbose()
+                .CreateLogger();
+            builder.AddSerilog(logger);
+        });
     }
 
     private void UnregisterActualHttpContextAccessor()

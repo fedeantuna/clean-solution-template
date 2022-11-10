@@ -43,8 +43,8 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
         await this.CallSavingChangesAsync();
 
         // Assert
-        this.VerifyFakeEntities(new [] { TestUserId, TestUserId },
-            new [] { TestUserId, TestUserId },
+        this.VerifyFakeEntities(new[] { TestUserId, TestUserId },
+            new[] { TestUserId, TestUserId },
             new DateTimeOffset?[] { this.UtcNow, this.UtcNow },
             new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }
@@ -116,7 +116,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
 
         // Assert
         this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
-            new [] { TestUserId, TestUserId },
+            new[] { TestUserId, TestUserId },
             new DateTimeOffset?[] { null, null },
             new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }
@@ -141,8 +141,8 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
         this.CallSavingChanges();
 
         // Assert
-        this.VerifyFakeEntities(new [] { TestUserId, TestUserId },
-            new [] { TestUserId, TestUserId },
+        this.VerifyFakeEntities(new[] { TestUserId, TestUserId },
+            new[] { TestUserId, TestUserId },
             new DateTimeOffset?[] { this.UtcNow, this.UtcNow },
             new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }
@@ -214,7 +214,7 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
 
         // Assert
         this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
-            new [] { TestUserId, TestUserId },
+            new[] { TestUserId, TestUserId },
             new DateTimeOffset?[] { null, null },
             new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
     }

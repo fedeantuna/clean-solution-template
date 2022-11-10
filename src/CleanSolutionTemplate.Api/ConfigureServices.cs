@@ -1,9 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
+using CleanSolutionTemplate.Api.SerilogPolicies;
 using CleanSolutionTemplate.Api.Services;
 using CleanSolutionTemplate.Application.Common.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Serilog;
+using Serilog.Core;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace CleanSolutionTemplate.Api;
 
@@ -12,6 +16,12 @@ public static class ConfigureServices
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public static IServiceCollection AddPresentationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddLogging(builder =>
+        {
+            builder.ClearProviders();
+            builder.AddSerilog(CreateLogger(configuration));
+        });
+
         services.AddHttpContextAccessor();
 
         services
@@ -27,6 +37,14 @@ public static class ConfigureServices
 
         return services;
     }
+
+    private static Logger CreateLogger(IConfiguration configuration) =>
+        new LoggerConfiguration()
+            .Destructure.UseSensitiveDataMasking()
+            .ReadFrom.Configuration(configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+            .CreateLogger();
 
     private static void ConfigureAuth(this IServiceCollection services, IConfiguration configuration)
     {

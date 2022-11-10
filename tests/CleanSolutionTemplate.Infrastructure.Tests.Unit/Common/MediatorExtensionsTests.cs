@@ -19,15 +19,13 @@ public class MediatorExtensionsTests : TestBase
         var domainEventMock = new Mock<DomainEvent>();
         var entity = new FakeEntity();
 
-        var cancellationToken = new CancellationToken();
-
         entity.AddDomainEvent(domainEventMock.Object);
-        await context.FakeEntities.AddAsync(entity, cancellationToken);
+        await context.FakeEntities.AddAsync(entity);
 
         var publisherMock = new Mock<IPublisher>();
 
         // Act
-        await publisherMock.Object.DispatchDomainEvents(context, cancellationToken);
+        await publisherMock.Object.DispatchDomainEvents(context);
 
         // Assert
         entity.DomainEvents.Should().BeEmpty();

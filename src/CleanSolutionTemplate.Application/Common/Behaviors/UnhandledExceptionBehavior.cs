@@ -8,7 +8,7 @@ public class UnhandledExceptionBehavior<TRequest, TException> : IRequestExceptio
     where TRequest : notnull
     where TException : Exception
 {
-    internal const string LogMessageTemplate = "CleanSolutionTemplate Request: Unhandled Exception for Request {requestName} {@request}";
+    internal const string LogMessageTemplate = "CleanSolutionTemplate Request: Unhandled Exception for Request {RequestName} {@Request}";
 
     private readonly ILogger _logger;
 

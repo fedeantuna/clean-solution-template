@@ -1,11 +1,12 @@
 using System.Reflection;
 using CleanSolutionTemplate.Application.Common.Services;
-using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Serilog;
+using Serilog.Sinks.InMemory;
 
 namespace CleanSolutionTemplate.Application.Tests.Unit;
 
@@ -22,8 +23,7 @@ public abstract class TestBase
         this._services.AddApplicationServices();
         this.AddFakeMediatorRequests();
 
-        this.SetupFakeLogging();
-
+        this.SetupInMemoryLogger();
         this.AddPresentationServiceMocks();
 
         this.UnregisterActualValidators();
@@ -46,9 +46,18 @@ public abstract class TestBase
         this._services.AddMediatR(Assembly.GetExecutingAssembly());
     }
 
-    private void SetupFakeLogging()
+    private void SetupInMemoryLogger()
     {
-        this._services.AddSingleton(typeof(ILogger<>), typeof(FakeLogger<>));
+        this._services.AddLogging(builder =>
+        {
+            builder.ClearProviders();
+
+            var logger = new LoggerConfiguration()
+                .WriteTo.InMemory()
+                .MinimumLevel.Verbose()
+                .CreateLogger();
+            builder.AddSerilog(logger);
+        });
     }
 
     private void AddPresentationServiceMocks()
