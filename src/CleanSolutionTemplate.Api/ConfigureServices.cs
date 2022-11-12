@@ -3,8 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using CleanSolutionTemplate.Api.SerilogPolicies;
 using CleanSolutionTemplate.Api.Services;
 using CleanSolutionTemplate.Application.Common.Services;
+using FastEndpoints;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Serilog;
 using Serilog.Core;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -24,12 +24,7 @@ public static class ConfigureServices
 
         services.AddHttpContextAccessor();
 
-        services
-            .AddControllers(options =>
-            {
-                options.Filters.Add(new AuthorizeFilter());
-            })
-            .AddControllersAsServices();
+        services.AddFastEndpoints();
 
         services.ConfigureAuth(configuration);
 
