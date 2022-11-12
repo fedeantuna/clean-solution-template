@@ -216,7 +216,7 @@ public class SensitiveInformationDestructuringPolicyTests : TestBase
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
             .WithProperty("Object").HavingADestructuredObject()
-            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws $Exception");
+            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws Exception");
     }
 
     [Theory]
@@ -240,7 +240,7 @@ public class SensitiveInformationDestructuringPolicyTests : TestBase
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
             .WithProperty("Object").HavingADestructuredObject()
-            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws $Exception");
+            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws Exception");
     }
 
     private static FakeModel CreateFakeModel() =>

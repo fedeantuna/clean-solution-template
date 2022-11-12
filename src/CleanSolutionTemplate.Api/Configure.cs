@@ -1,3 +1,5 @@
+using FastEndpoints;
+
 namespace CleanSolutionTemplate.Api;
 
 public static class Configure
@@ -13,6 +15,6 @@ public static class Configure
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.UseFastEndpoints();
     }
 }

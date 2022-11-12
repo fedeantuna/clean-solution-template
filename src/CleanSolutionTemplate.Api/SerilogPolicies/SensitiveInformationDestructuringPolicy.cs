@@ -79,7 +79,7 @@ public class SensitiveInformationDestructuringPolicy : IDestructuringPolicy
         catch (Exception ex)
         {
             SelfLog.WriteLine("Property Accessor {0} throws Exception {1}", propertyInfo, ex);
-            return $"Property Accessor throws ${ex.InnerException?.GetType().Name ?? ex.GetType().Name}";
+            return $"Property Accessor throws {ex.InnerException?.GetType().Name ?? ex.GetType().Name}";
         }
     }
 }
