@@ -29,7 +29,13 @@
                 "**/*.lock.json",
                 "**/.git/**",
                 ".github/workflows/package.yml",
-                "*.nuspec"
+                "*.nuspec",
+                "test-logs",
+                "test-reports",
+                "test-results",
+                "stryker-reports",
+                "stryker-results",
+                "*.nupkg"
             ]
         }
     ]
