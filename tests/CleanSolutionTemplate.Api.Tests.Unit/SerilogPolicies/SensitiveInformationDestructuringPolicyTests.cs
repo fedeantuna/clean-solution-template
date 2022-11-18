@@ -202,7 +202,7 @@ public class SensitiveInformationDestructuringPolicyTests : TestBase
     [InlineData(LogLevel.Warning)]
     [InlineData(LogLevel.Error)]
     [InlineData(LogLevel.Critical)]
-    public void Logger_ShouldLogMessageWithExceptionType_WhenReadingAPropertyThrowsExceptionWithoutInnerException(LogLevel logLevel)
+    public void Logger_ShouldLogMessageWithExceptionType_WhenReadingAPropertyThrowsException(LogLevel logLevel)
     {
         // Arrange
         var exception = new Exception();
@@ -216,31 +216,7 @@ public class SensitiveInformationDestructuringPolicyTests : TestBase
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
             .WithProperty("Object").HavingADestructuredObject()
-            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws Exception");
-    }
-
-    [Theory]
-    [InlineData(LogLevel.Trace)]
-    [InlineData(LogLevel.Debug)]
-    [InlineData(LogLevel.Information)]
-    [InlineData(LogLevel.Warning)]
-    [InlineData(LogLevel.Error)]
-    [InlineData(LogLevel.Critical)]
-    public void Logger_ShouldLogMessageWithInnerExceptionType_WhenReadingAPropertyThrowsExceptionWithInnerException(LogLevel logLevel)
-    {
-        // Arrange
-        var exception = new FakeExceptionWithInnerException(new Exception());
-        var fakeUnreadableModel = new FakeUnreadableModel(exception);
-
-        // Act
-        this.Log(logLevel, fakeUnreadableModel);
-
-        // Assert
-        InMemorySink.Instance
-            .Should()
-            .HaveMessage(LogMessageTemplate).Once()
-            .WithProperty("Object").HavingADestructuredObject()
-            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws Exception");
+            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws an Exception");
     }
 
     private static FakeModel CreateFakeModel() =>

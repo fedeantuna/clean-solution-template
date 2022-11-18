@@ -60,11 +60,3 @@ public class FakeUnreadableModel
     public int ThrowingExceptionProperty =>
         throw this._exception;
 }
-
-public class FakeExceptionWithInnerException : Exception
-{
-    public FakeExceptionWithInnerException(Exception innerException)
-        : base(string.Empty, innerException)
-    {
-    }
-}

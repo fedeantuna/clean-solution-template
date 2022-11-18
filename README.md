@@ -12,7 +12,7 @@ This template is based on Jason Taylor's [Clean Architecture Template](https://g
 
 Icon design credit goes to [@antunamirna](https://www.instagram.com/antunamirna/)
 
-## Installation
+## Getting started
 
 The most simple way to obtain this template is by installing the NuGet package.
 
