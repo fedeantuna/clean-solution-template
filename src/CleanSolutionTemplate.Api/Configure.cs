@@ -1,4 +1,5 @@
 using FastEndpoints;
+using FastEndpoints.Swagger;
 
 namespace CleanSolutionTemplate.Api;
 
@@ -16,5 +17,6 @@ public static class Configure
         app.UseAuthorization();
 
         app.UseFastEndpoints();
+        app.UseSwaggerGen();
     }
 }

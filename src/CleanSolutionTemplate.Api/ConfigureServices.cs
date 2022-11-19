@@ -4,6 +4,7 @@ using CleanSolutionTemplate.Api.SerilogPolicies;
 using CleanSolutionTemplate.Api.Services;
 using CleanSolutionTemplate.Application.Common.Services;
 using FastEndpoints;
+using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
 using Serilog.Core;
@@ -25,6 +26,7 @@ public static class ConfigureServices
         services.AddHttpContextAccessor();
 
         services.AddFastEndpoints();
+        services.AddSwaggerDoc();
 
         services.ConfigureAuth(configuration);
 
