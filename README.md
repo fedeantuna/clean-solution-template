@@ -30,6 +30,8 @@ In order to run the Integration Tests there are a few steps needed before.
     *   `docker pull testcontainers/ryuk:0.3.4`
     *   `docker pull fedeantuna/test-identity-server:v1.0.1`
 
+Now the first thing to do is to update the stryker configuration files that are located under each source project. Don't forget to change this README accordingly to your project and to review the LICENSE.
+
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses Codacy as the tool for code analysis and reporting on test coverage. In order to set it up follow the steps described in the docs:

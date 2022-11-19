@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>CleanSolutionTemplate</id>
-    <version>0.2.0</version>
+    <version>1.0.0</version>
     <title>Clean Solution Template - Api</title>
     <authors>Federico Antuña</authors>
     <owners>fedeantuna</owners>
@@ -26,6 +26,6 @@
   <files>
     <file src=".template.config\icon.png" />
     <file src="README.md" />
-    <file src=".\**" target="content" exclude="**\bin\**;**\obj\**;**\test-results\**;**test-reports\**;**\.vs\**;**\.idea\**;**\.vscode\**;**\.git\**;**\.github\package.yml;**\CODE_OF_CONDUCT.md;" />
+    <file src=".\**" target="content" exclude="**\bin\**;**\obj\**;**\test-results\**;**\test-reports\**;**\test-logs\**;**\.vs\**;**\.idea\**;**\.vscode\**;**\.git\**;**\.github\package.yml;**\CODE_OF_CONDUCT.md;**\stryker-reports\**;**\stryker-results\**;" />
   </files>
 </package>
