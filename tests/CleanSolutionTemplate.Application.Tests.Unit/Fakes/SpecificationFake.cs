@@ -4,13 +4,13 @@ using CleanSolutionTemplate.Domain.Common;
 
 namespace CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 
-public class FakeTrueSpecification : Specification<Entity>
+public class TrueSpecificationFake : Specification<Entity>
 {
     public override Expression<Func<Entity, bool>> ToExpression() =>
         x => true;
 }
 
-public class FakeFalseSpecification : Specification<Entity>
+public class FalseSpecificationFake : Specification<Entity>
 {
     public override Expression<Func<Entity, bool>> ToExpression() =>
         x => false;

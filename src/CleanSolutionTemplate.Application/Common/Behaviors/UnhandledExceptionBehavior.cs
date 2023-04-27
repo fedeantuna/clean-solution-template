@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanSolutionTemplate.Application.Common.Behaviors;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class UnhandledExceptionBehavior<TRequest, TException> : IRequestExceptionAction<TRequest, TException>
     where TRequest : notnull
     where TException : Exception

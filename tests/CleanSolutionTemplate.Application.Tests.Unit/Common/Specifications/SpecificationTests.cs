@@ -70,8 +70,8 @@ public class SpecificationTests
     public void IsSatisfiedBy_ShouldReturnTrue_WhenBothSpecificationsCombinedByAndAreTrue()
     {
         // Arrange
-        var leftSpecification = new FakeTrueSpecification();
-        var rightSpecification = new FakeTrueSpecification();
+        var leftSpecification = new TrueSpecificationFake();
+        var rightSpecification = new TrueSpecificationFake();
 
         var entity = new Mock<Entity>(Guid.NewGuid()).Object;
 
@@ -116,8 +116,8 @@ public class SpecificationTests
     public void IsSatisfiedBy_ShouldReturnFalse_WhenBothSpecificationsCombinedByOrAreFalse()
     {
         // Arrange
-        var leftSpecification = new FakeFalseSpecification();
-        var rightSpecification = new FakeFalseSpecification();
+        var leftSpecification = new FalseSpecificationFake();
+        var rightSpecification = new FalseSpecificationFake();
 
         var entity = new Mock<Entity>(Guid.NewGuid()).Object;
 
@@ -151,18 +151,18 @@ public class SpecificationTests
         {
             new object[]
             {
-                new FakeFalseSpecification(),
-                new FakeTrueSpecification()
+                new FalseSpecificationFake(),
+                new TrueSpecificationFake()
             },
             new object[]
             {
-                new FakeTrueSpecification(),
-                new FakeFalseSpecification()
+                new TrueSpecificationFake(),
+                new FalseSpecificationFake()
             },
             new object[]
             {
-                new FakeFalseSpecification(),
-                new FakeFalseSpecification()
+                new FalseSpecificationFake(),
+                new FalseSpecificationFake()
             }
         };
 
@@ -171,18 +171,18 @@ public class SpecificationTests
         {
             new object[]
             {
-                new FakeFalseSpecification(),
-                new FakeTrueSpecification()
+                new FalseSpecificationFake(),
+                new TrueSpecificationFake()
             },
             new object[]
             {
-                new FakeTrueSpecification(),
-                new FakeFalseSpecification()
+                new TrueSpecificationFake(),
+                new FalseSpecificationFake()
             },
             new object[]
             {
-                new FakeTrueSpecification(),
-                new FakeTrueSpecification()
+                new TrueSpecificationFake(),
+                new TrueSpecificationFake()
             }
         };
 
@@ -192,21 +192,21 @@ public class SpecificationTests
             new object[]
             {
                 Specification<Entity>.All,
-                new FakeTrueSpecification()
+                new TrueSpecificationFake()
             },
             new object[]
             {
                 Specification<Entity>.All,
-                new FakeFalseSpecification()
+                new FalseSpecificationFake()
             },
             new object[]
             {
-                new FakeTrueSpecification(),
+                new TrueSpecificationFake(),
                 Specification<Entity>.All
             },
             new object[]
             {
-                new FakeFalseSpecification(),
+                new FalseSpecificationFake(),
                 Specification<Entity>.All
             },
             new object[]
@@ -221,11 +221,11 @@ public class SpecificationTests
         {
             new object[]
             {
-                new FakeTrueSpecification()
+                new TrueSpecificationFake()
             },
             new object[]
             {
-                new FakeFalseSpecification()
+                new FalseSpecificationFake()
             }
         };
 }
