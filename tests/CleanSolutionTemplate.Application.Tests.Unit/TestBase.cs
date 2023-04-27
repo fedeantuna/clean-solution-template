@@ -43,7 +43,10 @@ public abstract class TestBase
 
     private void AddFakeMediatorRequests()
     {
-        this._services.AddMediatR(Assembly.GetExecutingAssembly());
+        this._services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
     }
 
     private void SetupInMemoryLogger()
