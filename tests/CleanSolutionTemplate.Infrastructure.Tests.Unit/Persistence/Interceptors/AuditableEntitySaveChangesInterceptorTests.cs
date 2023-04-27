@@ -1,25 +1,31 @@
 using CleanSolutionTemplate.Application.Common.Persistence;
+using CleanSolutionTemplate.Application.Common.Wrappers;
 using CleanSolutionTemplate.Infrastructure.Persistence.Interceptors;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence.Interceptors;
 
-public class AuditableEntitySaveChangesInterceptorTests : TestBase
+public class AuditableEntitySaveChangesInterceptorTests
 {
     private readonly FakeDbContext _fakeDbContext;
+    private readonly IDateTimeOffsetWrapper _dateTimeOffsetWrapper;
 
     private readonly AuditableEntitySaveChangesInterceptor _sut;
 
     public AuditableEntitySaveChangesInterceptorTests()
     {
-        this._fakeDbContext = (FakeDbContext)this.FindService<IApplicationDbContext>();
+        var provider = new ServiceProviderBuilder().Build();
 
-        this._sut = this.FindService<AuditableEntitySaveChangesInterceptor>();
+        this._fakeDbContext = (FakeDbContext)provider.GetRequiredService<IApplicationDbContext>();
+        this._dateTimeOffsetWrapper = provider.GetRequiredService<IDateTimeOffsetWrapper>();
+
+        this._sut = provider.GetRequiredService<AuditableEntitySaveChangesInterceptor>();
     }
 
     [Fact]
@@ -43,10 +49,10 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
         await this.CallSavingChangesAsync();
 
         // Assert
-        this.VerifyFakeEntities(new[] { TestUserId, TestUserId },
-            new[] { TestUserId, TestUserId },
-            new DateTimeOffset?[] { this.UtcNow, this.UtcNow },
-            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
+        this.VerifyFakeEntities(new[] { Constants.TestUserId, Constants.TestUserId },
+            new[] { Constants.TestUserId, Constants.TestUserId },
+            new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow },
+            new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
 
     [Fact]
@@ -116,9 +122,9 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
 
         // Assert
         this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
-            new[] { TestUserId, TestUserId },
+            new[] { Constants.TestUserId, Constants.TestUserId },
             new DateTimeOffset?[] { null, null },
-            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
+            new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
 
     [Fact]
@@ -141,10 +147,10 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
         this.CallSavingChanges();
 
         // Assert
-        this.VerifyFakeEntities(new[] { TestUserId, TestUserId },
-            new[] { TestUserId, TestUserId },
-            new DateTimeOffset?[] { this.UtcNow, this.UtcNow },
-            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
+        this.VerifyFakeEntities(new[] { Constants.TestUserId, Constants.TestUserId },
+            new[] { Constants.TestUserId, Constants.TestUserId },
+            new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow },
+            new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
 
     [Fact]
@@ -214,9 +220,9 @@ public class AuditableEntitySaveChangesInterceptorTests : TestBase
 
         // Assert
         this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
-            new[] { TestUserId, TestUserId },
+            new[] { Constants.TestUserId, Constants.TestUserId },
             new DateTimeOffset?[] { null, null },
-            new DateTimeOffset?[] { this.UtcNow, this.UtcNow });
+            new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
 
     private static (DbContextEventData, InterceptionResult<int>) CreateSavingChangesParameters(DbContext? context)

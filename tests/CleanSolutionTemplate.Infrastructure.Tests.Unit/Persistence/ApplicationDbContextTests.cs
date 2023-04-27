@@ -3,17 +3,27 @@ using CleanSolutionTemplate.Application.Common.Wrappers;
 using CleanSolutionTemplate.Domain.Common;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using FluentAssertions;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence;
 
-public class ApplicationDbContextTests : TestBase
+public class ApplicationDbContextTests
 {
+    private readonly IDateTimeOffsetWrapper _dateTimeOffsetWrapper;
+    private readonly IPublisher _publisher;
+
     private readonly IApplicationDbContext _sut;
 
     public ApplicationDbContextTests()
     {
-        this._sut = this.FindService<IApplicationDbContext>();
+        var provider = new ServiceProviderBuilder().Build();
+
+        this._dateTimeOffsetWrapper = provider.GetRequiredService<IDateTimeOffsetWrapper>();
+        this._publisher = provider.GetRequiredService<IPublisher>();
+
+        this._sut = provider.GetRequiredService<IApplicationDbContext>();
     }
 
     [Fact]
@@ -24,7 +34,7 @@ public class ApplicationDbContextTests : TestBase
 
         await ((FakeDbContext)this._sut).FakeEntities.AddAsync(fakeEntity);
 
-        var now = this.FindService<IDateTimeOffsetWrapper>().UtcNow;
+        var now = this._dateTimeOffsetWrapper.UtcNow;
 
         // Act
         await this._sut.SaveChangesAsync();
@@ -32,8 +42,8 @@ public class ApplicationDbContextTests : TestBase
         // Assert
         fakeEntity.CreatedAt.Should().Be(now);
         fakeEntity.LastModifiedAt.Should().Be(now);
-        fakeEntity.CreatedBy.Should().Be(TestUserId);
-        fakeEntity.LastModifiedBy.Should().Be(TestUserId);
+        fakeEntity.CreatedBy.Should().Be(Constants.TestUserId);
+        fakeEntity.LastModifiedBy.Should().Be(Constants.TestUserId);
     }
 
     [Fact]
@@ -49,10 +59,12 @@ public class ApplicationDbContextTests : TestBase
 
         await ((FakeDbContext)this._sut).FakeEntities.AddAsync(fakeEntity, cancellationToken);
 
+        var publisherMock = Mock.Get(this._publisher);
+
         // Act
         await this._sut.SaveChangesAsync(cancellationToken);
 
         // Assert
-        this.PublisherMock.Verify(p => p.Publish(domainEvent, cancellationToken));
+        publisherMock.Verify(p => p.Publish(domainEvent, cancellationToken), Times.Once);
     }
 }

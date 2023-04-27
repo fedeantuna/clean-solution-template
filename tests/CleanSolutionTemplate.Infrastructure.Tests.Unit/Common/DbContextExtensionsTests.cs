@@ -4,16 +4,19 @@ using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Common;
 
-public class DbContextExtensionsTests : TestBase
+public class DbContextExtensionsTests
 {
     private readonly FakeDbContext _fakeDbContext;
 
     public DbContextExtensionsTests()
     {
-        this._fakeDbContext = (FakeDbContext)this.FindService<IApplicationDbContext>();
+        var provider = new ServiceProviderBuilder().Build();
+
+        this._fakeDbContext = (FakeDbContext)provider.GetRequiredService<IApplicationDbContext>();
     }
 
     [Fact]

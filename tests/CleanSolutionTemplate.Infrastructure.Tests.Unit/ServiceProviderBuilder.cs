@@ -10,17 +10,13 @@ using Moq;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit;
 
-public class TestBase
+public class ServiceProviderBuilder
 {
     private const string InMemoryDatabaseName = "InMemoryDatabase";
-    private const string TestUserEmail = "test-user-email";
-
-    protected const string TestUserId = "test-user-id";
 
     private readonly IServiceCollection _services = new ServiceCollection();
-    private readonly IServiceProvider _provider;
 
-    protected TestBase()
+    public ServiceProviderBuilder()
     {
         this._services.AddInfrastructureServices(null!, true);
         this.ReplaceApplicationDbContextWithFakeDbContext();
@@ -31,19 +27,9 @@ public class TestBase
         this.AddApplicationServiceMocks();
 
         this.SetupWrapperMocks();
-
-        this._provider = this._services.BuildServiceProvider();
     }
 
-    protected DateTimeOffset UtcNow { get; } = DateTimeOffset.UtcNow;
-
-    protected Mock<IPublisher> PublisherMock { get; private set; } = null!;
-
-    protected T FindService<T>()
-        where T : notnull
-    {
-        return this._provider.GetRequiredService<T>();
-    }
+    public IServiceProvider Build() => this._services.BuildServiceProvider();
 
     private void ReplaceApplicationDbContextWithFakeDbContext()
     {
@@ -63,8 +49,8 @@ public class TestBase
     private void AddPresentationServiceMocks()
     {
         var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(TestUserId);
-        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(TestUserEmail);
+        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(Constants.TestUserId);
+        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(Constants.TestUserEmail);
         this._services.AddTransient(_ => userServiceMock.Object);
     }
 
@@ -73,16 +59,17 @@ public class TestBase
         var mediatorMock = new Mock<IMediator>();
         this._services.AddTransient(_ => mediatorMock.Object);
 
-        this.PublisherMock = new Mock<IPublisher>();
-        this._services.AddTransient(_ => this.PublisherMock.Object);
+        var publisherMock = new Mock<IPublisher>();
+        this._services.AddTransient(_ => publisherMock.Object);
     }
 
     private void SetupWrapperMocks()
     {
         var dateTimeOffsetWrapper = this._services.Single(s => s.ServiceType == typeof(IDateTimeOffsetWrapper));
         this._services.Remove(dateTimeOffsetWrapper);
+
         var dateTimeOffsetWrapperMock = new Mock<IDateTimeOffsetWrapper>();
-        dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(this.UtcNow);
+        dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(DateTimeOffset.UtcNow);
         this._services.AddSingleton(_ => dateTimeOffsetWrapperMock.Object);
     }
 }

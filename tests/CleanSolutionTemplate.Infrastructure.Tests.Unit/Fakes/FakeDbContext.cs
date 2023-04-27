@@ -19,6 +19,8 @@ internal class FakeDbContext : ApplicationDbContext
         modelBuilder.Entity<FakeRelatedEntity>()
             .OwnsOne(e =>
                 e.FakeValueObject);
+
+        base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<FakeEntity> FakeEntities =>
