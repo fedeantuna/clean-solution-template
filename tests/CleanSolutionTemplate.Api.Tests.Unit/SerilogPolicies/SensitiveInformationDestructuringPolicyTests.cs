@@ -1,6 +1,7 @@
 ﻿using CleanSolutionTemplate.Api.SerilogPolicies;
 using CleanSolutionTemplate.Api.Tests.Unit.Fakes;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog.Events;
 using Serilog.Sinks.InMemory;
@@ -8,7 +9,7 @@ using Serilog.Sinks.InMemory.Assertions;
 
 namespace CleanSolutionTemplate.Api.Tests.Unit.SerilogPolicies;
 
-public class SensitiveInformationDestructuringPolicyTests : TestBase
+public class SensitiveInformationDestructuringPolicyTests
 {
     private const string LogMessageTemplate = "Destructuring {@Object}";
 
@@ -18,7 +19,9 @@ public class SensitiveInformationDestructuringPolicyTests : TestBase
 
     public SensitiveInformationDestructuringPolicyTests()
     {
-        this._logger = this.FindService<ILogger<SensitiveInformationDestructuringPolicyTests>>();
+        var provider = new ServiceProviderBuilder().Build();
+
+        this._logger = provider.GetRequiredService<ILogger<SensitiveInformationDestructuringPolicyTests>>();
 
         this._fakeModel = CreateFakeModel();
     }
