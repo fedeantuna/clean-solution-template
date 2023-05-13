@@ -22,15 +22,7 @@ Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
 At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported. To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
 
-In order to run the Integration Tests there are a few steps needed before.
-
-1.  If not installed already, install [Docker](https://docker.com)
-
-2.  Run the following to get the needed Docker Images:
-    *   `docker pull testcontainers/ryuk:0.3.4`
-    *   `docker pull fedeantuna/test-identity-server:v1.0.1`
-
-Now the first thing to do is to update the stryker configuration files that are located under each source project. Don't forget to change this README accordingly to your project and to review the LICENSE.
+The first thing to do is to update the stryker configuration files that are located under each source project. Don't forget to change this README accordingly to your project and to review the LICENSE.
 
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
@@ -120,11 +112,11 @@ This layer depends on both the Application and Infrastructure layers, however, t
 
 ### Unit Tests
 
-Our definition of Unit Test is a test that takes a layer in isolation and mocks every external dependency or those that belongs to a different layer. We rely on DI to obtain the SUTs and the configuration for it can be found in the TestBase class. These tests will run isolated from one another, making xUnit a great tool for the job. No test should depend on the execution or state of a previous test. Everything that relates to the database will be done using an InMemory Database.
+Our definition of Unit Test is a test that takes a layer in isolation and mocks every external dependency or those that belongs to a different layer. We rely on DI to obtain the SUTs and the configuration for it can be found in the ServiceProviderBuilder class. These tests will run isolated from one another, making xUnit a great tool for the job. No test should depend on the execution or state of a previous test. Everything that relates to the database will be done using an InMemory Database.
 
 ### Integration Tests
 
-Our definition of Integration Test is a test that takes all the layers and works only mocking external dependencies. We rely on DI to obtain the SUTs and the configuration for it can be found in the TestBase class. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run within a Docker container using a real database.
+Our definition of Integration Test is a test that takes the Domain, Application and Infrastructure layers and mocks only external dependencies. We rely on DI to obtain the SUTs and the configuration for it can be found in the ServiceProviderBuilder class. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run within a Docker container using a real database.
 
 ### End to End Tests
 
