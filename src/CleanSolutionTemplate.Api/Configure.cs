@@ -7,7 +7,7 @@ public static class Configure
 {
     public static void SetupMiddleware(this WebApplication app)
     {
-        app.UseHealthChecks("/health");
+        app.UseHealthChecks("/healthcheck");
 
         app.UseHttpsRedirection();
 

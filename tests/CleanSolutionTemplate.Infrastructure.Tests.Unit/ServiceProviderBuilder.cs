@@ -18,7 +18,7 @@ public class ServiceProviderBuilder
 
     public ServiceProviderBuilder()
     {
-        this._services.AddInfrastructureServices(null!, true);
+        this._services.AddInfrastructureServices(null!);
         this.ReplaceApplicationDbContextWithFakeDbContext();
 
         this._services.AddLogging();

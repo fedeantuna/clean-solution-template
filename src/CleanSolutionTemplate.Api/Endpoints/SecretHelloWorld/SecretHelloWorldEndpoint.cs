@@ -26,6 +26,7 @@ public class SecretHelloWorldEndpoint : Endpoint<SecretHelloWorldRequest, Secret
 
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public record SecretHelloWorldRequest
 {
     public string Name { get; init; } = "Random Person";
