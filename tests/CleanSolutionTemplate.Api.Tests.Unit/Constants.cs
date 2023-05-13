@@ -1,7 +1,10 @@
-﻿namespace CleanSolutionTemplate.Api.Tests.Unit;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace CleanSolutionTemplate.Api.Tests.Unit;
+
+[SuppressMessage("ReSharper", "ConvertToConstant.Global")]
 public static class Constants
 {
-    public const string TestUserId = "test-user-id";
-    public const string TestUserEmail = "test-user-email";
+    public static readonly  string TestUserId = "test-user-id";
+    public static readonly  string TestUserEmail = "test-user-email";
 }

@@ -379,7 +379,9 @@ StrykerOutput/
 .idea/**/*.iml
 .idea/**/contentModel.xml
 .idea/**/modules.xml
-.idea/**/sonarlint/**
+
+# Rider plugins
+.idea/**/sonarlint
 
 Thumbs.db
 Desktop.ini
