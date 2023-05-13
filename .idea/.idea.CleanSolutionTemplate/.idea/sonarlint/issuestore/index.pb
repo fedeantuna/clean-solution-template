@@ -23,10 +23,6 @@ Esrc/CleanSolutionTemplate.Infrastructure/Common/MediatorExtensions.cs,2\1\2163
 Xtests/CleanSolutionTemplate.Infrastructure.Tests.Unit/Common/DbContextExtensionsTests.cs,b\7\b773d6be8ad95032d2e2b58442df8ecb98b56a44
 š
 jsrc/CleanSolutionTemplate.Infrastructure/Persistence/Interceptors/AuditableEntitySaveChangesInterceptor.cs,a\9\a9e93933df5a8403fe6c46fbaeda3c32c50abdbb
-¬
-|tests/CleanSolutionTemplate.Infrastructure.Tests.Unit/Persistence/Interceptors/AuditableEntitySaveChangesInterceptorTests.cs,4\a\4af5302a75071f275b94c2dabc1a11ece8fcb258
-‡
-Wtests/CleanSolutionTemplate.Infrastructure.Tests.Unit/Common/MediatorExtensionsTests.cs,7\8\7840aaa6434cb052769decc4e2ee626bc0386aa1
 a
 1src/CleanSolutionTemplate.Domain/Common/Entity.cs,a\f\afade89173ed73bfb313e410773e6725d93a27b0
 j
