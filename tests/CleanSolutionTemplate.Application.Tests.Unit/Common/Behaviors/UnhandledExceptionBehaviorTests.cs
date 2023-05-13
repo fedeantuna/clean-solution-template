@@ -20,7 +20,7 @@ public class UnhandledExceptionBehaviorTests
     }
 
     [Fact]
-    public async Task LogsError_WhenRequestFails()
+    public async Task LogsErrorWhenRequestFails()
     {
         // Arrange
         var request = new FailingRequestFake();
