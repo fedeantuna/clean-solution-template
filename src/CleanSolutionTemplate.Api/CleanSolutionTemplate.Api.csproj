@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+      <UserSecretsId>339e3e00-4033-4ff8-957b-232a5b858e32</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
@@ -22,7 +23,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="CleanSolutionTemplate.Api.Tests.Unit" />
-        <InternalsVisibleTo Include="CleanSolutionTemplate.Tests.Integration" />
+        <InternalsVisibleTo Include="CleanSolutionTemplate.Api.Tests.EndToEnd" />
     </ItemGroup>
 
 </Project>

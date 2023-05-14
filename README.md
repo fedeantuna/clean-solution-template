@@ -24,6 +24,10 @@ At this moment, the supported way to create a solution using this template is fr
 
 The first thing to do is to update the stryker configuration files that are located under each source project. Don't forget to change this README accordingly to your project and to review the LICENSE.
 
+## Running PostgresSQL locally
+
+The easiest and simplest way to run a local DB is using Docker, the connection string for the PostgresSQL DB in the `appsettings.Development.json` will allow you to connect to the container that gets created by running `docker run --name cst-postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15.3-alpine3.18`
+
 ## Static Analysis, Online Coverage Report and Online Mutation Report
 
 This template uses Codacy as the tool for code analysis and reporting on test coverage. In order to set it up follow the steps described in the docs:

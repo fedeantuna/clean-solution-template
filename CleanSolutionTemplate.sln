@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Api.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Tests.Integration", "tests\CleanSolutionTemplate.Tests.Integration\CleanSolutionTemplate.Tests.Integration.csproj", "{89D9E01E-971C-4F1D-956F-9AA19F2B36D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Tests.EndToEnd", "tests\CleanSolutionTemplate.Tests.EndToEnd\CleanSolutionTemplate.Tests.EndToEnd.csproj", "{9046E28D-29EF-44B2-9BC7-374F1A6B05D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanSolutionTemplate.Api.Tests.EndToEnd", "tests\CleanSolutionTemplate.Api.Tests.EndToEnd\CleanSolutionTemplate.Api.Tests.EndToEnd.csproj", "{9046E28D-29EF-44B2-9BC7-374F1A6B05D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E6E996C1-3135-44D8-AC9A-A06FDCA9A4BF}"
 	ProjectSection(SolutionItems) = preProject

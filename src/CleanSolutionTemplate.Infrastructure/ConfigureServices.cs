@@ -27,13 +27,9 @@ public static class ConfigureServices
     {
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
-        const string cosmosAccountEndpointSettingName = "Cosmos:AccountEndpoint";
-        const string cosmosAccountKeySettingName = "Cosmos:AccountKey";
-        const string cosmosDatabaseNameSettingName = "Cosmos:DatabaseName";
+        const string defaultConnectionStringName = "Default";
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseCosmos(configuration.GetValue<string>(cosmosAccountEndpointSettingName)!,
-                configuration.GetValue<string>(cosmosAccountKeySettingName)!,
-                configuration.GetValue<string>(cosmosDatabaseNameSettingName)!));
+            options.UseNpgsql(configuration.GetConnectionString(defaultConnectionStringName)));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
