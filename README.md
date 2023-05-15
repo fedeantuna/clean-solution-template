@@ -2,7 +2,6 @@
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/fedeantuna/clean-solution-template/package.yml?label=package\&style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/.github/workflows/package.yml)
 [![Codacy Code Analysis](https://img.shields.io/codacy/grade/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com\&utm_medium=referral\&utm_content=fedeantuna/clean-solution-template\&utm_campaign=Badge_Grade)
 [![Codacy Code Coverage](https://img.shields.io/codacy/coverage/ff9e3c8e39824582be03f19769d3b6ad?style=flat-square)](https://www.codacy.com/gh/fedeantuna/clean-solution-template/dashboard?utm_source=github.com\&utm_medium=referral\&utm_content=fedeantuna/clean-solution-template\&utm_campaign=Badge_Coverage)
-[![Mutation Testing Score](https://img.shields.io/endpoint?style=flat-square\&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffedeantuna%2Fclean-solution-template%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/fedeantuna/clean-solution-template/main)
 [![NuGet](https://img.shields.io/nuget/v/CleanSolutionTemplate?style=flat-square)](https://www.nuget.org/packages/CleanSolutionTemplate/)
 [![GitHub](https://img.shields.io/github/license/fedeantuna/clean-solution-template?style=flat-square)](https://github.com/fedeantuna/clean-solution-template/blob/main/LICENSE)
 
@@ -22,13 +21,13 @@ Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
 At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported. To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
 
-The first thing to do is to update the stryker configuration files that are located under each source project. Don't forget to change this README accordingly to your project and to review the LICENSE.
+Don't forget to change this README accordingly to your project and to review the LICENSE.
 
 ## Running PostgresSQL locally
 
 The easiest and simplest way to run a local DB is using Docker, the connection string for the PostgresSQL DB in the `appsettings.Development.json` will allow you to connect to the container that gets created by running `docker run --name cst-postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15.3-alpine3.18`
 
-## Static Analysis, Online Coverage Report and Online Mutation Report
+## Static Analysis and Online Coverage Report
 
 This template uses Codacy as the tool for code analysis and reporting on test coverage. In order to set it up follow the steps described in the docs:
 
@@ -37,62 +36,17 @@ This template uses Codacy as the tool for code analysis and reporting on test co
 *   https://docs.codacy.com/repositories-configure/integrations/github-integration/#configuring
 *   https://docs.codacy.com/faq/general/how-do-i-block-merging-prs-using-codacy-as-a-quality-gate/
 
-For the Mutation Report this template uses Stryker. You need to sign in with your GitHub Account into https://dashboard.stryker-mutator.io/ and then allow access to your repository. Once that is done follow the instructions on how to set up the corresponding secrets. Remember to modify the `stryker-config.json`files that are in each Source Project to match the name with your actual repository.
-
-## Local Mutation Report
-
-Running the mutation report locally can be done by executing the stryker scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the stryker tool, please visit the [Stryker Web](https://stryker-mutator.io/docs/stryker-net/introduction/) to know more about the project.
-
 ## Local Coverage Report
 
 Running the coverage report locally can be done by executing the test coverage scripts inside the `scripts` directory. Both are the same script, one written in Powershell and the other one in Bash. These scripts make use of the report-generator tool, please visit the [ReportGenerator GitHub](https://github.com/danielpalme/ReportGenerator) to know more about the project.
 
 ## Structure Overview
 
-The project is divided as follows
+The project is divided as follows:
 
-```text
-.
-|__ CleanSolutionTemplate.sln
-|
-|__ scripts
-|   |__ run_stryker.ps1
-|   |__ run_stryker.sh
-|   |__ run_test_coverage.ps1
-|   |__ run_test_coverage.sh
-|
-|__ src
-|   |__ CleanSolutionTemplate.Api
-|       |__ ...
-|       |__ stryker-config.json
-|   |__ CleanSolutionTemplate.Application
-|       |__ ...
-|       |__ stryker-config.json
-|   |__ CleanSolutionTemplate.Domain
-|       |__ ...
-|       |__ stryker-config.json
-|   |__ CleanSolutionTemplate.Infrastructure
-|       |__ ...
-|       |__ stryker-config.json
-|
-|__ tests
-|   |__ CleanSolutionTemplate.Api.Tests.Unit
-|   |__ CleanSolutionTemplate.Application.Tests.Unit
-|   |__ CleanSolutionTemplate.Domain.Tests.Unit
-|   |__ CleanSolutionTemplate.Infrastructure.Tests.Unit
-|   |__ CleanSolutionTemplate.Tests.EndToEnd
-|   |__ CleanSolutionTemplate.Tests.Integration
-|
-|__ LICENSE
-|
-|__ README.md
-```
-
-The `scripts` directory is where all scripts should be placed. By default four come with the template to run the tests and generate a coverage and mutation report locally.
-
-The `src` directory is where all the source code should be placed. By default four projects are included here. The Api project is the default Presentation Layer, then we have the Application, Domain and Infrastructure layers.
-
-The `tests` directory is where all the code for the tests should be placed. By default four Unit Test projects corresponding to a `src` project, an Integration Test and an End to End Test are placed here.
+*   The `scripts` directory is where all scripts should be placed. By default four come with the template to run the tests and generate a coverage and mutation report locally.
+*   The `src` directory is where all the source code should be placed. By default four projects are included here. The Api project is the default Presentation Layer, then we have the Application, Domain and Infrastructure layers.
+*   The `tests` directory is where all the code for the tests should be placed. By default four Unit Test projects corresponding to a `src` project, an Integration Test and an End to End Test are placed here.
 
 ## Layers Overview
 
