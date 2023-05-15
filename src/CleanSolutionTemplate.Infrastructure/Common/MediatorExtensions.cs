@@ -7,7 +7,8 @@ namespace CleanSolutionTemplate.Infrastructure.Common;
 public static class MediatorExtensions
 {
     public static Task DispatchDomainEvents(this IPublisher publisher,
-        DbContext context) => publisher.DispatchDomainEvents(context, default);
+        DbContext context) =>
+        publisher.DispatchDomainEvents(context, default);
 
     public static async Task DispatchDomainEvents(this IPublisher publisher,
         DbContext context,
@@ -25,9 +26,6 @@ public static class MediatorExtensions
 
         entities.ForEach(e => e.ClearDomainEvents());
 
-        foreach (var domainEvent in domainEvents)
-        {
-            await publisher.Publish(domainEvent, cancellationToken);
-        }
+        foreach (var domainEvent in domainEvents) await publisher.Publish(domainEvent, cancellationToken);
     }
 }

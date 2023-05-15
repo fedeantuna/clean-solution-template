@@ -1,16 +1,25 @@
 using System.Security.Claims;
 using CleanSolutionTemplate.Application.Common.Services;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace CleanSolutionTemplate.Api.Tests.Unit.Services;
 
-public class UserServiceTests : TestBase
+public class UserServiceTests
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     private readonly IUserService _sut;
 
     public UserServiceTests()
     {
-        this._sut = this.FindService<IUserService>();
+        var provider = new ServiceProviderBuilder().Build();
+
+        this._httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+
+        this._sut = provider.GetRequiredService<IUserService>();
     }
 
     [Fact]
@@ -20,7 +29,7 @@ public class UserServiceTests : TestBase
         var result = this._sut.GetCurrentUserId();
 
         // Assert
-        result.Should().Be(TestUserId);
+        result.Should().Be(Constants.TestUserId);
     }
 
     [Fact]
@@ -30,7 +39,7 @@ public class UserServiceTests : TestBase
         var result = this._sut.GetCurrentUserEmail();
 
         // Assert
-        result.Should().Be(TestUserEmail);
+        result.Should().Be(Constants.TestUserEmail);
     }
 
     [Fact]
@@ -38,7 +47,9 @@ public class UserServiceTests : TestBase
     {
         // Arrange
         const string unknownUserId = "Unknown";
-        this.HttpContextMock.SetupGet(hc => hc.User).Returns(new ClaimsPrincipal());
+
+        var httpContextMock = Mock.Get(this._httpContextAccessor.HttpContext!);
+        httpContextMock.SetupGet(hc => hc.User).Returns(new ClaimsPrincipal());
 
         // Act
         var result = this._sut.GetCurrentUserId();
@@ -52,7 +63,9 @@ public class UserServiceTests : TestBase
     {
         // Arrange
         const string unknownUserEmail = "Unknown";
-        this.HttpContextMock.SetupGet(hc => hc.User).Returns(new ClaimsPrincipal());
+
+        var httpContextMock = Mock.Get(this._httpContextAccessor.HttpContext!);
+        httpContextMock.SetupGet(hc => hc.User).Returns(new ClaimsPrincipal());
 
         // Act
         var result = this._sut.GetCurrentUserEmail();

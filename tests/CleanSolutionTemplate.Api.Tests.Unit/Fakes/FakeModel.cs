@@ -52,10 +52,8 @@ public record FakeInnerModelRecord
 public class FakeUnreadableModel
 {
     private readonly Exception _exception;
-    public FakeUnreadableModel(Exception exception)
-    {
-        this._exception = exception;
-    }
+
+    public FakeUnreadableModel(Exception exception) => this._exception = exception;
 
     public int ThrowingExceptionProperty =>
         throw this._exception;

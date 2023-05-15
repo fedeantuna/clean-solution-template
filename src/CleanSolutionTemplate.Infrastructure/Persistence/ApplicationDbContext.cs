@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanSolutionTemplate.Infrastructure.Persistence;
 
-internal class ApplicationDbContext : DbContext, IApplicationDbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
     private readonly IPublisher _publisher;
@@ -22,6 +22,16 @@ internal class ApplicationDbContext : DbContext, IApplicationDbContext
         this._auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
+    public async Task<int> SaveChangesAsync() => await this.SaveChangesAsync(default);
+
+    [SuppressMessage("ReSharper", "OptionalParameterHierarchyMismatch")]
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        await this._publisher.DispatchDomainEvents(this, cancellationToken);
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -31,15 +41,4 @@ internal class ApplicationDbContext : DbContext, IApplicationDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.AddInterceptors(this._auditableEntitySaveChangesInterceptor);
-
-    public async Task<int> SaveChangesAsync() =>
-        await this.SaveChangesAsync(default);
-
-    [SuppressMessage("ReSharper", "OptionalParameterHierarchyMismatch")]
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-    {
-        await this._publisher.DispatchDomainEvents(this, cancellationToken);
-
-        return await base.SaveChangesAsync(cancellationToken);
-    }
 }

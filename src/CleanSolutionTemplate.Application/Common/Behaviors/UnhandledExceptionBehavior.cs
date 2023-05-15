@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanSolutionTemplate.Application.Common.Behaviors;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class UnhandledExceptionBehavior<TRequest, TException> : IRequestExceptionAction<TRequest, TException>
     where TRequest : notnull
     where TException : Exception
@@ -14,10 +15,7 @@ public class UnhandledExceptionBehavior<TRequest, TException> : IRequestExceptio
 
     [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
     [SuppressMessage("ReSharper", "ContextualLoggerProblem")]
-    public UnhandledExceptionBehavior(ILogger<TRequest> logger)
-    {
-        this._logger = logger;
-    }
+    public UnhandledExceptionBehavior(ILogger<TRequest> logger) => this._logger = logger;
 
     public Task Execute(TRequest request, TException exception, CancellationToken cancellationToken)
     {

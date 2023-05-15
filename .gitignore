@@ -380,6 +380,9 @@ StrykerOutput/
 .idea/**/contentModel.xml
 .idea/**/modules.xml
 
+# Rider plugins
+.idea/**/sonarlint
+
 Thumbs.db
 Desktop.ini
 .DS_Store

@@ -8,43 +8,31 @@ public abstract class Specification<TEntity>
 {
     public static readonly Specification<TEntity> All = new IdentitySpecification<TEntity>();
 
-    public bool IsSatisfiedBy(TEntity entity) =>
-        this.ToExpression().Compile()(entity);
+    public bool IsSatisfiedBy(TEntity entity) => this.ToExpression().Compile()(entity);
 
-    public abstract Expression<Func<TEntity, bool>> ToExpression();
+    protected abstract Expression<Func<TEntity, bool>> ToExpression();
 
     public Specification<TEntity> And(Specification<TEntity> specification)
     {
-        if (this == All)
-        {
-            return specification;
-        }
-        if (specification == All)
-        {
-            return this;
-        }
+        if (this == All) return specification;
+        if (specification == All) return this;
 
         return new AndSpecification<TEntity>(this, specification);
     }
 
     public Specification<TEntity> Or(Specification<TEntity> specification)
     {
-        if (this == All || specification == All)
-        {
-            return All;
-        }
+        if (this == All || specification == All) return All;
 
         return new OrSpecification<TEntity>(this, specification);
     }
 
-    public Specification<TEntity> Not()
-        => new NotSpecification<TEntity>(this);
+    public Specification<TEntity> Not() => new NotSpecification<TEntity>(this);
 
     private sealed class IdentitySpecification<T> : Specification<T>
         where T : Entity
     {
-        public override Expression<Func<T, bool>> ToExpression() =>
-            x => true;
+        protected override Expression<Func<T, bool>> ToExpression() => x => true;
     }
 
     private sealed class AndSpecification<T> : Specification<T>
@@ -59,7 +47,7 @@ public abstract class Specification<TEntity>
             this._right = right;
         }
 
-        public override Expression<Func<T, bool>> ToExpression()
+        protected override Expression<Func<T, bool>> ToExpression()
         {
             var leftExpression = this._left.ToExpression();
             var rightExpression = this._right.ToExpression();
@@ -82,7 +70,7 @@ public abstract class Specification<TEntity>
             this._right = right;
         }
 
-        public override Expression<Func<T, bool>> ToExpression()
+        protected override Expression<Func<T, bool>> ToExpression()
         {
             var leftExpression = this._left.ToExpression();
             var rightExpression = this._right.ToExpression();
@@ -98,12 +86,9 @@ public abstract class Specification<TEntity>
     {
         private readonly Specification<T> _specification;
 
-        public NotSpecification(Specification<T> specification)
-        {
-            this._specification = specification;
-        }
+        public NotSpecification(Specification<T> specification) => this._specification = specification;
 
-        public override Expression<Func<T, bool>> ToExpression()
+        protected override Expression<Func<T, bool>> ToExpression()
         {
             var expression = this._specification.ToExpression();
 

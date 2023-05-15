@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanSolutionTemplate.Application.Common.Behaviors;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public class LoggingBehavior<TRequest> : IRequestPreProcessor<TRequest>
     where TRequest : notnull
 {

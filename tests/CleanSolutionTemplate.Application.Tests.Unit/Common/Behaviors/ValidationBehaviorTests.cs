@@ -1,103 +1,67 @@
-using CleanSolutionTemplate.Application.Common.Behaviors;
+using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using FluentAssertions;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
-using Moq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Behaviors;
 
-public class ValidationBehaviorTests : TestBase
+public class ValidationBehaviorTests
 {
-    private const string HandlerResponse = "test-handler-response";
-
-    private readonly Mock<IRequest<string>> _requestMock;
-
-    private readonly ValidationBehavior<IRequest<string>, string> _sut;
+    private readonly ISender _sender;
 
     public ValidationBehaviorTests()
     {
-        this._requestMock = new Mock<IRequest<string>>();
+        var provider = new ServiceProviderBuilder().Build();
 
-        var pipelineBehaviors = this.FindService<IEnumerable<IPipelineBehavior<IRequest<string>, string>>>();
-        this._sut = (ValidationBehavior<IRequest<string>, string>)pipelineBehaviors.First(pb =>
-            pb.GetType().Name == typeof(ValidationBehavior<,>).Name);
+        this._sender = provider.GetRequiredService<ISender>();
     }
 
     [Fact]
-    public async Task Handle_CallsValidateAsyncOnEachValidatorAndReturnsRequestHandlerResult_WhenValidationsAreSuccessful()
+    public async Task ShouldNotThrowAnyExceptionWhenValidationsArePassing()
     {
         // Arrange
-        SetupPassingValidator(this.ValidatorAMock, this._requestMock.Object);
-        SetupPassingValidator(this.ValidatorBMock, this._requestMock.Object);
+        var request = new ValidatedPassingRequestFake
+        {
+            SomeString = "some-string"
+        };
+        var cancellationToken = default(CancellationToken);
 
         // Act
-        var result = await this._sut.Handle(this._requestMock.Object, Handler, default);
+        var act = () => this._sender.Send(request, cancellationToken);
 
         // Assert
-        VerifyValidation(this.ValidatorAMock, this._requestMock.Object);
-        VerifyValidation(this.ValidatorBMock, this._requestMock.Object);
-        result.Should().Be(HandlerResponse);
+        await act.Should().NotThrowAsync();
     }
 
     [Fact]
-    public async Task Handle_CallsValidateAsyncOnEachValidatorAndThrowsValidationException_WhenValidationsContainFailures()
+    public async Task ShouldNotThrowAnyExceptionWhenThereAreNoValidations()
     {
         // Arrange
-        SetupPassingValidator(this.ValidatorBMock, this._requestMock.Object);
-        SetupFailingValidator(this.ValidatorAMock, this._requestMock.Object);
+        var request = new UnvalidatedPassingRequestFake();
+        var cancellationToken = default(CancellationToken);
 
         // Act
-        Func<Task> act = () => this._sut.Handle(this._requestMock.Object, Handler, default);
+        var act = () => this._sender.Send(request, cancellationToken);
+
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionWhenTheValidationFails()
+    {
+        // Arrange
+        var request = new ValidatedPassingRequestFake
+        {
+            SomeString = null
+        };
+        var cancellationToken = default(CancellationToken);
+
+        // Act
+        var act = () => this._sender.Send(request, cancellationToken);
 
         // Assert
         await act.Should().ThrowAsync<ValidationException>();
-        VerifyValidation(this.ValidatorBMock, this._requestMock.Object);
-        VerifyValidation(this.ValidatorAMock, this._requestMock.Object);
-    }
-
-    [Fact]
-    public async Task Handle_ReturnsRequestHandlerResult_WhenNoValidatorsAreRegistered()
-    {
-        // Arrange
-        var sut = new ValidationBehavior<IRequest<string>, string>(Enumerable.Empty<IValidator<IRequest<string>>>());
-
-        // Act
-        var result = await sut.Handle(this._requestMock.Object, Handler, default);
-
-        // Assert
-        result.Should().Be(HandlerResponse);
-    }
-
-    private static Task<string> Handler() =>
-        Task.FromResult(HandlerResponse);
-
-    private static void SetupPassingValidator(Mock<IValidator<IRequest<string>>> validator, IRequest<string> request)
-    {
-        validator.Setup(v =>
-            v.ValidateAsync(It.Is<ValidationContext<IRequest<string>>>(vc =>
-                    vc.InstanceToValidate == request),
-                default)).ReturnsAsync(new ValidationResult());
-    }
-
-    private static void SetupFailingValidator(Mock<IValidator<IRequest<string>>> validator, IRequest<string> request)
-    {
-        var validationFailures = new List<ValidationFailure>
-        {
-            new("test-property", "test-error-message")
-        };
-
-        validator.Setup(v =>
-            v.ValidateAsync(It.Is<ValidationContext<IRequest<string>>>(vc =>
-                    vc.InstanceToValidate == request),
-                default)).ReturnsAsync(new ValidationResult(validationFailures));
-    }
-
-    private static void VerifyValidation(Mock<IValidator<IRequest<string>>> validatorMock, IRequest<string> request)
-    {
-        validatorMock.Verify(v =>
-            v.ValidateAsync(It.Is<ValidationContext<IRequest<string>>>(vc =>
-                    vc.InstanceToValidate == request),
-                default), Times.Once);
     }
 }

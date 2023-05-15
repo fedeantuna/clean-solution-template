@@ -8,6 +8,89 @@ namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Specifications;
 
 public class SpecificationTests
 {
+    public static IEnumerable<object[]> AtLeastOneFalseSpecificationData =>
+        new List<object[]>
+        {
+            new object[]
+            {
+                new FalseSpecificationFake(),
+                new TrueSpecificationFake()
+            },
+            new object[]
+            {
+                new TrueSpecificationFake(),
+                new FalseSpecificationFake()
+            },
+            new object[]
+            {
+                new FalseSpecificationFake(),
+                new FalseSpecificationFake()
+            }
+        };
+
+    public static IEnumerable<object[]> AtLeastOneTrueSpecificationData =>
+        new List<object[]>
+        {
+            new object[]
+            {
+                new FalseSpecificationFake(),
+                new TrueSpecificationFake()
+            },
+            new object[]
+            {
+                new TrueSpecificationFake(),
+                new FalseSpecificationFake()
+            },
+            new object[]
+            {
+                new TrueSpecificationFake(),
+                new TrueSpecificationFake()
+            }
+        };
+
+    public static IEnumerable<object[]> AtLeastOneAllSpecificationData =>
+        new List<object[]>
+        {
+            new object[]
+            {
+                Specification<Entity>.All,
+                new TrueSpecificationFake()
+            },
+            new object[]
+            {
+                Specification<Entity>.All,
+                new FalseSpecificationFake()
+            },
+            new object[]
+            {
+                new TrueSpecificationFake(),
+                Specification<Entity>.All
+            },
+            new object[]
+            {
+                new FalseSpecificationFake(),
+                Specification<Entity>.All
+            },
+            new object[]
+            {
+                Specification<Entity>.All,
+                Specification<Entity>.All
+            }
+        };
+
+    public static IEnumerable<object[]> UnarySpecifications =>
+        new List<object[]>
+        {
+            new object[]
+            {
+                new TrueSpecificationFake()
+            },
+            new object[]
+            {
+                new FalseSpecificationFake()
+            }
+        };
+
     [Fact]
     public void All_ShouldAlwaysReturnTrue_WhenEvaluatingAnEntity()
     {
@@ -53,7 +136,8 @@ public class SpecificationTests
 
     [Theory]
     [MemberData(nameof(AtLeastOneFalseSpecificationData))]
-    public void IsSatisfiedBy_ShouldReturnFalse_WhenAtLeastOneSpecificationCombinedByAndIsFalse(Specification<Entity> leftSpecification, Specification<Entity> rightSpecification)
+    public void IsSatisfiedBy_ShouldReturnFalse_WhenAtLeastOneSpecificationCombinedByAndIsFalse(Specification<Entity> leftSpecification,
+        Specification<Entity> rightSpecification)
     {
         // Arrange
         var entity = new Mock<Entity>(Guid.NewGuid()).Object;
@@ -70,8 +154,8 @@ public class SpecificationTests
     public void IsSatisfiedBy_ShouldReturnTrue_WhenBothSpecificationsCombinedByAndAreTrue()
     {
         // Arrange
-        var leftSpecification = new FakeTrueSpecification();
-        var rightSpecification = new FakeTrueSpecification();
+        var leftSpecification = new TrueSpecificationFake();
+        var rightSpecification = new TrueSpecificationFake();
 
         var entity = new Mock<Entity>(Guid.NewGuid()).Object;
 
@@ -85,7 +169,8 @@ public class SpecificationTests
 
     [Theory]
     [MemberData(nameof(AtLeastOneAllSpecificationData))]
-    public void Or_ShouldReturnAll_WhenAtLeastOneSpecificationIsAll(Specification<Entity> leftSpecification, Specification<Entity> rightSpecification)
+    public void Or_ShouldReturnAll_WhenAtLeastOneSpecificationIsAll(Specification<Entity> leftSpecification,
+        Specification<Entity> rightSpecification)
     {
         // Arrange
         var allSpecification = Specification<Entity>.All;
@@ -99,7 +184,8 @@ public class SpecificationTests
 
     [Theory]
     [MemberData(nameof(AtLeastOneTrueSpecificationData))]
-    public void IsSatisfiedBy_ShouldReturnTrue_WhenOneSpecificationCombinedByOrIsTrue(Specification<Entity> leftSpecification, Specification<Entity> rightSpecification)
+    public void IsSatisfiedBy_ShouldReturnTrue_WhenOneSpecificationCombinedByOrIsTrue(Specification<Entity> leftSpecification,
+        Specification<Entity> rightSpecification)
     {
         // Arrange
         var entity = new Mock<Entity>(Guid.NewGuid()).Object;
@@ -116,8 +202,8 @@ public class SpecificationTests
     public void IsSatisfiedBy_ShouldReturnFalse_WhenBothSpecificationsCombinedByOrAreFalse()
     {
         // Arrange
-        var leftSpecification = new FakeFalseSpecification();
-        var rightSpecification = new FakeFalseSpecification();
+        var leftSpecification = new FalseSpecificationFake();
+        var rightSpecification = new FalseSpecificationFake();
 
         var entity = new Mock<Entity>(Guid.NewGuid()).Object;
 
@@ -146,86 +232,35 @@ public class SpecificationTests
         result.Should().Be(!specificationResult);
     }
 
-    public static IEnumerable<object[]> AtLeastOneFalseSpecificationData =>
-        new List<object[]>
-        {
-            new object[]
-            {
-                new FakeFalseSpecification(),
-                new FakeTrueSpecification()
-            },
-            new object[]
-            {
-                new FakeTrueSpecification(),
-                new FakeFalseSpecification()
-            },
-            new object[]
-            {
-                new FakeFalseSpecification(),
-                new FakeFalseSpecification()
-            }
-        };
+    [Fact]
+    public void IsSatisfiedBy_ShouldThrowArgumentException_WhenRightAndSpecificationIsNull()
+    {
+        // Arrange
+        var leftSpecification = new Mock<Specification<Entity>>().Object;
+        var rightSpecification = (Specification<Entity>)null!;
 
-    public static IEnumerable<object[]> AtLeastOneTrueSpecificationData =>
-        new List<object[]>
-        {
-            new object[]
-            {
-                new FakeFalseSpecification(),
-                new FakeTrueSpecification()
-            },
-            new object[]
-            {
-                new FakeTrueSpecification(),
-                new FakeFalseSpecification()
-            },
-            new object[]
-            {
-                new FakeTrueSpecification(),
-                new FakeTrueSpecification()
-            }
-        };
+        var specification = leftSpecification.And(rightSpecification);
 
-    public static IEnumerable<object[]> AtLeastOneAllSpecificationData =>
-        new List<object[]>
-        {
-            new object[]
-            {
-                Specification<Entity>.All,
-                new FakeTrueSpecification()
-            },
-            new object[]
-            {
-                Specification<Entity>.All,
-                new FakeFalseSpecification()
-            },
-            new object[]
-            {
-                new FakeTrueSpecification(),
-                Specification<Entity>.All
-            },
-            new object[]
-            {
-                new FakeFalseSpecification(),
-                Specification<Entity>.All
-            },
-            new object[]
-            {
-                Specification<Entity>.All,
-                Specification<Entity>.All
-            }
-        };
+        // Act
+        var act = () => specification.IsSatisfiedBy(new Mock<Entity>().Object);
 
-    public static IEnumerable<object[]> UnarySpecifications =>
-        new List<object[]>
-        {
-            new object[]
-            {
-                new FakeTrueSpecification()
-            },
-            new object[]
-            {
-                new FakeFalseSpecification()
-            }
-        };
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void IsSatisfiedBy_ShouldThrowArgumentException_WhenRightOrSpecificationIsNull()
+    {
+        // Arrange
+        var leftSpecification = new Mock<Specification<Entity>>().Object;
+        var rightSpecification = (Specification<Entity>)null!;
+
+        var specification = leftSpecification.Or(rightSpecification);
+
+        // Act
+        var act = () => specification.IsSatisfiedBy(new Mock<Entity>().Object);
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
 }

@@ -10,37 +10,24 @@ using Serilog.Sinks.InMemory;
 
 namespace CleanSolutionTemplate.Api.Tests.Unit;
 
-public class TestBase
+public class ServiceProviderBuilder
 {
-    protected const string TestUserEmail = "test-user-email";
-    protected const string TestUserId = "test-user-id";
-
     private readonly IServiceCollection _services = new ServiceCollection();
-    private readonly IServiceProvider _provider;
 
-    protected TestBase()
+    public ServiceProviderBuilder()
     {
         var configuration = new ConfigurationBuilder().Build();
-        this._services.AddPresentationServices(configuration);
+        this._services.AddPresentationServices(configuration, false);
 
         this.ReplaceLoggerWithInMemoryLogger();
 
         this.UnregisterActualHttpContextAccessor();
         this.SetupHttpContextAccessorMock();
-
-        this._provider = this._services.BuildServiceProvider();
     }
 
-    protected Mock<HttpContext> HttpContextMock { get; private set; } = null!;
+    public IServiceProvider Build() => this._services.BuildServiceProvider();
 
-    protected T FindService<T>()
-        where T : notnull
-    {
-        return this._provider.GetRequiredService<T>();
-    }
-
-    private void ReplaceLoggerWithInMemoryLogger()
-    {
+    private void ReplaceLoggerWithInMemoryLogger() =>
         this._services.AddLogging(builder =>
         {
             builder.ClearProviders();
@@ -53,7 +40,6 @@ public class TestBase
                 .CreateLogger();
             builder.AddSerilog(logger);
         });
-    }
 
     private void UnregisterActualHttpContextAccessor()
     {
@@ -67,18 +53,18 @@ public class TestBase
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, TestUserId),
-            new(ClaimTypes.Email, TestUserEmail)
+            new(ClaimTypes.NameIdentifier, Constants.TestUserId),
+            new(ClaimTypes.Email, Constants.TestUserEmail)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims);
 
         var user = new ClaimsPrincipal(claimsIdentity);
 
-        this.HttpContextMock = new Mock<HttpContext>();
-        this.HttpContextMock.SetupGet(hc => hc.User).Returns(user);
+        var httpContextMock = new Mock<HttpContext>();
+        httpContextMock.SetupGet(hc => hc.User).Returns(user);
 
-        httpContextAccessorMock.SetupGet(hca => hca.HttpContext).Returns(this.HttpContextMock.Object);
+        httpContextAccessorMock.SetupGet(hca => hca.HttpContext).Returns(httpContextMock.Object);
 
         this._services.AddSingleton(httpContextAccessorMock.Object);
     }

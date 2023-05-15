@@ -3,17 +3,18 @@ using System.Text;
 using CleanSolutionTemplate.Api.Endpoints.SecretHelloWorld;
 using FluentAssertions;
 
-namespace CleanSolutionTemplate.Tests.Integration.Endpoints.SecretHelloWorld;
+namespace CleanSolutionTemplate.Api.Tests.EndToEnd.Endpoints.SecretHelloWorld;
 
-public class SecretHelloWorldEndpointTests : TestBase
+public class SecretHelloWorldEndpointTests
 {
     private const string RequestUri = "api/secret-hello-world";
 
+    [Test]
     public async Task ShouldNotAllowUnauthorizedUsersToAccessProtectedEndpoints()
     {
-        this.EnsureRequestIsNotAuthenticated();
+        Testing.EnsureRequestIsNotAuthenticated();
 
-        var response = await this.SendRequest(HttpMethod.Get, RequestUri);
+        var response = await Testing.SendRequest(HttpMethod.Get, RequestUri);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -21,13 +22,13 @@ public class SecretHelloWorldEndpointTests : TestBase
     [Test]
     public async Task ShouldDisplayCorrectMessageForAuthenticatedUser_WhenNoBodyIsSent()
     {
-        await this.EnsureRequestIsAuthenticated();
+        await Testing.EnsureRequestIsAuthenticated();
 
-        var response = await this.SendRequest(HttpMethod.Get, RequestUri);
+        var response = await Testing.SendRequest(HttpMethod.Get, RequestUri);
 
         response.EnsureSuccessStatusCode();
 
-        var secretHelloWorldResponse = await GetDeserializedResponse<SecretHelloWorldResponse>(response);
+        var secretHelloWorldResponse = await Testing.GetDeserializedResponse<SecretHelloWorldResponse>(response);
         var message = secretHelloWorldResponse.Message;
         var secret = Encoding.UTF8.GetString(Convert.FromBase64String(secretHelloWorldResponse.Secret));
 
@@ -38,16 +39,16 @@ public class SecretHelloWorldEndpointTests : TestBase
     [Test]
     public async Task ShouldDisplayCorrectMessageForAuthenticatedUser_WhenBodyIsSent()
     {
-        await this.EnsureRequestIsAuthenticated();
+        await Testing.EnsureRequestIsAuthenticated();
 
         var secretHelloWorldRequest = CreateSecretHelloWorldRequest();
-        var response = await this.SendRequest(HttpMethod.Get,
+        var response = await Testing.SendRequest(HttpMethod.Get,
             RequestUri,
             secretHelloWorldRequest);
 
         response.EnsureSuccessStatusCode();
 
-        var secretHelloWorldResponse = await GetDeserializedResponse<SecretHelloWorldResponse>(response);
+        var secretHelloWorldResponse = await Testing.GetDeserializedResponse<SecretHelloWorldResponse>(response);
         var message = secretHelloWorldResponse.Message;
         var secret = Encoding.UTF8.GetString(Convert.FromBase64String(secretHelloWorldResponse.Secret));
 

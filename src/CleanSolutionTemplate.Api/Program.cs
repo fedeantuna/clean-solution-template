@@ -5,12 +5,12 @@ using CleanSolutionTemplate.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddInfrastructureServices(builder.Configuration, false)
-    .AddPresentationServices(builder.Configuration)
+    .AddInfrastructureServices(builder.Configuration)
+    .AddPresentationServices(builder.Configuration, builder.Environment.IsDevelopment())
     .AddApplicationServices();
 
 var app = builder.Build();
 
-app.SetupMiddleware();
+app.SetupMiddleware(builder.Environment.IsDevelopment());
 
 app.Run();

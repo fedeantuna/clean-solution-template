@@ -14,16 +14,16 @@ internal class FakeDbContext : ApplicationDbContext
     {
     }
 
+    public DbSet<FakeEntity> FakeEntities => this.Set<FakeEntity>();
+
+    public DbSet<FakeRelatedEntity> FakeRelatedEntities => this.Set<FakeRelatedEntity>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<FakeRelatedEntity>()
             .OwnsOne(e =>
                 e.FakeValueObject);
+
+        base.OnModelCreating(modelBuilder);
     }
-
-    public DbSet<FakeEntity> FakeEntities =>
-        this.Set<FakeEntity>();
-
-    public DbSet<FakeRelatedEntity> FakeRelatedEntities =>
-        this.Set<FakeRelatedEntity>();
 }

@@ -1,40 +1,40 @@
 using CleanSolutionTemplate.Application.Common.Behaviors;
+using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using MediatR;
-using MediatR.Pipeline;
-using Moq;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog.Sinks.InMemory;
 using Serilog.Sinks.InMemory.Assertions;
 
 namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Behaviors;
 
-public class LoggingBehaviorTests : TestBase
+public class LoggingBehaviorTests
 {
-    private readonly LoggingBehavior<IBaseRequest> _sut;
+    private readonly ISender _sender;
 
     public LoggingBehaviorTests()
     {
-        var preProcessors = this.FindService<IEnumerable<IRequestPreProcessor<IBaseRequest>>>();
-        this._sut = (LoggingBehavior<IBaseRequest>)preProcessors.First(pp =>
-            pp.GetType().Name == typeof(LoggingBehavior<>).Name);
+        var provider = new ServiceProviderBuilder().Build();
+
+        this._sender = provider.GetRequiredService<ISender>();
     }
 
     [Fact]
-    public async Task Process_LogsInformationAboutTheUserAndTheRequest()
+    public async Task LogsInformationAboutTheUserAndTheRequest()
     {
         // Arrange
-        var requestMock = new Mock<IBaseRequest>();
+        var request = new UnvalidatedPassingRequestFake();
         var cancellationToken = default(CancellationToken);
 
         // Act
-        await this._sut.Process(requestMock.Object, cancellationToken);
+        await this._sender.Send(request, cancellationToken);
 
         // Assert
         InMemorySink.Instance
             .Should()
             .HaveMessage(LoggingBehavior<object>.LogMessageTemplate).Once()
-            .WithProperty("RequestName").WithValue(nameof(IBaseRequest))
-            .And.WithProperty("UserId").WithValue(TestUserId)
-            .And.WithProperty("UserEmail").WithValue(TestUserEmail)
+            .WithProperty("RequestName").WithValue(nameof(UnvalidatedPassingRequestFake))
+            .And.WithProperty("UserId").WithValue(Constants.TestUserId)
+            .And.WithProperty("UserEmail").WithValue(Constants.TestUserEmail)
             .And.WithProperty("Request").HavingADestructuredObject();
     }
 }

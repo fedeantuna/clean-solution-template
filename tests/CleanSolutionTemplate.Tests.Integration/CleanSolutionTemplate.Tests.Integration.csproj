@@ -6,20 +6,20 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-  </PropertyGroup>
+    </PropertyGroup>
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="6.8.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
-        <PackageReference Include="Moq" Version="4.18.2" />
+        <PackageReference Include="FluentAssertions" Version="6.11.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.5" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+        <PackageReference Include="Moq" Version="4.18.4" />
         <PackageReference Include="NUnit" Version="3.13.3" />
-        <PackageReference Include="NUnit3TestAdapter" Version="4.3.0" />
-        <PackageReference Include="NUnit.Analyzers" Version="3.5.0">
+        <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
+        <PackageReference Include="NUnit.Analyzers" Version="3.6.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -27,18 +27,20 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Testcontainers" Version="2.2.0" />
+        <PackageReference Include="Testcontainers" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Domain\CleanSolutionTemplate.Domain.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Infrastructure\CleanSolutionTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="appsettings.json" />
       <Content Include="appsettings.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
     </ItemGroup>
 

@@ -18,14 +18,14 @@ public static class ConfigureServices
         return services;
     }
 
-    private static void ConfigureValidators(this IServiceCollection services)
-    {
+    private static void ConfigureValidators(this IServiceCollection services) =>
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-    }
 
-    private static void ConfigureMediator(this IServiceCollection services)
-    {
-        services.AddMediatR(Assembly.GetExecutingAssembly());
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-    }
+    private static void ConfigureMediator(this IServiceCollection services) =>
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        });
 }

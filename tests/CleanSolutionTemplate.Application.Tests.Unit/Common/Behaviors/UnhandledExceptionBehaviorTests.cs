@@ -2,55 +2,39 @@ using CleanSolutionTemplate.Application.Common.Behaviors;
 using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using FluentAssertions;
 using MediatR;
-using MediatR.Pipeline;
-using Moq;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog.Sinks.InMemory;
 using Serilog.Sinks.InMemory.Assertions;
 
 namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Behaviors;
 
-public class UnhandledExceptionBehaviorTests : TestBase
+public class UnhandledExceptionBehaviorTests
 {
-    private readonly UnhandledExceptionBehavior<IRequest<string>, Exception> _sut;
+    private readonly ISender _sender;
 
     public UnhandledExceptionBehaviorTests()
     {
-        var pipelineBehaviors = this.FindService<IEnumerable<IRequestExceptionAction<IRequest<string>, Exception>>>();
-        this._sut = (UnhandledExceptionBehavior<IRequest<string>, Exception>)pipelineBehaviors.First(pb =>
-            pb.GetType().Name == typeof(UnhandledExceptionBehavior<,>).Name);
+        var provider = new ServiceProviderBuilder().Build();
+
+        this._sender = provider.GetRequiredService<ISender>();
     }
 
     [Fact]
-    public async Task Execute_LogsError_WhenRequestHandlerIsNotValid()
+    public async Task LogsErrorWhenRequestFails()
     {
         // Arrange
-        var requestMock = new Mock<IRequest<string>>();
-        var exception = new Exception("test-exception");
+        var request = new FailingRequestFake();
         var cancellationToken = default(CancellationToken);
 
         // Act
-        await this._sut.Execute(requestMock.Object, exception, cancellationToken);
-
-        // Assert
-        InMemorySink.Instance
-            .Should()
-            .HaveMessage(UnhandledExceptionBehavior<IRequest<string>, Exception>.LogMessageTemplate).Once()
-            .WithProperty("RequestName").WithValue(typeof(IRequest<>).Name)
-            .And.WithProperty("Request").HavingADestructuredObject();
-    }
-
-    [Fact]
-    public async Task Execute_ProcessUnhandledExceptions()
-    {
-        // Arrange
-        var mediator = this.FindService<IMediator>();
-
-        var request = new FakeFailingRequest();
-
-        // Act
-        var act = async () => await mediator.Send(request);
+        var act = () => this._sender.Send(request, cancellationToken);
 
         // Assert
         await act.Should().ThrowAsync<Exception>();
+        InMemorySink.Instance
+            .Should()
+            .HaveMessage(UnhandledExceptionBehavior<IRequest, Exception>.LogMessageTemplate).Once()
+            .WithProperty("RequestName").WithValue(nameof(FailingRequestFake))
+            .And.WithProperty("Request").HavingADestructuredObject();
     }
 }

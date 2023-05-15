@@ -3,6 +3,7 @@ using FastEndpoints;
 
 namespace CleanSolutionTemplate.Api.Endpoints.HelloWorld;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class HelloWorldEndpoint : Endpoint<HelloWorldRequest, HelloWorldResponse>
 {
     public override void Configure()
@@ -24,6 +25,7 @@ public class HelloWorldEndpoint : Endpoint<HelloWorldRequest, HelloWorldResponse
 
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public record HelloWorldRequest
 {
     public string Name { get; init; } = "Random Person";

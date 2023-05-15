@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using CleanSolutionTemplate.Api.SerilogPolicies;
 using CleanSolutionTemplate.Api.Services;
 using CleanSolutionTemplate.Application.Common.Services;
+using CleanSolutionTemplate.Infrastructure.Persistence;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +16,9 @@ namespace CleanSolutionTemplate.Api;
 public static class ConfigureServices
 {
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
-    public static IServiceCollection AddPresentationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPresentationServices(this IServiceCollection services,
+        IConfiguration configuration,
+        bool isDevelopment)
     {
         services.AddLogging(builder =>
         {
@@ -26,11 +29,16 @@ public static class ConfigureServices
         services.AddHttpContextAccessor();
 
         services.AddFastEndpoints();
-        services.AddSwaggerDoc();
+
+        if (isDevelopment)
+            services.SwaggerDocument();
 
         services.ConfigureAuth(configuration);
 
         services.AddSingleton<IUserService, UserService>();
+
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>();
 
         return services;
     }
