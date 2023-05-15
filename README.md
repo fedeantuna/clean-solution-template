@@ -52,10 +52,6 @@ The project is divided as follows:
 *   The `src` directory is where all the source code should be placed. By default four projects are included here. The Api project is the default Presentation Layer, then we have the Application, Domain and Infrastructure layers.
 *   The `tests` directory is where all the code for the tests should be placed. By default four Unit Test projects corresponding to a `src` project, an Integration Test and an End to End Test are placed here.
 
-## What happened to Stryker?
-
-I love the [Stryker](https://stryker-mutator.io) project, but maintaining a custom way to merge those reports gets outdated fast. Once an official way to do that is implemented I'll add it back to the template.
-
 ## Layers Overview
 
 ### Domain
