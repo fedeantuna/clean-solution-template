@@ -11,6 +11,6 @@ builder.Services
 
 var app = builder.Build();
 
-app.SetupMiddleware();
+app.SetupMiddleware(builder.Environment.IsDevelopment());
 
 app.Run();

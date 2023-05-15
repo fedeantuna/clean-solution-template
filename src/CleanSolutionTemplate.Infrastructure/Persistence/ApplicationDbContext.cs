@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanSolutionTemplate.Infrastructure.Persistence;
 
-internal class ApplicationDbContext : DbContext, IApplicationDbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
     private readonly IPublisher _publisher;

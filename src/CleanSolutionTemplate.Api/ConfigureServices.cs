@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using CleanSolutionTemplate.Api.SerilogPolicies;
 using CleanSolutionTemplate.Api.Services;
 using CleanSolutionTemplate.Application.Common.Services;
+using CleanSolutionTemplate.Infrastructure.Persistence;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,6 +36,9 @@ public static class ConfigureServices
         services.ConfigureAuth(configuration);
 
         services.AddSingleton<IUserService, UserService>();
+
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>();
 
         return services;
     }

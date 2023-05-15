@@ -32,9 +32,6 @@ public static class ConfigureServices
             options.UseNpgsql(configuration.GetConnectionString(defaultConnectionStringName)));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
-        services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>();
     }
 
     private static void ConfigureWrappers(this IServiceCollection services)

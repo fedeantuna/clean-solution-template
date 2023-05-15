@@ -3,8 +3,7 @@
         "project": "CleanSolutionTemplate.Api.csproj",
         "test-projects": [
             "../../tests/CleanSolutionTemplate.Api.Tests.Unit/CleanSolutionTemplate.Api.Tests.Unit.csproj",
-            "../../tests/CleanSolutionTemplate.Tests.Integration/CleanSolutionTemplate.Tests.Integration.csproj",
-            "../../tests/CleanSolutionTemplate.Tests.EndToEnd/CleanSolutionTemplate.Tests.EndToEnd.csproj"
+            "../../tests/CleanSolutionTemplate.Api.Tests.EndToEnd/CleanSolutionTemplate.Api.Tests.EndToEnd.csproj"
         ],
         "project-info": {
             "module": "Api",

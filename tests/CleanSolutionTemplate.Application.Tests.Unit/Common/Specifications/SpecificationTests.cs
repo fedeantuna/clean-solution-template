@@ -146,6 +146,38 @@ public class SpecificationTests
         result.Should().Be(!specificationResult);
     }
 
+    [Fact]
+    public void IsSatisfiedBy_ShouldThrowArgumentException_WhenRightAndSpecificationIsNull()
+    {
+        // Arrange
+        var leftSpecification = new Mock<Specification<Entity>>().Object;
+        var rightSpecification = (Specification<Entity>)null!;
+
+        var specification = leftSpecification.And(rightSpecification);
+
+        // Act
+        var act = () => specification.IsSatisfiedBy(new Mock<Entity>().Object);
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void IsSatisfiedBy_ShouldThrowArgumentException_WhenRightOrSpecificationIsNull()
+    {
+        // Arrange
+        var leftSpecification = new Mock<Specification<Entity>>().Object;
+        var rightSpecification = (Specification<Entity>)null!;
+
+        var specification = leftSpecification.Or(rightSpecification);
+
+        // Act
+        var act = () => specification.IsSatisfiedBy(new Mock<Entity>().Object);
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
+
     public static IEnumerable<object[]> AtLeastOneFalseSpecificationData =>
         new List<object[]>
         {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanSolutionTemplate.Infrastructure.Persistence.Interceptors;
 
-internal class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
+public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
     private readonly IDateTimeOffsetWrapper _dateTimeOffsetWrapper;
     private readonly IUserService _userService;

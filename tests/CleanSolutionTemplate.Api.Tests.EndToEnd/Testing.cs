@@ -42,6 +42,9 @@ public static class Testing
         return deserializedResponse;
     }
 
+    public static async Task<string> GetStringResponse(HttpResponseMessage response) =>
+        await response.Content.ReadAsStringAsync();
+
     public static Task<HttpResponseMessage> SendRequest<T>(HttpMethod method, string requestUri, T requestContent)
         where T : class
     {

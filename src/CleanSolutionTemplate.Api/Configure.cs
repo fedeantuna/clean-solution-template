@@ -5,7 +5,7 @@ namespace CleanSolutionTemplate.Api;
 
 public static class Configure
 {
-    public static void SetupMiddleware(this WebApplication app)
+    public static void SetupMiddleware(this WebApplication app, bool isDevelopment)
     {
         app.UseHealthChecks("/healthcheck");
 
@@ -17,6 +17,7 @@ public static class Configure
         app.UseAuthorization();
 
         app.UseFastEndpoints();
-        app.UseSwaggerGen();
+        if (isDevelopment)
+            app.UseSwaggerGen();
     }
 }

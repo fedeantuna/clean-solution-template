@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 		CleanSolutionTemplate.sln.DotSettings = CleanSolutionTemplate.sln.DotSettings
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
+		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{AD7DA10C-B7B0-432E-AF09-913D312283F3}"

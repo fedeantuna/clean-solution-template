@@ -76,9 +76,8 @@ public class SensitiveInformationDestructuringPolicy : IDestructuringPolicy
         {
             return propertyInfo.GetValue(instance);
         }
-        catch (Exception ex)
+        catch
         {
-            SelfLog.WriteLine("Property Accessor {0} throws Exception {1}", propertyInfo, ex);
             return $"Property Accessor throws an Exception";
         }
     }

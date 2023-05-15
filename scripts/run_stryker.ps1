@@ -209,7 +209,7 @@ function New-MergedStrykerHtmlReport {
     )
 
     $StrykerMutationHtmlReport = Join-Path -Path $StrykerReportsOutput -ChildPath 'mutation-report.html'
-    $StrykerMutationHtmlReportFileUrl = 'https://raw.githubusercontent.com/stryker-mutator/stryker-net/master/src/Stryker.Core/Stryker.Core/Reporters/HtmlReporter/Files/mutation-report.html'
+    $StrykerMutationHtmlReportFileUrl = 'https://raw.githubusercontent.com/stryker-mutator/stryker-net/master/src/Stryker.Core/Stryker.Core/Reporters/Html/Files/mutation-report.html'
 
     Invoke-WebRequest -Uri $StrykerMutationHtmlReportFileUrl -OutFile $StrykerMutationHtmlReport
 
