@@ -17,7 +17,7 @@ public class ServiceProviderBuilder
     public ServiceProviderBuilder()
     {
         var configuration = new ConfigurationBuilder().Build();
-        this._services.AddPresentationServices(configuration, true);
+        this._services.AddPresentationServices(configuration, false);
 
         this.ReplaceLoggerWithInMemoryLogger();
 
