@@ -19,13 +19,17 @@ First make sure that you have the [.NET 7 SDK](https://dotnet.microsoft.com/en-u
 
 Then run `dotnet new -i CleanSolutionTemplate` to install the template.
 
-At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported. To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
+At this moment, the supported way to create a solution using this template is from the command line. Using the template from an IDE (like Visual Studio or Rider) is not supported (you can do it but the structure will be messed up). To create a solution using this template simply run `dotnet new cst -n <SolutionName>`
 
-Don't forget to change this README accordingly to your project and to review the LICENSE.
+Don't forget to change this README and LICENSE accordingly to your project's needs.
 
 ## Running PostgresSQL locally
 
-The easiest and simplest way to run a local DB is using Docker, the connection string for the PostgresSQL DB in the `appsettings.Development.json` will allow you to connect to the container that gets created by running `docker run --name cst-postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15.3-alpine3.18`
+The easiest and simplest way to run a local DB is using Docker.
+
+Run `docker run --name cst-postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15.3-alpine3.18`.
+
+The connection string for the PostgresSQL DB in the `appsettings.Development.json` will allow you to connect to the container that got created.
 
 ## Static Analysis and Online Coverage Report
 
@@ -48,6 +52,10 @@ The project is divided as follows:
 *   The `src` directory is where all the source code should be placed. By default four projects are included here. The Api project is the default Presentation Layer, then we have the Application, Domain and Infrastructure layers.
 *   The `tests` directory is where all the code for the tests should be placed. By default four Unit Test projects corresponding to a `src` project, an Integration Test and an End to End Test are placed here.
 
+## What happened to Stryker?
+
+I love the [Stryker](https://stryker-mutator.io) project, but maintaining a custom way to merge those reports gets outdated fast. Once an official way to do that is implemented I'll add it back to the template.
+
 ## Layers Overview
 
 ### Domain
@@ -56,21 +64,21 @@ This will contain all entities, enums, exceptions, interfaces, types and logic s
 
 ### Application
 
-This layer contains all application logic. It is dependent on the domain layer, but has no dependencies on any other layer or project. This layer defines interfaces that are implemented by outside layers. For example, if the application need to access a notification service, a new interface would be added to application and an implementation would be created within infrastructure.
+This layer contains all application logic. It is dependent on the domain layer, but has no dependencies on any other layer or project. This layer defines interfaces that are implemented by outside layers. For example, if the application needs to access a notification service, a new interface would be added to application and an implementation would be created within infrastructure.
 
 ### Infrastructure
 
-This layer contains classes for accessing external resources such as file systems, web services, smtp, and so on. These classes should be based on interfaces defined within the application layer.
+This layer contains classes for accessing external resources such as file systems, web services, SMTP, and so on. These classes should be based on interfaces defined within the application layer.
 
 ### Presentation
 
-This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only Startup.cs should reference Infrastructure.
+This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only ConfigureServices.cs, Configure.cs and Program.cs should be able to reference Infrastructure.
 
 ## Tests Overview
 
 ### Unit Tests
 
-Our definition of Unit Test is a test that takes a layer in isolation and mocks every external dependency or those that belongs to a different layer. We rely on DI to obtain the SUTs and the configuration for it can be found in the ServiceProviderBuilder class. These tests will run isolated from one another, making xUnit a great tool for the job. No test should depend on the execution or state of a previous test. Everything that relates to the database will be done using an InMemory Database.
+Our definition of Unit Test is a test that takes a layer in isolation and mocks everything else. We rely on DI to obtain the SUTs, the configuration for it can be found in the ServiceProviderBuilder class. These tests will run isolated from one another, making xUnit a great tool for the job. No test should depend on the execution or state of a previous test. Everything that relates to the database will be done using an InMemory Database for the Infrastructure layer and Moq for the Application layer.
 
 ### Integration Tests
 
@@ -78,7 +86,7 @@ Our definition of Integration Test is a test that takes the Domain, Application 
 
 ### End to End Tests
 
-Our definition of End to End Test is a test that takes all the layers and external dependencies. We do not mock. We rely on a Test Server to run our API. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run against a database environment for development/testing, separated from production but as close as possible to it.
+Our definition of End to End Test is a test that takes all the layers and external dependencies. We do not mock. We rely on a Test Server to run our API. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run against a testing/staging environment if possible or within a Docker container using a real database. Everything that relates to STS will be run against a testing/staging environment if possible or within a Docker container using a test server.
 
 ## Problems or Suggestions
 
