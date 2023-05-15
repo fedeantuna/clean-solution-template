@@ -3,7 +3,8 @@
         "project": "CleanSolutionTemplate.Application.csproj",
         "test-projects": [
             "../../tests/CleanSolutionTemplate.Application.Tests.Unit/CleanSolutionTemplate.Application.Tests.Unit.csproj",
-            "../../tests/CleanSolutionTemplate.Tests.Integration/CleanSolutionTemplate.Tests.Integration.csproj"
+            "../../tests/CleanSolutionTemplate.Tests.Integration/CleanSolutionTemplate.Tests.Integration.csproj",
+            "../../tests/CleanSolutionTemplate.Api.Tests.EndToEnd/CleanSolutionTemplate.Api.Tests.EndToEnd.csproj"
         ],
         "project-info": {
             "module": "Application",

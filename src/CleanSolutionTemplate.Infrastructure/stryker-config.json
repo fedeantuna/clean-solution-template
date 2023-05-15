@@ -2,12 +2,10 @@
     "stryker-config": {
         "project": "CleanSolutionTemplate.Infrastructure.csproj",
         "test-projects": [
-            "../../tests/CleanSolutionTemplate.Infrastructure.Tests.Unit/CleanSolutionTemplate.Infrastructure.Tests.Unit.csproj"
+            "../../tests/CleanSolutionTemplate.Infrastructure.Tests.Unit/CleanSolutionTemplate.Infrastructure.Tests.Unit.csproj",
+            "../../tests/CleanSolutionTemplate.Tests.Integration/CleanSolutionTemplate.Tests.Integration.csproj",
+            "../../tests/CleanSolutionTemplate.Api.Tests.EndToEnd/CleanSolutionTemplate.Api.Tests.EndToEnd.csproj"
         ],
-        "project-info": {
-            "module": "Infrastructure",
-            "name": "github.com/fedeantuna/clean-solution-template"
-        },
         "thresholds": {
             "high": 90,
             "low": 80,

@@ -30,14 +30,17 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Domain\CleanSolutionTemplate.Domain.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Infrastructure\CleanSolutionTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="appsettings.json" />
-      <Content Include="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <None Remove="appsettings.json" />
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

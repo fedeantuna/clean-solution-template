@@ -23,6 +23,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="CleanSolutionTemplate.Api.Tests.Unit" />
+        <InternalsVisibleTo Include="CleanSolutionTemplate.Tests.Integration" />
         <InternalsVisibleTo Include="CleanSolutionTemplate.Api.Tests.EndToEnd" />
     </ItemGroup>
 

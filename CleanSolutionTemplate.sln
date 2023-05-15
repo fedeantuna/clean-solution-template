@@ -41,8 +41,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{AD7D
 	ProjectSection(SolutionItems) = preProject
 		scripts\run_test_coverage.ps1 = scripts\run_test_coverage.ps1
 		scripts\run_test_coverage.sh = scripts\run_test_coverage.sh
-		scripts\run_stryker.sh = scripts\run_stryker.sh
-		scripts\run_stryker.ps1 = scripts\run_stryker.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{189122CD-4280-487E-AF38-C6E9BC05C279}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{AFF8B5D8-7B58-4641-A3E1-73BC47BD4D48}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\package.yml = .github\workflows\package.yml
+		.github\workflows\codeql.yml = .github\workflows\codeql.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
 EndProject
 Global
@@ -101,5 +108,7 @@ Global
 		{9046E28D-29EF-44B2-9BC7-374F1A6B05D3} = {67C08E34-4CF6-45FE-8C3A-CD8070BF895E}
 		{69E5A6A5-3A9F-41F1-B2BC-3A47EEAE9EDE} = {E6E996C1-3135-44D8-AC9A-A06FDCA9A4BF}
 		{AD7DA10C-B7B0-432E-AF09-913D312283F3} = {E6E996C1-3135-44D8-AC9A-A06FDCA9A4BF}
+		{189122CD-4280-487E-AF38-C6E9BC05C279} = {E6E996C1-3135-44D8-AC9A-A06FDCA9A4BF}
+		{AFF8B5D8-7B58-4641-A3E1-73BC47BD4D48} = {189122CD-4280-487E-AF38-C6E9BC05C279}
 	EndGlobalSection
 EndGlobal

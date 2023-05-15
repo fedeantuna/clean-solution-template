@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-  </PropertyGroup>
+    </PropertyGroup>
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
@@ -27,10 +27,14 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Testcontainers" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Domain\CleanSolutionTemplate.Domain.csproj" />
+        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Infrastructure\CleanSolutionTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
