@@ -306,16 +306,14 @@ public static class SensitiveInformationDestructuringPolicyTestsExtensions
         logEventAssertion
             .WithDeconstructedFakeModelProperty(deconstructedPropertyName).WithValue(value);
 
-    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(
-        this LogEventAssertion logEventAssertion,
+    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName,
         string innerPropertyName) =>
         logEventAssertion
             .WithDeconstructedFakeModelProperty(deconstructedPropertyName).HavingADestructuredObject()
             .WithProperty(innerPropertyName).WithValue(SensitiveInformationDestructuringPolicy.Mask);
 
-    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(
-        this LogEventAssertion logEventAssertion,
+    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName,
         string innerPropertyName,
         object? value) =>
@@ -323,8 +321,7 @@ public static class SensitiveInformationDestructuringPolicyTestsExtensions
             .WithDeconstructedFakeModelProperty(deconstructedPropertyName).HavingADestructuredObject()
             .WithProperty(innerPropertyName).WithValue(value);
 
-    private static LogEventPropertyValueAssertions WithDeconstructedFakeModelProperty(
-        this LogEventAssertion logEventAssertion,
+    private static LogEventPropertyValueAssertions WithDeconstructedFakeModelProperty(this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName) =>
         logEventAssertion
             .WithProperty(FakeModelProperty).HavingADestructuredObject()
