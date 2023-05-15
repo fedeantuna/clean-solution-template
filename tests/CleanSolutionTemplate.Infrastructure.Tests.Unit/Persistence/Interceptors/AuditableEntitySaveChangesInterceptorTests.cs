@@ -13,8 +13,8 @@ namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence.Intercepto
 
 public class AuditableEntitySaveChangesInterceptorTests
 {
-    private readonly FakeDbContext _fakeDbContext;
     private readonly IDateTimeOffsetWrapper _dateTimeOffsetWrapper;
+    private readonly FakeDbContext _fakeDbContext;
 
     private readonly AuditableEntitySaveChangesInterceptor _sut;
 
@@ -240,7 +240,11 @@ public class AuditableEntitySaveChangesInterceptorTests
         var eventId = new EventId(0);
         const LogLevel logLevel = LogLevel.None;
         const string eventIdCode = "test-event-id-code";
-        Action<ILogger, Exception?> LogActionFunc(LogLevel _) => (_, _) => { };
+
+        Action<ILogger, Exception?> LogActionFunc(LogLevel _)
+        {
+            return (_, _) => { };
+        }
 
         return new EventDefinition(loggingOptionsMock.Object,
             eventId,
@@ -251,8 +255,10 @@ public class AuditableEntitySaveChangesInterceptorTests
 
     private static DbContextEventData CreateDbContextEventData(EventDefinitionBase eventDefinition, DbContext? context)
     {
-        string MessageGenerator(EventDefinitionBase eventDefinitionBase, EventData eventData) =>
-            string.Empty;
+        string MessageGenerator(EventDefinitionBase eventDefinitionBase, EventData eventData)
+        {
+            return string.Empty;
+        }
 
         return new DbContextEventData(eventDefinition,
             MessageGenerator,
@@ -261,40 +267,30 @@ public class AuditableEntitySaveChangesInterceptorTests
 
     private async Task AddFakeEntitiesAsync(int count)
     {
-        for (var i = 0; i < count; i++)
-        {
-            await this._fakeDbContext.FakeEntities.AddAsync(new FakeEntity());
-        }
+        for (var i = 0; i < count; i++) await this._fakeDbContext.FakeEntities.AddAsync(new FakeEntity());
     }
 
     private void AddFakeEntities(int count)
     {
-        for (var i = 0; i < count; i++)
-        {
-            this._fakeDbContext.FakeEntities.Add(new FakeEntity());
-        }
+        for (var i = 0; i < count; i++) this._fakeDbContext.FakeEntities.Add(new FakeEntity());
     }
 
     private async Task AddFakeRelatedEntitiesAsync(int count)
     {
         for (var i = 0; i < count; i++)
-        {
             await this._fakeDbContext.FakeRelatedEntities.AddAsync(new FakeRelatedEntity
             {
                 FakeValueObject = new FakeValueObject()
             });
-        }
     }
 
     private void AddFakeRelatedEntities(int count)
     {
         for (var i = 0; i < count; i++)
-        {
             this._fakeDbContext.FakeRelatedEntities.Add(new FakeRelatedEntity
             {
                 FakeValueObject = new FakeValueObject()
             });
-        }
     }
 
     private async Task CallSavingChangesAsync()

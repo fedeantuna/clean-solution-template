@@ -4,12 +4,10 @@ using FastEndpoints;
 
 namespace CleanSolutionTemplate.Api.Endpoints.SecretHelloWorld;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class SecretHelloWorldEndpoint : Endpoint<SecretHelloWorldRequest, SecretHelloWorldResponse>
 {
-    public override void Configure()
-    {
-        this.Get("/api/secret-hello-world");
-    }
+    public override void Configure() => this.Get("/api/secret-hello-world");
 
     public override async Task HandleAsync(SecretHelloWorldRequest req, CancellationToken ct)
     {

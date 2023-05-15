@@ -18,17 +18,13 @@ public static class Testing
     private static IContainer _testIdentityServerContainer = CreateTestIdentityServerContainer();
     private static IContainer _testDatabaseContainer = CreateTestDatabaseContainer();
 
-    public static Task StartTestIdentityServerContainer() =>
-        _testIdentityServerContainer.StartAsync();
+    public static Task StartTestIdentityServerContainer() => _testIdentityServerContainer.StartAsync();
 
-    public static Task StartTestDatabaseContainer() =>
-        _testDatabaseContainer.StartAsync();
+    public static Task StartTestDatabaseContainer() => _testDatabaseContainer.StartAsync();
 
-    public static Task StopTestIdentityServerContainer() =>
-        _testIdentityServerContainer.StopAsync();
+    public static Task StopTestIdentityServerContainer() => _testIdentityServerContainer.StopAsync();
 
-    public static Task StopTestDatabaseContainer() =>
-        _testDatabaseContainer.StopAsync();
+    public static Task StopTestDatabaseContainer() => _testDatabaseContainer.StopAsync();
 
     public static async Task<T> GetDeserializedResponse<T>(HttpResponseMessage response)
     {
@@ -48,7 +44,6 @@ public static class Testing
     public static Task<HttpResponseMessage> SendRequest<T>(HttpMethod method, string requestUri, T requestContent)
         where T : class
     {
-
         var request = new HttpRequestMessage
         {
             Method = method,
@@ -76,14 +71,13 @@ public static class Testing
     {
         const string schema = "Bearer";
 
-        const string tokenEndpoint = $"http://localhost:3210/connect/token";
+        const string tokenEndpoint = "http://localhost:3210/connect/token";
         var token = await GetTestIdentityServerToken(tokenEndpoint);
 
         TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(schema, token);
     }
 
-    public static void EnsureRequestIsNotAuthenticated() =>
-        TestClient.DefaultRequestHeaders.Authorization = null;
+    public static void EnsureRequestIsNotAuthenticated() => TestClient.DefaultRequestHeaders.Authorization = null;
 
     private static async Task<string> GetTestIdentityServerToken(string tokenEndpoint)
     {
@@ -115,7 +109,7 @@ public static class Testing
             .WithPortBinding(TestIdentityServerContainerPort, 80)
             .WithEnvironment(new Dictionary<string, string>
             {
-                { "ASPNETCORE_URLS", aspnetCoreUrls },
+                { "ASPNETCORE_URLS", aspnetCoreUrls }
             })
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(80))
             .Build();
@@ -131,7 +125,7 @@ public static class Testing
             .WithPortBinding(TestDatabaseContainerPort, 5432)
             .WithEnvironment(new Dictionary<string, string>
             {
-                { "POSTGRES_PASSWORD", testDatabasePassword },
+                { "POSTGRES_PASSWORD", testDatabasePassword }
             })
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();

@@ -13,9 +13,9 @@ public class SensitiveInformationDestructuringPolicyTests
 {
     private const string LogMessageTemplate = "Destructuring {@Object}";
 
-    private readonly ILogger _logger;
-
     private readonly FakeModel _fakeModel;
+
+    private readonly ILogger _logger;
 
     public SensitiveInformationDestructuringPolicyTests()
     {
@@ -86,10 +86,8 @@ public class SensitiveInformationDestructuringPolicyTests
             .HaveMessage(LogMessageTemplate).Once()
             .WithDeconstructedFakeModel(nameof(FakeModel.SomeNumbers),
                 $"[{string.Join(", ", this._fakeModel.SomeNumbers)}]")
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeString),
-                this._fakeModel.SomeString)
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeNumber),
-                this._fakeModel.SomeNumber)
+            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeString), this._fakeModel.SomeString)
+            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeNumber), this._fakeModel.SomeNumber)
             .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeDictionary),
                 $"[{string.Join(", ", this._fakeModel.SomeDictionary.Select(d => $"({d.Key}: \"{d.Value}\")"))}]");
     }
@@ -140,11 +138,9 @@ public class SensitiveInformationDestructuringPolicyTests
                 nameof(FakeInnerModelRecord.SomeStrings),
                 $"[{string.Join(", ", this._fakeModel.SomeFakeInnerModelRecord.SomeStrings.Select(ss => $"\"{ss}\""))}]")
             .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeString),
-                this._fakeModel.SomeFakeInnerModelRecord.SomeString)
+                nameof(FakeInnerModelRecord.SomeString), this._fakeModel.SomeFakeInnerModelRecord.SomeString)
             .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeNumber),
-                this._fakeModel.SomeFakeInnerModelRecord.SomeNumber)
+                nameof(FakeInnerModelRecord.SomeNumber), this._fakeModel.SomeFakeInnerModelRecord.SomeNumber)
             .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
                 nameof(FakeInnerModelRecord.SomeDictionary),
                 $"[{string.Join(", ", this._fakeModel.SomeFakeInnerModelRecord.SomeDictionary.Select(d => $"(\"{d.Key}\": {d.Value})"))}]");
@@ -219,7 +215,8 @@ public class SensitiveInformationDestructuringPolicyTests
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
             .WithProperty("Object").HavingADestructuredObject()
-            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty)).WithValue($"Property Accessor throws an Exception");
+            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty))
+            .WithValue("Property Accessor throws an Exception");
     }
 
     private static FakeModel CreateFakeModel() =>
@@ -262,10 +259,7 @@ public class SensitiveInformationDestructuringPolicyTests
             }
         };
 
-    private void LogFakeModel(LogLevel logLevel)
-    {
-        this.Log(logLevel, this._fakeModel);
-    }
+    private void LogFakeModel(LogLevel logLevel) => this.Log(logLevel, this._fakeModel);
 
     private void Log(LogLevel logLevel, object @object)
     {
@@ -303,7 +297,8 @@ public static class SensitiveInformationDestructuringPolicyTestsExtensions
     public static AndConstraint<LogEventAssertion> WithDeconstructedFakeModel(this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName) =>
         logEventAssertion
-            .WithDeconstructedFakeModelProperty(deconstructedPropertyName).WithValue(SensitiveInformationDestructuringPolicy.Mask);
+            .WithDeconstructedFakeModelProperty(deconstructedPropertyName)
+            .WithValue(SensitiveInformationDestructuringPolicy.Mask);
 
     public static AndConstraint<LogEventAssertion> WithDeconstructedFakeModel(this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName,
@@ -311,14 +306,16 @@ public static class SensitiveInformationDestructuringPolicyTestsExtensions
         logEventAssertion
             .WithDeconstructedFakeModelProperty(deconstructedPropertyName).WithValue(value);
 
-    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(this LogEventAssertion logEventAssertion,
+    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(
+        this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName,
         string innerPropertyName) =>
         logEventAssertion
             .WithDeconstructedFakeModelProperty(deconstructedPropertyName).HavingADestructuredObject()
             .WithProperty(innerPropertyName).WithValue(SensitiveInformationDestructuringPolicy.Mask);
 
-    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(this LogEventAssertion logEventAssertion,
+    public static AndConstraint<LogEventAssertion> WithDeconstructedFakeInnerModel(
+        this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName,
         string innerPropertyName,
         object? value) =>
@@ -326,7 +323,8 @@ public static class SensitiveInformationDestructuringPolicyTestsExtensions
             .WithDeconstructedFakeModelProperty(deconstructedPropertyName).HavingADestructuredObject()
             .WithProperty(innerPropertyName).WithValue(value);
 
-    private static LogEventPropertyValueAssertions WithDeconstructedFakeModelProperty(this LogEventAssertion logEventAssertion,
+    private static LogEventPropertyValueAssertions WithDeconstructedFakeModelProperty(
+        this LogEventAssertion logEventAssertion,
         string deconstructedPropertyName) =>
         logEventAssertion
             .WithProperty(FakeModelProperty).HavingADestructuredObject()

@@ -5,7 +5,6 @@ using CleanSolutionTemplate.Domain.Common.Attributes;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
-using Serilog.Debugging;
 using Serilog.Events;
 
 namespace CleanSolutionTemplate.Api.SerilogPolicies;
@@ -53,7 +52,6 @@ public class SensitiveInformationDestructuringPolicy : IDestructuringPolicy
     private static IEnumerable<LogEventProperty> GetLogEventProperties(IEnumerable<Property> properties,
         ILogEventPropertyValueFactory propertyValueFactory)
     {
-
         var logEventProperties = new List<LogEventProperty>();
         properties
             .ToList()
@@ -78,7 +76,7 @@ public class SensitiveInformationDestructuringPolicy : IDestructuringPolicy
         }
         catch
         {
-            return $"Property Accessor throws an Exception";
+            return "Property Accessor throws an Exception";
         }
     }
 }

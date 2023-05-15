@@ -1,4 +1,5 @@
-﻿using CleanSolutionTemplate.Infrastructure.Persistence;
+﻿using System.Diagnostics.CodeAnalysis;
+using CleanSolutionTemplate.Infrastructure.Persistence;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using MediatR;
@@ -16,12 +17,11 @@ public static class Testing
 
     private static IContainer _testDatabaseContainer = CreateTestDatabaseContainer();
 
-    public static Task StartTestDatabaseContainer() =>
-        _testDatabaseContainer.StartAsync();
+    public static Task StartTestDatabaseContainer() => _testDatabaseContainer.StartAsync();
 
-    public static Task StopTestDatabaseContainer() =>
-        _testDatabaseContainer.StopAsync();
+    public static Task StopTestDatabaseContainer() => _testDatabaseContainer.StopAsync();
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
     {
         using var scope = TestWebApplicationFactory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
@@ -31,6 +31,7 @@ public static class Testing
         return await mediator.Send(request);
     }
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static async Task SendAsync(IBaseRequest request)
     {
         using var scope = TestWebApplicationFactory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
@@ -40,6 +41,7 @@ public static class Testing
         await mediator.Send(request);
     }
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues)
         where TEntity : class
     {
@@ -50,6 +52,7 @@ public static class Testing
         return await context.FindAsync<TEntity>(keyValues);
     }
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static async Task AddAsync<TEntity>(TEntity entity)
         where TEntity : class
     {
@@ -62,6 +65,7 @@ public static class Testing
         await context.SaveChangesAsync();
     }
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static async Task<int> CountAsync<TEntity>() where TEntity : class
     {
         using var scope = TestWebApplicationFactory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
@@ -81,7 +85,7 @@ public static class Testing
             .WithPortBinding(TestDatabaseContainerPort, 5432)
             .WithEnvironment(new Dictionary<string, string>
             {
-                { "POSTGRES_PASSWORD", testDatabasePassword },
+                { "POSTGRES_PASSWORD", testDatabasePassword }
             })
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();

@@ -34,8 +34,6 @@ public static class ConfigureServices
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
     }
 
-    private static void ConfigureWrappers(this IServiceCollection services)
-    {
+    private static void ConfigureWrappers(this IServiceCollection services) =>
         services.AddSingleton<IDateTimeOffsetWrapper, DateTimeOffsetWrapper>();
-    }
 }

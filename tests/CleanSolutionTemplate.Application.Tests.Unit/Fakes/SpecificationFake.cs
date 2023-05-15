@@ -6,12 +6,10 @@ namespace CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 
 public class TrueSpecificationFake : Specification<Entity>
 {
-    public override Expression<Func<Entity, bool>> ToExpression() =>
-        x => true;
+    protected override Expression<Func<Entity, bool>> ToExpression() => x => true;
 }
 
 public class FalseSpecificationFake : Specification<Entity>
 {
-    public override Expression<Func<Entity, bool>> ToExpression() =>
-        x => false;
+    protected override Expression<Func<Entity, bool>> ToExpression() => x => false;
 }

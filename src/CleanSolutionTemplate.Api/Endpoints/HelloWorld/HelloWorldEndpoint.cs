@@ -3,6 +3,7 @@ using FastEndpoints;
 
 namespace CleanSolutionTemplate.Api.Endpoints.HelloWorld;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class HelloWorldEndpoint : Endpoint<HelloWorldRequest, HelloWorldResponse>
 {
     public override void Configure()

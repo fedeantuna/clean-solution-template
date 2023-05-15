@@ -6,8 +6,7 @@ namespace CleanSolutionTemplate.Tests.Integration;
 
 internal class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
+    protected override void ConfigureWebHost(IWebHostBuilder builder) =>
         builder.ConfigureAppConfiguration(configurationBuilder =>
         {
             var configuration = new ConfigurationBuilder()
@@ -17,5 +16,4 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
 
             configurationBuilder.AddConfiguration(configuration);
         });
-    }
 }

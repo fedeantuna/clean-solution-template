@@ -9,52 +9,6 @@ public class ValueObjectTests
         "2",
         Guid.Parse("97ea43f0-6fef-4fb7-8c67-9114a7ff6ec0"));
 
-    [Theory]
-    [MemberData(nameof(EqualValueObjects))]
-    public void Equals_ShouldReturnTrue_WhenEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var sut = instanceA.Equals(instanceB);
-
-        // Assert
-        sut.Should().BeTrue(reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(EqualValueObjects))]
-    public void GetHashCode_ShouldReturnSameHashCodes_WhenEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var hashCodeA = instanceA.GetHashCode();
-        var hashCodeB = instanceB.GetHashCode();
-
-        // Assert
-        hashCodeA.Should().Be(hashCodeB, reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(NonEqualValueObjects))]
-    public void Equals_ShouldReturnFalse_WhenNonEqualValueObjects(ValueObject instanceA, ValueObject instanceB, string reason)
-    {
-        // Act
-        var sut = instanceA.Equals(instanceB);
-
-        // Assert
-        sut.Should().BeFalse(reason);
-    }
-
-    [Theory]
-    [MemberData(nameof(NonEqualValueObjects))]
-    public void GetHashCode_ShouldReturnDifferentHashCodes_WhenNonEqualValueObjects(ValueObject instanceA, ValueObject? instanceB, string reason)
-    {
-        // Act
-        var hashCodeA = instanceA.GetHashCode();
-        var hashCodeB = instanceB?.GetHashCode();
-
-        // Assert
-        hashCodeA.Should().NotBe(hashCodeB, reason);
-    }
-
     public static readonly TheoryData<ValueObject, ValueObject, string> EqualValueObjects = new()
     {
         {
@@ -120,6 +74,60 @@ public class ValueObjectTests
         }
     };
 
+    [Theory]
+    [MemberData(nameof(EqualValueObjects))]
+    public void Equals_ShouldReturnTrue_WhenEqualValueObjects(ValueObject instanceA,
+        ValueObject instanceB,
+        string reason)
+    {
+        // Act
+        var sut = instanceA.Equals(instanceB);
+
+        // Assert
+        sut.Should().BeTrue(reason);
+    }
+
+    [Theory]
+    [MemberData(nameof(EqualValueObjects))]
+    public void GetHashCode_ShouldReturnSameHashCodes_WhenEqualValueObjects(ValueObject instanceA,
+        ValueObject instanceB,
+        string reason)
+    {
+        // Act
+        var hashCodeA = instanceA.GetHashCode();
+        var hashCodeB = instanceB.GetHashCode();
+
+        // Assert
+        hashCodeA.Should().Be(hashCodeB, reason);
+    }
+
+    [Theory]
+    [MemberData(nameof(NonEqualValueObjects))]
+    public void Equals_ShouldReturnFalse_WhenNonEqualValueObjects(ValueObject instanceA,
+        ValueObject instanceB,
+        string reason)
+    {
+        // Act
+        var sut = instanceA.Equals(instanceB);
+
+        // Assert
+        sut.Should().BeFalse(reason);
+    }
+
+    [Theory]
+    [MemberData(nameof(NonEqualValueObjects))]
+    public void GetHashCode_ShouldReturnDifferentHashCodes_WhenNonEqualValueObjects(ValueObject instanceA,
+        ValueObject? instanceB,
+        string reason)
+    {
+        // Act
+        var hashCodeA = instanceA.GetHashCode();
+        var hashCodeB = instanceB?.GetHashCode();
+
+        // Assert
+        hashCodeA.Should().NotBe(hashCodeB, reason);
+    }
+
     private class ValueObjectA : ValueObject
     {
         public ValueObjectA(int a, string? b, Guid c, string? notAnEqualityComponent = null)
@@ -163,10 +171,7 @@ public class ValueObjectTests
             yield return this.A;
             yield return this.B;
 
-            foreach (var c in this.C)
-            {
-                yield return c;
-            }
+            foreach (var c in this.C) yield return c;
         }
     }
 }

@@ -15,10 +15,7 @@ public class UnhandledExceptionBehavior<TRequest, TException> : IRequestExceptio
 
     [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
     [SuppressMessage("ReSharper", "ContextualLoggerProblem")]
-    public UnhandledExceptionBehavior(ILogger<TRequest> logger)
-    {
-        this._logger = logger;
-    }
+    public UnhandledExceptionBehavior(ILogger<TRequest> logger) => this._logger = logger;
 
     public Task Execute(TRequest request, TException exception, CancellationToken cancellationToken)
     {

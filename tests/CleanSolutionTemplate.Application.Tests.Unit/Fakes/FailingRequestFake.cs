@@ -10,12 +10,8 @@ public class FailingRequestFake : IRequest
     public Exception Exception { get; } = new(ExceptionMessage);
 }
 
-
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class FailingRequestHandlerFake : IRequestHandler<FailingRequestFake>
 {
-    public Task Handle(FailingRequestFake request, CancellationToken cancellationToken)
-    {
-        throw request.Exception;
-    }
+    public Task Handle(FailingRequestFake request, CancellationToken cancellationToken) => throw request.Exception;
 }

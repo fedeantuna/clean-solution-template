@@ -27,8 +27,7 @@ public class ServiceProviderBuilder
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
 
-    private void ReplaceLoggerWithInMemoryLogger()
-    {
+    private void ReplaceLoggerWithInMemoryLogger() =>
         this._services.AddLogging(builder =>
         {
             builder.ClearProviders();
@@ -41,7 +40,6 @@ public class ServiceProviderBuilder
                 .CreateLogger();
             builder.AddSerilog(logger);
         });
-    }
 
     private void UnregisterActualHttpContextAccessor()
     {

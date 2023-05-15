@@ -25,21 +25,14 @@ public class ServiceProviderBuilder
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
 
-    private void AddFakeValidators()
-    {
-        this._services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-    }
+    private void AddFakeValidators() => this._services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-    private void AddFakeMediatorRequests()
+    private void AddFakeMediatorRequests() => this._services.AddMediatR(cfg =>
     {
-        this._services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-        });
-    }
+        cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    });
 
-    private void SetupInMemoryLogger()
-    {
+    private void SetupInMemoryLogger() =>
         this._services.AddLogging(builder =>
         {
             builder.ClearProviders();
@@ -50,7 +43,6 @@ public class ServiceProviderBuilder
                 .CreateLogger();
             builder.AddSerilog(logger);
         });
-    }
 
     private void AddPresentationServiceMocks()
     {

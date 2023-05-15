@@ -9,10 +9,7 @@ public class UserService : IUserService
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(IHttpContextAccessor httpContextAccessor)
-    {
-        this._httpContextAccessor = httpContextAccessor;
-    }
+    public UserService(IHttpContextAccessor httpContextAccessor) => this._httpContextAccessor = httpContextAccessor;
 
     public string GetCurrentUserId() =>
         this._httpContextAccessor

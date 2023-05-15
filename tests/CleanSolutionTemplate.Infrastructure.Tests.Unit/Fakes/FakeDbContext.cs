@@ -14,6 +14,10 @@ internal class FakeDbContext : ApplicationDbContext
     {
     }
 
+    public DbSet<FakeEntity> FakeEntities => this.Set<FakeEntity>();
+
+    public DbSet<FakeRelatedEntity> FakeRelatedEntities => this.Set<FakeRelatedEntity>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<FakeRelatedEntity>()
@@ -22,10 +26,4 @@ internal class FakeDbContext : ApplicationDbContext
 
         base.OnModelCreating(modelBuilder);
     }
-
-    public DbSet<FakeEntity> FakeEntities =>
-        this.Set<FakeEntity>();
-
-    public DbSet<FakeRelatedEntity> FakeRelatedEntities =>
-        this.Set<FakeRelatedEntity>();
 }

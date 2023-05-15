@@ -48,8 +48,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{AFF8B5D8-7B58-4641-A3E1-73BC47BD4D48}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\package.yml = .github\workflows\package.yml
-		.github\workflows\codeql.yml = .github\workflows\codeql.yml
 		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\analyze.yml = .github\workflows\analyze.yml
 	EndProjectSection
 EndProject
 Global

@@ -10,8 +10,6 @@ public class UnvalidatedPassingRequestFake : IRequest
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class UnvalidatedPassingRequestFakeHandler : IRequestHandler<UnvalidatedPassingRequestFake>
 {
-    public Task Handle(UnvalidatedPassingRequestFake request, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    public Task Handle(UnvalidatedPassingRequestFake request, CancellationToken cancellationToken) =>
+        Task.CompletedTask;
 }
