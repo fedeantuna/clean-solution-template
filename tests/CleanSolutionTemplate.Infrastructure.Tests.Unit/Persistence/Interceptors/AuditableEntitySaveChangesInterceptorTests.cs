@@ -243,10 +243,7 @@ public class AuditableEntitySaveChangesInterceptorTests
 
         Action<ILogger, Exception?> LogActionFunc(LogLevel logLevel)
         {
-            return (logger, exception) =>
-            {
-                logger.Log(logLevel, exception, "some-message");
-            };
+            return (logger, exception) => logger.Log(logLevel, exception, "some-message");
         }
 
         return new EventDefinition(loggingOptionsMock.Object,

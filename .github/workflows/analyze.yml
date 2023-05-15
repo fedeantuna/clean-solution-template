@@ -63,4 +63,4 @@ jobs:
     - name: Report results to Codacy
       run: |
         dotnet jb inspectcode CleanSolutionTemplate.sln --output=jb-inspectcode-report.xml --format=xml --build -a
-        grep -q "<Issues />" report.xml || exit 1
+        grep -q "<Issues />" jb-inspectcode-report.xml || exit 1
