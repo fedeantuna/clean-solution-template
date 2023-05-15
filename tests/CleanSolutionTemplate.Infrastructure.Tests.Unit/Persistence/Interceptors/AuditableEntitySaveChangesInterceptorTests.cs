@@ -238,17 +238,20 @@ public class AuditableEntitySaveChangesInterceptorTests
     {
         var loggingOptionsMock = new Mock<ILoggingOptions>();
         var eventId = new EventId(0);
-        const LogLevel logLevel = LogLevel.None;
+        const LogLevel logLevelNone = LogLevel.None;
         const string eventIdCode = "test-event-id-code";
 
-        Action<ILogger, Exception?> LogActionFunc(LogLevel _)
+        Action<ILogger, Exception?> LogActionFunc(LogLevel logLevel)
         {
-            return (_, _) => { };
+            return (logger, exception) =>
+            {
+                logger.Log(logLevel, exception, "some-message");
+            };
         }
 
         return new EventDefinition(loggingOptionsMock.Object,
             eventId,
-            logLevel,
+            logLevelNone,
             eventIdCode,
             LogActionFunc);
     }
@@ -257,7 +260,7 @@ public class AuditableEntitySaveChangesInterceptorTests
     {
         string MessageGenerator(EventDefinitionBase eventDefinitionBase, EventData eventData)
         {
-            return string.Empty;
+            return $"{eventDefinitionBase.EventIdCode}-{eventData.EventIdCode}";
         }
 
         return new DbContextEventData(eventDefinition,
