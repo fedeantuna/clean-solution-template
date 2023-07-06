@@ -1,0 +1,34 @@
+name: JB InspectCode
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  analyze:
+    name: JB InspectCode
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Run jb inspectcode
+        run: |
+          dotnet jb inspectcode CleanSolutionTemplate.sln --output=jb-inspectcode-report.xml --format=xml --build -a
+          echo "============================================================================================"
+          echo -en "\n" | cat jb-inspectcode-report.xml -
+          echo "============================================================================================"
+          grep -q "<Issues />" jb-inspectcode-report.xml || exit 1
