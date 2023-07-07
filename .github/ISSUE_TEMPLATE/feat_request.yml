@@ -1,0 +1,41 @@
+name: 📘 Feature request
+description: Suggest an idea to add or improve a feature
+title: 'feat: '
+labels:
+  - feat
+body:
+  - id: description
+    type: textarea
+    attributes:
+      label: Description
+      description: Tell us what you want to add or improve
+      placeholder: What do you want to see in this project?
+    validations:
+      required: true
+
+  - id: solution
+    type: textarea
+    attributes:
+      label: Proposed Solution
+      description: Tell us how would you solve this as clear and concise as you can
+      placeholder: How would you solve this?
+    validations:
+      required: false
+
+  - id: alternative-solutions
+    type: textarea
+    attributes:
+      label: Alternative Solutions
+      description: Tell us alternatives to how to solve this as clear and concise as you can
+      placeholder: Is there any other way to solve this?
+    validations:
+      required: false
+
+  - id: additional-context
+    type: textarea
+    attributes:
+      label: Additional Context
+      description: If applicable, add screenshots and any other information that can help explain or visualize your idea.
+      placeholder: What else can you tell us?
+    validations:
+      required: false

@@ -1,0 +1,67 @@
+name: 🪲 Bug report
+description: Create a report to help us improve
+title: 'fix: '
+labels:
+  - fix
+body:
+  - id: description
+    type: textarea
+    attributes:
+      label: Describe the Bug
+      description: Tell us what happen as clear and concise as you can
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - id: reproduce
+    type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: Tell us step by step how to reproduce the bug
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - id: expected
+    type: textarea
+    attributes:
+      label: Expected Behavior
+      description: Tell us what you expected as clear and concise as you can
+      placeholder: What was supposed to happen?
+    validations:
+      required: true
+
+  - id: operating-system
+    type: dropdown
+    attributes:
+      label: Operating System
+      multiple: true
+      options:
+        - Linux
+        - Windows
+        - MacOS
+        - Other
+    validations:
+      required: true
+
+  - id: version
+    type: input
+    attributes:
+      label: Version
+      description: What version of the software are you seeing the bug on?
+      placeholder: v0.1.2
+    validations:
+      required: true
+
+  - id: additional-context
+    type: textarea
+    attributes:
+      label: Additional Context
+      description: If applicable, add screenshots and any other information that can help explain or reproduce your problem.
+      placeholder: What else can you tell us?
+    validations:
+      required: false
