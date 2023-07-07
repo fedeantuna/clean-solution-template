@@ -34,7 +34,6 @@ public class LoggingBehaviorTests
             .HaveMessage(LoggingBehavior<object>.LogMessageTemplate).Once()
             .WithProperty("RequestName").WithValue(nameof(UnvalidatedPassingRequestFake))
             .And.WithProperty("UserId").WithValue(Constants.TestUserId)
-            .And.WithProperty("UserEmail").WithValue(Constants.TestUserEmail)
             .And.WithProperty("Request").HavingADestructuredObject();
     }
 }

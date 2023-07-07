@@ -9,7 +9,7 @@ namespace CleanSolutionTemplate.Application.Common.Behaviors;
 public class LoggingBehavior<TRequest> : IRequestPreProcessor<TRequest>
     where TRequest : notnull
 {
-    internal const string LogMessageTemplate = "Request: {RequestName} {UserId} {UserEmail} {@Request}";
+    internal const string LogMessageTemplate = "Request: {RequestName} {UserId} {@Request}";
 
     private readonly ILogger _logger;
     private readonly IUserService _userService;
@@ -27,10 +27,9 @@ public class LoggingBehavior<TRequest> : IRequestPreProcessor<TRequest>
     {
         var requestName = typeof(TRequest).Name;
         var userId = this._userService.GetCurrentUserId();
-        var userEmail = this._userService.GetCurrentUserEmail();
 
         this._logger.LogInformation(LogMessageTemplate,
-            requestName, userId, userEmail, request);
+            requestName, userId, request);
 
         return Task.CompletedTask;
     }
