@@ -53,8 +53,8 @@ public class ServiceProviderBuilder
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, Constants.TestUserId),
-            new(ClaimTypes.Email, Constants.TestUserEmail)
+            new(ClaimTypes.NameIdentifier, Testing.TestUserId),
+            new(ClaimTypes.Email, Testing.TestUserEmail)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims);

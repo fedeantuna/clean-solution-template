@@ -29,7 +29,7 @@ public class UserServiceTests
         var result = this._sut.GetCurrentUserId();
 
         // Assert
-        result.Should().Be(Constants.TestUserId);
+        result.Should().Be(Testing.TestUserId);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class UserServiceTests
         var result = this._sut.GetCurrentUserEmail();
 
         // Assert
-        result.Should().Be(Constants.TestUserEmail);
+        result.Should().Be(Testing.TestUserEmail);
     }
 
     [Fact]

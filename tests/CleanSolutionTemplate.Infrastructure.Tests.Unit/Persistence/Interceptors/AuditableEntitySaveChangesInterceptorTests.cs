@@ -49,8 +49,8 @@ public class AuditableEntitySaveChangesInterceptorTests
         await this.CallSavingChangesAsync();
 
         // Assert
-        this.VerifyFakeEntities(new[] { Constants.TestUserId, Constants.TestUserId },
-            new[] { Constants.TestUserId, Constants.TestUserId },
+        this.VerifyFakeEntities(new[] { Testing.TestUserId, Testing.TestUserId },
+            new[] { Testing.TestUserId, Testing.TestUserId },
             new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow },
             new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
@@ -122,7 +122,7 @@ public class AuditableEntitySaveChangesInterceptorTests
 
         // Assert
         this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
-            new[] { Constants.TestUserId, Constants.TestUserId },
+            new[] { Testing.TestUserId, Testing.TestUserId },
             new DateTimeOffset?[] { null, null },
             new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
@@ -147,8 +147,8 @@ public class AuditableEntitySaveChangesInterceptorTests
         this.CallSavingChanges();
 
         // Assert
-        this.VerifyFakeEntities(new[] { Constants.TestUserId, Constants.TestUserId },
-            new[] { Constants.TestUserId, Constants.TestUserId },
+        this.VerifyFakeEntities(new[] { Testing.TestUserId, Testing.TestUserId },
+            new[] { Testing.TestUserId, Testing.TestUserId },
             new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow },
             new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }
@@ -220,7 +220,7 @@ public class AuditableEntitySaveChangesInterceptorTests
 
         // Assert
         this.VerifyFakeEntitiesWithValueObjects(new string?[] { null, null },
-            new[] { Constants.TestUserId, Constants.TestUserId },
+            new[] { Testing.TestUserId, Testing.TestUserId },
             new DateTimeOffset?[] { null, null },
             new DateTimeOffset?[] { this._dateTimeOffsetWrapper.UtcNow, this._dateTimeOffsetWrapper.UtcNow });
     }

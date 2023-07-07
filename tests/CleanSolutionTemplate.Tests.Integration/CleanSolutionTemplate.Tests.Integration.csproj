@@ -14,7 +14,8 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.11.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
         <PackageReference Include="Moq" Version="4.18.4" />
         <PackageReference Include="NUnit" Version="3.13.3" />
@@ -27,14 +28,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
         <PackageReference Include="Testcontainers" Version="3.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Api\CleanSolutionTemplate.Api.csproj" />
-        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
-        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Domain\CleanSolutionTemplate.Domain.csproj" />
-        <ProjectReference Include="..\..\src\CleanSolutionTemplate.Infrastructure\CleanSolutionTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -42,6 +37,11 @@
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\CleanSolutionTemplate.Application\CleanSolutionTemplate.Application.csproj" />
+      <ProjectReference Include="..\..\src\CleanSolutionTemplate.Infrastructure\CleanSolutionTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

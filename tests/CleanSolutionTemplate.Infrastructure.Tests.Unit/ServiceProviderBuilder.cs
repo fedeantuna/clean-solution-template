@@ -49,8 +49,8 @@ public class ServiceProviderBuilder
     private void AddPresentationServiceMocks()
     {
         var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(Constants.TestUserId);
-        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(Constants.TestUserEmail);
+        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(Testing.TestUserId);
+        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
         this._services.AddTransient(_ => userServiceMock.Object);
     }
 

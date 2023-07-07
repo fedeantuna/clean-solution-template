@@ -42,8 +42,8 @@ public class ApplicationDbContextTests
         // Assert
         fakeEntity.CreatedAt.Should().Be(now);
         fakeEntity.LastModifiedAt.Should().Be(now);
-        fakeEntity.CreatedBy.Should().Be(Constants.TestUserId);
-        fakeEntity.LastModifiedBy.Should().Be(Constants.TestUserId);
+        fakeEntity.CreatedBy.Should().Be(Testing.TestUserId);
+        fakeEntity.LastModifiedBy.Should().Be(Testing.TestUserId);
     }
 
     [Fact]
