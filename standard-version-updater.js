@@ -9,7 +9,7 @@ module.exports.readVersion = (contents) => {
 
 module.exports.writeVersion = function (contents, version) {
     const updatedContents = contents
-        .replace(/<veresion>*.*.*<\/veresion>/g,
+        .replace(/<version>*.*.*<\/version>/g,
             `<veresion>${version}</veresion>`);
 
     return updatedContents;
