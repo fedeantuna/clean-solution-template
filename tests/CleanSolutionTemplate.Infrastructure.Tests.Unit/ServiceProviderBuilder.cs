@@ -65,11 +65,21 @@ public class ServiceProviderBuilder
 
     private void SetupWrapperMocks()
     {
-        var dateTimeOffsetWrapper = this._services.Single(s => s.ServiceType == typeof(IDateTimeOffsetWrapper));
-        this._services.Remove(dateTimeOffsetWrapper);
-
-        var dateTimeOffsetWrapperMock = new Mock<IDateTimeOffsetWrapper>();
+        var dateTimeOffsetWrapperMock = this._services.ReplaceServiceWithMock<IDateTimeOffsetWrapper>();
         dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(DateTimeOffset.UtcNow);
-        this._services.AddSingleton(_ => dateTimeOffsetWrapperMock.Object);
+    }
+}
+
+public static class ServiceCollectionExtensions
+{
+    public static Mock<TIService> ReplaceServiceWithMock<TIService>(this IServiceCollection services)
+        where TIService : class
+    {
+        var service = services.Single(sd => sd.ServiceType == typeof(TIService));
+        services.Remove(service);
+        var replace = new Mock<TIService>();
+        services.AddSingleton(_ => replace.Object);
+
+        return replace;
     }
 }

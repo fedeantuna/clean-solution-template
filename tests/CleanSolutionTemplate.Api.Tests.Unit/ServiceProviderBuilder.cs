@@ -19,15 +19,14 @@ public class ServiceProviderBuilder
         var configuration = new ConfigurationBuilder().Build();
         this._services.AddPresentationServices(configuration, false);
 
-        this.ReplaceLoggerWithInMemoryLogger();
+        this.SetupLoggerWithInMemoryLogger();
 
-        this.UnregisterActualHttpContextAccessor();
         this.SetupHttpContextAccessorMock();
     }
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
 
-    private void ReplaceLoggerWithInMemoryLogger() =>
+    private void SetupLoggerWithInMemoryLogger() =>
         this._services.AddLogging(builder =>
         {
             builder.ClearProviders();
@@ -41,15 +40,9 @@ public class ServiceProviderBuilder
             builder.AddSerilog(logger);
         });
 
-    private void UnregisterActualHttpContextAccessor()
-    {
-        var httpContextAccessor = this._services.Single(s => s.ServiceType == typeof(IHttpContextAccessor));
-        this._services.Remove(httpContextAccessor);
-    }
-
     private void SetupHttpContextAccessorMock()
     {
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        var httpContextAccessorMock = this._services.ReplaceServiceWithMock<IHttpContextAccessor>();
 
         var claims = new List<Claim>
         {
@@ -65,7 +58,19 @@ public class ServiceProviderBuilder
         httpContextMock.SetupGet(hc => hc.User).Returns(user);
 
         httpContextAccessorMock.SetupGet(hca => hca.HttpContext).Returns(httpContextMock.Object);
+    }
+}
 
-        this._services.AddSingleton(httpContextAccessorMock.Object);
+public static class ServiceCollectionExtensions
+{
+    public static Mock<TIService> ReplaceServiceWithMock<TIService>(this IServiceCollection services)
+        where TIService : class
+    {
+        var service = services.Single(sd => sd.ServiceType == typeof(TIService));
+        services.Remove(service);
+        var replace = new Mock<TIService>();
+        services.AddSingleton(_ => replace.Object);
+
+        return replace;
     }
 }
