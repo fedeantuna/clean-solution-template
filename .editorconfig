@@ -6,7 +6,7 @@ tab_width=4
 indent_style=space
 indent_size=4 # 2 for .yml/.yaml overrides this later
 charset=utf-8
-max_line_length=140 
+max_line_length=140
 
 # Microsoft .NET properties
 csharp_new_line_before_members_in_object_initializers=false
