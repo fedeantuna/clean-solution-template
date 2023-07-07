@@ -3,28 +3,12 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Containers;
 
 namespace CleanSolutionTemplate.Api.Tests.EndToEnd;
 
 public static class Testing
 {
-    private const int TestIdentityServerContainerPort = 3210;
-    private const int TestDatabaseContainerPort = 5433;
-
     private static readonly HttpClient TestClient = new TestWebApplicationFactory().CreateClient();
-
-    private static IContainer _testIdentityServerContainer = CreateTestIdentityServerContainer();
-    private static IContainer _testDatabaseContainer = CreateTestDatabaseContainer();
-
-    public static Task StartTestIdentityServerContainer() => _testIdentityServerContainer.StartAsync();
-
-    public static Task StartTestDatabaseContainer() => _testDatabaseContainer.StartAsync();
-
-    public static Task StopTestIdentityServerContainer() => _testIdentityServerContainer.StopAsync();
-
-    public static Task StopTestDatabaseContainer() => _testDatabaseContainer.StopAsync();
 
     public static async Task<T> GetDeserializedResponse<T>(HttpResponseMessage response)
     {
@@ -97,38 +81,6 @@ public static class Testing
         var serializedIdentityServerResponse = await identityResponse.Content.ReadAsStringAsync();
 
         return JsonSerializer.Deserialize<IdentityServerResponse>(serializedIdentityServerResponse)!.AccessToken;
-    }
-
-    private static IContainer CreateTestIdentityServerContainer()
-    {
-        const string testIdentityServerImage = "fedeantuna/test-identity-server:v1.0.1";
-        const string aspnetCoreUrls = "http://+";
-
-        return _testIdentityServerContainer = new ContainerBuilder()
-            .WithImage(testIdentityServerImage)
-            .WithPortBinding(TestIdentityServerContainerPort, 80)
-            .WithEnvironment(new Dictionary<string, string>
-            {
-                { "ASPNETCORE_URLS", aspnetCoreUrls }
-            })
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(80))
-            .Build();
-    }
-
-    private static IContainer CreateTestDatabaseContainer()
-    {
-        const string testDatabaseImage = "postgres:15.3-alpine3.18";
-        const string testDatabasePassword = "password";
-
-        return _testDatabaseContainer = new ContainerBuilder()
-            .WithImage(testDatabaseImage)
-            .WithPortBinding(TestDatabaseContainerPort, 5432)
-            .WithEnvironment(new Dictionary<string, string>
-            {
-                { "POSTGRES_PASSWORD", testDatabasePassword }
-            })
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-            .Build();
     }
 
     private class IdentityServerResponse

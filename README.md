@@ -25,9 +25,9 @@ Don't forget to change this README and LICENSE accordingly to your project's nee
 
 ## Running PostgresSQL locally
 
-The easiest and simplest way to run a local DB is using Docker.
+The easiest and simplest way to run a local DB is using Podman/Docker.
 
-Run `docker run --name cst-postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15.3-alpine3.18`.
+Run `podman run --name cst-postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:15.3-alpine3.18`.
 
 The connection string for the PostgresSQL DB in the `appsettings.Development.json` will allow you to connect to the container that got created.
 
@@ -48,9 +48,11 @@ Running the coverage report locally can be done by executing the test coverage s
 
 The project is divided as follows:
 
-*   The `scripts` directory is where all scripts should be placed. By default four come with the template to run the tests and generate a coverage and mutation report locally.
+*   The `scripts` directory is where all scripts should be placed. By default four come with the template to run the tests and start the containers for the tests.
 *   The `src` directory is where all the source code should be placed. By default four projects are included here. The Api project is the default Presentation Layer, then we have the Application, Domain and Infrastructure layers.
 *   The `tests` directory is where all the code for the tests should be placed. By default four Unit Test projects corresponding to a `src` project, an Integration Test and an End to End Test are placed here.
+
+Note: If you want to run Docker instead of Podman for the containers, simply replace the `podman` command by `docker`.
 
 ## Layers Overview
 
@@ -78,11 +80,11 @@ Our definition of Unit Test is a test that takes a layer in isolation and mocks 
 
 ### Integration Tests
 
-Our definition of Integration Test is a test that takes the Domain, Application and Infrastructure layers and mocks only external dependencies. We rely on DI to obtain the SUTs and the configuration for it can be found in the ServiceProviderBuilder class. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run within a Docker container using a real database.
+Our definition of Integration Test is a test that takes the Domain, Application and Infrastructure layers and mocks only external dependencies. We rely on DI to obtain the SUTs and the configuration for it can be found in the ServiceProviderBuilder class. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run within a Podman/Docker container using a real database.
 
 ### End to End Tests
 
-Our definition of End to End Test is a test that takes all the layers and external dependencies. We do not mock. We rely on a Test Server to run our API. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run against a testing/staging environment if possible or within a Docker container using a real database. Everything that relates to STS will be run against a testing/staging environment if possible or within a Docker container using a test server.
+Our definition of End to End Test is a test that takes all the layers and external dependencies. We do not mock. We rely on a Test Server to run our API. These tests will run sequentially, each class is allowed to keep state and rely on the state of the previous execution, making NUnit a great tool for the job. Tests within a class shouldn't depend on the execution or state of tests in different classes. Everything that relates to the database will be run against a testing/staging environment if possible or within a Podman/Docker container using a real database. Everything that relates to STS will be run against a testing/staging environment if possible or within a Podman/Docker container using a test server.
 
 ## Problems or Suggestions
 

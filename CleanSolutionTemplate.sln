@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{AD7D
 	ProjectSection(SolutionItems) = preProject
 		scripts\run_test_coverage.ps1 = scripts\run_test_coverage.ps1
 		scripts\run_test_coverage.sh = scripts\run_test_coverage.sh
+		scripts\containers.ps1 = scripts\containers.ps1
+		scripts\containers.sh = scripts\containers.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{189122CD-4280-487E-AF38-C6E9BC05C279}"
