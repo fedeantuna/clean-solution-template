@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/fedeantuna/clean-solution-template/compare/v2.0.1...v2.0.2) (2023-07-07)
+
+
+### Bug Fixes
+
+* Typo in standard-version-updater.js and CleanSolutionTemplate.nuspec ([5ad91ca](https://github.com/fedeantuna/clean-solution-template/commit/5ad91ca9b9ea13e2b2f20c75371b7c7d278dd175))
+
 ### [2.0.1](https://github.com/fedeantuna/clean-solution-template/compare/v2.0.0...v2.0.1) (2023-07-07)
 
 
