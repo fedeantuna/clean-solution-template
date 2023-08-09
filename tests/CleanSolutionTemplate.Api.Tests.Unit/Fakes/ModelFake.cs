@@ -3,7 +3,7 @@ using CleanSolutionTemplate.Domain.Common.Attributes;
 
 namespace CleanSolutionTemplate.Api.Tests.Unit.Fakes;
 
-public class FakeModel
+public class ModelFake
 {
     [SensitiveInformation] public List<string> SomeSensitiveStrings { get; init; } = new();
 
@@ -23,12 +23,12 @@ public class FakeModel
 
     public Dictionary<int, string> SomeDictionary { get; init; } = new();
 
-    [SensitiveInformation] public FakeInnerModelRecord SomeSensitiveFakeInnerModelRecord { get; init; } = new();
+    [SensitiveInformation] public InnerModelRecordFake SomeSensitiveFakeInnerModelRecord { get; init; } = new();
 
-    public FakeInnerModelRecord SomeFakeInnerModelRecord { get; init; } = new();
+    public InnerModelRecordFake SomeFakeInnerModelRecord { get; init; } = new();
 }
 
-public record FakeInnerModelRecord
+public record InnerModelRecordFake
 {
     [SensitiveInformation] public List<int> SomeSensitiveNumbers { get; init; } = new();
 
@@ -49,11 +49,11 @@ public record FakeInnerModelRecord
     public Dictionary<string, int> SomeDictionary { get; init; } = new();
 }
 
-public class FakeUnreadableModel
+public class UnreadableModelFake
 {
     private readonly Exception _exception;
 
-    public FakeUnreadableModel(Exception exception) => this._exception = exception;
+    public UnreadableModelFake(Exception exception) => this._exception = exception;
 
     public int ThrowingExceptionProperty =>
         throw this._exception;

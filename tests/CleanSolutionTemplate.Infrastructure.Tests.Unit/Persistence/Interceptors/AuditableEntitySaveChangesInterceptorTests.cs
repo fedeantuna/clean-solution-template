@@ -2,12 +2,12 @@ using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Application.Common.Wrappers;
 using CleanSolutionTemplate.Infrastructure.Persistence.Interceptors;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
+using FakeItEasy;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Persistence.Interceptors;
 
@@ -236,7 +236,7 @@ public class AuditableEntitySaveChangesInterceptorTests
 
     private static EventDefinition CreateEventDefinition()
     {
-        var loggingOptionsMock = new Mock<ILoggingOptions>();
+        var loggingOptionsFake = A.Fake<ILoggingOptions>();
         var eventId = new EventId(0);
         const LogLevel logLevelNone = LogLevel.None;
         const string eventIdCode = "test-event-id-code";
@@ -246,7 +246,7 @@ public class AuditableEntitySaveChangesInterceptorTests
             return (logger, exception) => logger.Log(logLevel, exception, "some-message");
         }
 
-        return new EventDefinition(loggingOptionsMock.Object,
+        return new EventDefinition(loggingOptionsFake,
             eventId,
             logLevelNone,
             eventIdCode,

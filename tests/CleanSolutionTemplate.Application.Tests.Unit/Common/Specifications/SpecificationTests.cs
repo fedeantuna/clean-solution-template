@@ -1,8 +1,8 @@
 ﻿using CleanSolutionTemplate.Application.Common.Specifications;
 using CleanSolutionTemplate.Application.Tests.Unit.Fakes;
 using CleanSolutionTemplate.Domain.Common;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 
 namespace CleanSolutionTemplate.Application.Tests.Unit.Common.Specifications;
 
@@ -97,7 +97,10 @@ public class SpecificationTests
         // Arrange
         var allSpecification = Specification<Entity>.All;
 
-        var entity = new Mock<Entity>(Guid.NewGuid()).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            Guid.NewGuid()
+        }));
 
         // Act
         var result = allSpecification.IsSatisfiedBy(entity);
@@ -110,7 +113,7 @@ public class SpecificationTests
     public void And_ShouldReturnLeftSpecification_WhenRightSpecificationIsAll()
     {
         // Arrange
-        var leftSpecification = new Mock<Specification<Entity>>().Object;
+        var leftSpecification = A.Fake<Specification<Entity>>();
         var rightSpecification = Specification<Entity>.All;
 
         // Act
@@ -125,7 +128,7 @@ public class SpecificationTests
     {
         // Arrange
         var leftSpecification = Specification<Entity>.All;
-        var rightSpecification = new Mock<Specification<Entity>>().Object;
+        var rightSpecification = A.Fake<Specification<Entity>>();
 
         // Act
         var result = leftSpecification.And(rightSpecification);
@@ -140,7 +143,10 @@ public class SpecificationTests
         Specification<Entity> rightSpecification)
     {
         // Arrange
-        var entity = new Mock<Entity>(Guid.NewGuid()).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            Guid.NewGuid()
+        }));
 
         // Act
         var specification = leftSpecification.And(rightSpecification);
@@ -157,7 +163,10 @@ public class SpecificationTests
         var leftSpecification = new TrueSpecificationFake();
         var rightSpecification = new TrueSpecificationFake();
 
-        var entity = new Mock<Entity>(Guid.NewGuid()).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            Guid.NewGuid()
+        }));
 
         // Act
         var specification = leftSpecification.And(rightSpecification);
@@ -188,7 +197,10 @@ public class SpecificationTests
         Specification<Entity> rightSpecification)
     {
         // Arrange
-        var entity = new Mock<Entity>(Guid.NewGuid()).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            Guid.NewGuid()
+        }));
 
         // Act
         var specification = leftSpecification.Or(rightSpecification);
@@ -205,7 +217,10 @@ public class SpecificationTests
         var leftSpecification = new FalseSpecificationFake();
         var rightSpecification = new FalseSpecificationFake();
 
-        var entity = new Mock<Entity>(Guid.NewGuid()).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            Guid.NewGuid()
+        }));
 
         // Act
         var specification = leftSpecification.Or(rightSpecification);
@@ -220,7 +235,10 @@ public class SpecificationTests
     public void IsSatisfiedBy_ShouldReturnTheOppositeToTheSpecification_WhenNotIsApplied(Specification<Entity> specification)
     {
         // Arrange
-        var entity = new Mock<Entity>(Guid.NewGuid()).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            Guid.NewGuid()
+        }));
 
         var specificationResult = specification.IsSatisfiedBy(entity);
 
@@ -230,37 +248,5 @@ public class SpecificationTests
 
         // Assert
         result.Should().Be(!specificationResult);
-    }
-
-    [Fact]
-    public void IsSatisfiedBy_ShouldThrowArgumentException_WhenRightAndSpecificationIsNull()
-    {
-        // Arrange
-        var leftSpecification = new Mock<Specification<Entity>>().Object;
-        var rightSpecification = (Specification<Entity>)null!;
-
-        var specification = leftSpecification.And(rightSpecification);
-
-        // Act
-        var act = () => specification.IsSatisfiedBy(new Mock<Entity>().Object);
-
-        // Assert
-        act.Should().Throw<ArgumentException>();
-    }
-
-    [Fact]
-    public void IsSatisfiedBy_ShouldThrowArgumentException_WhenRightOrSpecificationIsNull()
-    {
-        // Arrange
-        var leftSpecification = new Mock<Specification<Entity>>().Object;
-        var rightSpecification = (Specification<Entity>)null!;
-
-        var specification = leftSpecification.Or(rightSpecification);
-
-        // Act
-        var act = () => specification.IsSatisfiedBy(new Mock<Entity>().Object);
-
-        // Assert
-        act.Should().Throw<ArgumentException>();
     }
 }

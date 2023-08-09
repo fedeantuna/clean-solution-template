@@ -14,6 +14,8 @@ public static class Testing
     public static readonly string TestUserId = "test-user-id";
     public static readonly string TestUserEmail = "test-user-email";
 
+    public static DateTimeOffset UtcNow { get; } = DateTimeOffset.UtcNow;
+
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
     {

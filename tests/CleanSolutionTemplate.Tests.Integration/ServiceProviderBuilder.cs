@@ -2,9 +2,9 @@
 using CleanSolutionTemplate.Application.Common.Services;
 using CleanSolutionTemplate.Application.Common.Wrappers;
 using CleanSolutionTemplate.Infrastructure;
+using FakeItEasy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 
 namespace CleanSolutionTemplate.Tests.Integration;
 
@@ -22,37 +22,38 @@ public class ServiceProviderBuilder
             .AddInfrastructureServices(configuration)
             .AddLogging();
 
-        this.AddPresentationServiceMocks();
+        this.AddPresentationServiceFakes();
 
-        this.SetupInfrastructureWrapperMocks();
+        this.SetupInfrastructureWrapperFakes();
     }
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
 
-    private void AddPresentationServiceMocks()
+    private void AddPresentationServiceFakes()
     {
-        var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(Testing.TestUserId);
-        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
-        this._services.AddTransient(_ => userServiceMock.Object);
+        var userServiceMock = A.Fake<IUserService>();
+        A.CallTo(() => userServiceMock.GetCurrentUserId()).Returns(Testing.TestUserId);
+        A.CallTo(() => userServiceMock.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
+        this._services.AddTransient(_ => userServiceMock);
     }
 
-    private void SetupInfrastructureWrapperMocks()
+    private void SetupInfrastructureWrapperFakes()
     {
-        var dateTimeOffsetWrapperMock = this._services.ReplaceServiceWithMock<IDateTimeOffsetWrapper>();
-        dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(DateTimeOffset.UtcNow);
+        var dateTimeOffsetWrapperMock = this._services.ReplaceServiceWithFake<IDateTimeOffsetWrapper>(ServiceLifetime.Transient);
+        A.CallTo(() => dateTimeOffsetWrapperMock.UtcNow).Returns(Testing.UtcNow);
     }
 }
 
 public static class ServiceCollectionExtensions
 {
-    public static Mock<TIService> ReplaceServiceWithMock<TIService>(this IServiceCollection services)
-        where TIService : class
+    public static TService ReplaceServiceWithFake<TService>(this IServiceCollection services, ServiceLifetime serviceLifetime)
+        where TService : class
     {
-        var service = services.Single(sd => sd.ServiceType == typeof(TIService));
+        var service = services.Single(sd => sd.ServiceType == typeof(TService));
         services.Remove(service);
-        var replace = new Mock<TIService>();
-        services.AddSingleton(_ => replace.Object);
+        var replace = A.Fake<TService>();
+        var serviceDescriptor = new ServiceDescriptor(typeof(TService), _ => replace, serviceLifetime);
+        services.Add(serviceDescriptor);
 
         return replace;
     }

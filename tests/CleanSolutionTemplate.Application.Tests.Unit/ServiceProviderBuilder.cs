@@ -1,9 +1,9 @@
 using System.Reflection;
 using CleanSolutionTemplate.Application.Common.Services;
+using FakeItEasy;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Serilog;
 using Serilog.Sinks.InMemory;
 
@@ -20,7 +20,7 @@ public class ServiceProviderBuilder
         this.AddFakeMediatorRequests();
 
         this.SetupInMemoryLogger();
-        this.AddPresentationServiceMocks();
+        this.AddPresentationServiceFakes();
     }
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
@@ -44,11 +44,11 @@ public class ServiceProviderBuilder
             builder.AddSerilog(logger);
         });
 
-    private void AddPresentationServiceMocks()
+    private void AddPresentationServiceFakes()
     {
-        var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(Testing.TestUserId);
-        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
-        this._services.AddTransient(_ => userServiceMock.Object);
+        var userServiceFake = A.Fake<IUserService>();
+        A.CallTo(() => userServiceFake.GetCurrentUserId()).Returns(Testing.TestUserId);
+        A.CallTo(() => userServiceFake.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
+        this._services.AddTransient(_ => userServiceFake);
     }
 }
