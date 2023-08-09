@@ -13,9 +13,9 @@ public class SensitiveInformationDestructuringPolicyTests
 {
     private const string LogMessageTemplate = "Destructuring {@Object}";
 
-    private readonly ModelFake _modelFake;
-
     private readonly ILogger _logger;
+
+    private readonly ModelFake _modelFake;
 
     public SensitiveInformationDestructuringPolicyTests()
     {
