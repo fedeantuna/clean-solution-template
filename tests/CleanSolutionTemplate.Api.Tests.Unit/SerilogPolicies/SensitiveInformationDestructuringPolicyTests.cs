@@ -13,9 +13,9 @@ public class SensitiveInformationDestructuringPolicyTests
 {
     private const string LogMessageTemplate = "Destructuring {@Object}";
 
-    private readonly FakeModel _fakeModel;
-
     private readonly ILogger _logger;
+
+    private readonly ModelFake _modelFake;
 
     public SensitiveInformationDestructuringPolicyTests()
     {
@@ -23,7 +23,7 @@ public class SensitiveInformationDestructuringPolicyTests
 
         this._logger = provider.GetRequiredService<ILogger<SensitiveInformationDestructuringPolicyTests>>();
 
-        this._fakeModel = CreateFakeModel();
+        this._modelFake = CreateFakeModel();
     }
 
     [Theory]
@@ -61,11 +61,11 @@ public class SensitiveInformationDestructuringPolicyTests
         InMemorySink.Instance
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
-            .WithDeconstructedFakeModel(nameof(FakeModel.SomeSensitiveStrings))
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeSensitiveString))
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeSensitiveNumber))
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeSensitiveDictionary))
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeSensitiveFakeInnerModelRecord));
+            .WithDeconstructedFakeModel(nameof(ModelFake.SomeSensitiveStrings))
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeSensitiveString))
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeSensitiveNumber))
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeSensitiveDictionary))
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeSensitiveFakeInnerModelRecord));
     }
 
     [Theory]
@@ -84,12 +84,12 @@ public class SensitiveInformationDestructuringPolicyTests
         InMemorySink.Instance
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
-            .WithDeconstructedFakeModel(nameof(FakeModel.SomeNumbers),
-                $"[{string.Join(", ", this._fakeModel.SomeNumbers)}]")
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeString), this._fakeModel.SomeString)
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeNumber), this._fakeModel.SomeNumber)
-            .And.WithDeconstructedFakeModel(nameof(FakeModel.SomeDictionary),
-                $"[{string.Join(", ", this._fakeModel.SomeDictionary.Select(d => $"({d.Key}: \"{d.Value}\")"))}]");
+            .WithDeconstructedFakeModel(nameof(ModelFake.SomeNumbers),
+                $"[{string.Join(", ", this._modelFake.SomeNumbers)}]")
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeString), this._modelFake.SomeString)
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeNumber), this._modelFake.SomeNumber)
+            .And.WithDeconstructedFakeModel(nameof(ModelFake.SomeDictionary),
+                $"[{string.Join(", ", this._modelFake.SomeDictionary.Select(d => $"({d.Key}: \"{d.Value}\")"))}]");
     }
 
     [Theory]
@@ -108,14 +108,14 @@ public class SensitiveInformationDestructuringPolicyTests
         InMemorySink.Instance
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
-            .WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeSensitiveNumbers))
-            .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeSensitiveString))
-            .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeSensitiveNumber))
-            .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeSensitiveDictionary));
+            .WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeSensitiveNumbers))
+            .And.WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeSensitiveString))
+            .And.WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeSensitiveNumber))
+            .And.WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeSensitiveDictionary));
     }
 
     [Theory]
@@ -134,16 +134,16 @@ public class SensitiveInformationDestructuringPolicyTests
         InMemorySink.Instance
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
-            .WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeStrings),
-                $"[{string.Join(", ", this._fakeModel.SomeFakeInnerModelRecord.SomeStrings.Select(ss => $"\"{ss}\""))}]")
-            .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeString), this._fakeModel.SomeFakeInnerModelRecord.SomeString)
-            .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeNumber), this._fakeModel.SomeFakeInnerModelRecord.SomeNumber)
-            .And.WithDeconstructedFakeInnerModel(nameof(FakeModel.SomeFakeInnerModelRecord),
-                nameof(FakeInnerModelRecord.SomeDictionary),
-                $"[{string.Join(", ", this._fakeModel.SomeFakeInnerModelRecord.SomeDictionary.Select(d => $"(\"{d.Key}\": {d.Value})"))}]");
+            .WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeStrings),
+                $"[{string.Join(", ", this._modelFake.SomeFakeInnerModelRecord.SomeStrings.Select(ss => $"\"{ss}\""))}]")
+            .And.WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeString), this._modelFake.SomeFakeInnerModelRecord.SomeString)
+            .And.WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeNumber), this._modelFake.SomeFakeInnerModelRecord.SomeNumber)
+            .And.WithDeconstructedFakeInnerModel(nameof(ModelFake.SomeFakeInnerModelRecord),
+                nameof(InnerModelRecordFake.SomeDictionary),
+                $"[{string.Join(", ", this._modelFake.SomeFakeInnerModelRecord.SomeDictionary.Select(d => $"(\"{d.Key}\": {d.Value})"))}]");
     }
 
     [Theory]
@@ -205,7 +205,7 @@ public class SensitiveInformationDestructuringPolicyTests
     {
         // Arrange
         var exception = new Exception();
-        var fakeUnreadableModel = new FakeUnreadableModel(exception);
+        var fakeUnreadableModel = new UnreadableModelFake(exception);
 
         // Act
         this.Log(logLevel, fakeUnreadableModel);
@@ -215,11 +215,11 @@ public class SensitiveInformationDestructuringPolicyTests
             .Should()
             .HaveMessage(LogMessageTemplate).Once()
             .WithProperty("Object").HavingADestructuredObject()
-            .WithProperty(nameof(FakeUnreadableModel.ThrowingExceptionProperty))
+            .WithProperty(nameof(UnreadableModelFake.ThrowingExceptionProperty))
             .WithValue("Property Accessor throws an Exception");
     }
 
-    private static FakeModel CreateFakeModel() =>
+    private static ModelFake CreateFakeModel() =>
         new()
         {
             SomeSensitiveStrings = new List<string> { "sensitive-information-1", "sensitive-information-2" },
@@ -238,8 +238,8 @@ public class SensitiveInformationDestructuringPolicyTests
                 { 0, "firstValue" },
                 { 1, "secondValue" }
             },
-            SomeSensitiveFakeInnerModelRecord = new FakeInnerModelRecord(),
-            SomeFakeInnerModelRecord = new FakeInnerModelRecord
+            SomeSensitiveFakeInnerModelRecord = new InnerModelRecordFake(),
+            SomeFakeInnerModelRecord = new InnerModelRecordFake
             {
                 SomeSensitiveNumbers = new List<int> { 1, 2, 3 },
                 SomeStrings = new List<string> { "first", "second", "third" },
@@ -259,7 +259,7 @@ public class SensitiveInformationDestructuringPolicyTests
             }
         };
 
-    private void LogFakeModel(LogLevel logLevel) => this.Log(logLevel, this._fakeModel);
+    private void LogFakeModel(LogLevel logLevel) => this.Log(logLevel, this._modelFake);
 
     private void Log(LogLevel logLevel, object @object)
     {

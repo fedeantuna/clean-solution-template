@@ -1,6 +1,6 @@
 using CleanSolutionTemplate.Domain.Common;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 
 namespace CleanSolutionTemplate.Domain.Tests.Unit.Common;
 
@@ -13,7 +13,10 @@ public class EntityTests
         var id = Guid.NewGuid();
 
         // Act
-        var sut = new Mock<Entity>(id).Object;
+        var sut = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            id
+        }));
 
         // Assert
         sut.Id.Should().NotBe(Guid.Empty);
@@ -24,9 +27,12 @@ public class EntityTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        var domainEvent = new Mock<DomainEvent>().Object;
+        var domainEvent = A.Fake<DomainEvent>();
 
-        var entity = new Mock<Entity>(id).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            id
+        }));
 
         // Act
         entity.AddDomainEvent(domainEvent);
@@ -40,9 +46,12 @@ public class EntityTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        var domainEvent = new Mock<DomainEvent>().Object;
+        var domainEvent = A.Fake<DomainEvent>();
 
-        var entity = new Mock<Entity>(id).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            id
+        }));
         entity.AddDomainEvent(domainEvent);
 
         // Act
@@ -57,9 +66,12 @@ public class EntityTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        var domainEvent = new Mock<DomainEvent>().Object;
+        var domainEvent = A.Fake<DomainEvent>();
 
-        var entity = new Mock<Entity>(id).Object;
+        var entity = A.Fake<Entity>(builder => builder.WithArgumentsForConstructor(new List<object?>
+        {
+            id
+        }));
         entity.AddDomainEvent(domainEvent);
 
         // Act

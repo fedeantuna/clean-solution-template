@@ -34,5 +34,5 @@ public static class ConfigureServices
     }
 
     private static void AddInfrastructureWrappers(this IServiceCollection services) =>
-        services.AddSingleton<IDateTimeOffsetWrapper, DateTimeOffsetWrapper>();
+        services.AddTransient<IDateTimeOffsetWrapper, DateTimeOffsetWrapper>();
 }

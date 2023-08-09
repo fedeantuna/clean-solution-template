@@ -2,10 +2,10 @@ using CleanSolutionTemplate.Application.Common.Persistence;
 using CleanSolutionTemplate.Domain.Common;
 using CleanSolutionTemplate.Infrastructure.Common;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
+using FakeItEasy;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit.Common;
 
@@ -24,16 +24,16 @@ public class MediatorExtensionsTests
     public async Task DispatchDomainEvents_ShouldClearTheDomainEventsFromTheEntity()
     {
         // Arrange
-        var domainEventMock = new Mock<DomainEvent>();
+        var domainEventFake = A.Fake<DomainEvent>();
         var entity = new FakeEntity();
 
-        entity.AddDomainEvent(domainEventMock.Object);
+        entity.AddDomainEvent(domainEventFake);
         await this._fakeDbContext.FakeEntities.AddAsync(entity);
 
-        var publisherMock = new Mock<IPublisher>();
+        var publisherMock = A.Fake<IPublisher>();
 
         // Act
-        await publisherMock.Object.DispatchDomainEvents(this._fakeDbContext);
+        await publisherMock.DispatchDomainEvents(this._fakeDbContext);
 
         // Assert
         entity.DomainEvents.Should().BeEmpty();
@@ -43,23 +43,23 @@ public class MediatorExtensionsTests
     public async Task DispatchDomainEvents_ShouldPublishEachDomainEvent()
     {
         // Arrange
-        var domainEventAMock = new Mock<DomainEvent>();
-        var domainEventBMock = new Mock<DomainEvent>();
+        var domainEventAFake = A.Fake<DomainEvent>();
+        var domainEventBFake = A.Fake<DomainEvent>();
         var entity = new FakeEntity();
 
         var cancellationToken = new CancellationToken();
 
-        entity.AddDomainEvent(domainEventAMock.Object);
-        entity.AddDomainEvent(domainEventBMock.Object);
+        entity.AddDomainEvent(domainEventAFake);
+        entity.AddDomainEvent(domainEventBFake);
         await this._fakeDbContext.FakeEntities.AddAsync(entity, cancellationToken);
 
-        var publisherMock = new Mock<IPublisher>();
+        var publisherFake = A.Fake<IPublisher>();
 
         // Act
-        await publisherMock.Object.DispatchDomainEvents(this._fakeDbContext, cancellationToken);
+        await publisherFake.DispatchDomainEvents(this._fakeDbContext, cancellationToken);
 
         // Assert
-        publisherMock.Verify(p => p.Publish(domainEventAMock.Object, cancellationToken), Times.Once);
-        publisherMock.Verify(p => p.Publish(domainEventBMock.Object, cancellationToken), Times.Once);
+        A.CallTo(() => publisherFake.Publish(domainEventAFake, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => publisherFake.Publish(domainEventBFake, cancellationToken)).MustHaveHappenedOnceExactly();
     }
 }

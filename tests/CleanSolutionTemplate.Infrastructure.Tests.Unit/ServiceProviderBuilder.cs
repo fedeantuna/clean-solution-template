@@ -3,10 +3,10 @@ using CleanSolutionTemplate.Application.Common.Services;
 using CleanSolutionTemplate.Application.Common.Wrappers;
 using CleanSolutionTemplate.Infrastructure.Persistence;
 using CleanSolutionTemplate.Infrastructure.Tests.Unit.Fakes;
+using FakeItEasy;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 
 namespace CleanSolutionTemplate.Infrastructure.Tests.Unit;
 
@@ -23,10 +23,10 @@ public class ServiceProviderBuilder
 
         this._services.AddLogging();
 
-        this.AddPresentationServiceMocks();
-        this.AddApplicationServiceMocks();
+        this.AddPresentationServiceFakes();
+        this.AddApplicationServiceFakes();
 
-        this.SetupWrapperMocks();
+        this.SetupWrapperFakes();
     }
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
@@ -46,39 +46,40 @@ public class ServiceProviderBuilder
         this._services.AddScoped<IApplicationDbContext, FakeDbContext>();
     }
 
-    private void AddPresentationServiceMocks()
+    private void AddPresentationServiceFakes()
     {
-        var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(us => us.GetCurrentUserId()).Returns(Testing.TestUserId);
-        userServiceMock.Setup(us => us.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
-        this._services.AddTransient(_ => userServiceMock.Object);
+        var userServiceFake = A.Fake<IUserService>();
+        A.CallTo(() => userServiceFake.GetCurrentUserId()).Returns(Testing.TestUserId);
+        A.CallTo(() => userServiceFake.GetCurrentUserEmail()).Returns(Testing.TestUserEmail);
+        this._services.AddTransient(_ => userServiceFake);
     }
 
-    private void AddApplicationServiceMocks()
+    private void AddApplicationServiceFakes()
     {
-        var mediatorMock = new Mock<IMediator>();
-        this._services.AddTransient(_ => mediatorMock.Object);
+        var mediatorFake = A.Fake<IMediator>();
+        this._services.AddTransient(_ => mediatorFake);
 
-        var publisherMock = new Mock<IPublisher>();
-        this._services.AddTransient(_ => publisherMock.Object);
+        var publisherFake = A.Fake<IPublisher>();
+        this._services.AddTransient(_ => publisherFake);
     }
 
-    private void SetupWrapperMocks()
+    private void SetupWrapperFakes()
     {
-        var dateTimeOffsetWrapperMock = this._services.ReplaceServiceWithMock<IDateTimeOffsetWrapper>();
-        dateTimeOffsetWrapperMock.SetupGet(dow => dow.UtcNow).Returns(DateTimeOffset.UtcNow);
+        var dateTimeOffsetWrapperMock = this._services.ReplaceServiceWithFake<IDateTimeOffsetWrapper>(ServiceLifetime.Transient);
+        A.CallTo(() => dateTimeOffsetWrapperMock.UtcNow).Returns(Testing.UtcNow);
     }
 }
 
 public static class ServiceCollectionExtensions
 {
-    public static Mock<TIService> ReplaceServiceWithMock<TIService>(this IServiceCollection services)
-        where TIService : class
+    public static TService ReplaceServiceWithFake<TService>(this IServiceCollection services, ServiceLifetime serviceLifetime)
+        where TService : class
     {
-        var service = services.Single(sd => sd.ServiceType == typeof(TIService));
+        var service = services.Single(sd => sd.ServiceType == typeof(TService));
         services.Remove(service);
-        var replace = new Mock<TIService>();
-        services.AddSingleton(_ => replace.Object);
+        var replace = A.Fake<TService>();
+        var serviceDescriptor = new ServiceDescriptor(typeof(TService), _ => replace, serviceLifetime);
+        services.Add(serviceDescriptor);
 
         return replace;
     }

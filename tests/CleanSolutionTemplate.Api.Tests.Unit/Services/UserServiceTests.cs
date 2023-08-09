@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using CleanSolutionTemplate.Application.Common.Services;
+using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 
 namespace CleanSolutionTemplate.Api.Tests.Unit.Services;
 
@@ -48,8 +48,7 @@ public class UserServiceTests
         // Arrange
         const string unknownUserId = "Unknown";
 
-        var httpContextMock = Mock.Get(this._httpContextAccessor.HttpContext!);
-        httpContextMock.SetupGet(hc => hc.User).Returns(new ClaimsPrincipal());
+        A.CallTo(() => this._httpContextAccessor.HttpContext!.User).Returns(new ClaimsPrincipal());
 
         // Act
         var result = this._sut.GetCurrentUserId();
@@ -64,8 +63,7 @@ public class UserServiceTests
         // Arrange
         const string unknownUserEmail = "Unknown";
 
-        var httpContextMock = Mock.Get(this._httpContextAccessor.HttpContext!);
-        httpContextMock.SetupGet(hc => hc.User).Returns(new ClaimsPrincipal());
+        A.CallTo(() => this._httpContextAccessor.HttpContext!.User).Returns(new ClaimsPrincipal());
 
         // Act
         var result = this._sut.GetCurrentUserEmail();

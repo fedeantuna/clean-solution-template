@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using CleanSolutionTemplate.Api.SerilogPolicies;
+using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Serilog;
 using Serilog.Sinks.InMemory;
 
@@ -21,7 +21,7 @@ public class ServiceProviderBuilder
 
         this.SetupLoggerWithInMemoryLogger();
 
-        this.SetupHttpContextAccessorMock();
+        this.SetupHttpContextAccessorFake();
     }
 
     public IServiceProvider Build() => this._services.BuildServiceProvider();
@@ -40,36 +40,34 @@ public class ServiceProviderBuilder
             builder.AddSerilog(logger);
         });
 
-    private void SetupHttpContextAccessorMock()
+    private void SetupHttpContextAccessorFake()
     {
-        var httpContextAccessorMock = this._services.ReplaceServiceWithMock<IHttpContextAccessor>();
-
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, Testing.TestUserId),
             new(ClaimTypes.Email, Testing.TestUserEmail)
         };
-
         var claimsIdentity = new ClaimsIdentity(claims);
-
         var user = new ClaimsPrincipal(claimsIdentity);
 
-        var httpContextMock = new Mock<HttpContext>();
-        httpContextMock.SetupGet(hc => hc.User).Returns(user);
+        var httpContextFake = A.Fake<HttpContext>();
+        A.CallTo(() => httpContextFake.User).Returns(user);
 
-        httpContextAccessorMock.SetupGet(hca => hca.HttpContext).Returns(httpContextMock.Object);
+        var httpContextAccessorFake = this._services.ReplaceServiceWithFake<IHttpContextAccessor>(ServiceLifetime.Singleton);
+        A.CallTo(() => httpContextAccessorFake.HttpContext).Returns(httpContextFake);
     }
 }
 
 public static class ServiceCollectionExtensions
 {
-    public static Mock<TIService> ReplaceServiceWithMock<TIService>(this IServiceCollection services)
-        where TIService : class
+    public static TService ReplaceServiceWithFake<TService>(this IServiceCollection services, ServiceLifetime serviceLifetime)
+        where TService : class
     {
-        var service = services.Single(sd => sd.ServiceType == typeof(TIService));
+        var service = services.Single(sd => sd.ServiceType == typeof(TService));
         services.Remove(service);
-        var replace = new Mock<TIService>();
-        services.AddSingleton(_ => replace.Object);
+        var replace = A.Fake<TService>();
+        var serviceDescriptor = new ServiceDescriptor(typeof(TService), _ => replace, serviceLifetime);
+        services.Add(serviceDescriptor);
 
         return replace;
     }
