@@ -53,7 +53,7 @@ jobs:
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory:"./test-results/" --logger:"console;verbosity=detailed"
 
       - name: Merge tests with ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@abaac9fef72e4116bfc69905d51062790bda0335
+        uses: danielpalme/ReportGenerator-GitHub-Action@873ee34c88a6234bdab7fd264d3666fd1ab417f7
         with:
           reports: "test-results/**/*.cobertura.xml"
           targetdir: "coverage-report"
